@@ -1,0 +1,64 @@
+# ─────────────────────────────────────────────────────────────
+# SKYWEB.AZ — files that must NEVER be published on GitHub
+# ─────────────────────────────────────────────────────────────
+
+# Real secrets / local configuration
+.env
+.env.*
+!.env.example
+/config/secrets.php
+/config/*.local.php
+/config/*.local.*
+/config/db*.php
+/config/*credentials*
+data/admin_auth.json
+data/sent_emails.txt
+sent_emails.txt
+*.pem
+*.key
+*.pfx
+
+# Runtime data, user uploads, caches and temp files
+/uploads/
+/assets/uploads/
+/data/*.json
+!/data/.htaccess
+/cache/
+/tmp/
+*.tmp
+*.cache
+
+# Scratch / diagnostics / local backups
+/scratch/
+/_backup_apps/
+/_backup_how/
+/_shots/
+*.bak
+*.before_*
+*.orig
+
+# Debug and server-disclosure helpers (no secrets, unsafe to publish)
+/phpinfo.php
+/info.php
+/test.php
+/test_file.php
+/opcache_clear.php
+/opcache_reset.php
+/cache_clear.php
+/clear_opcache.php
+/full_page.html
+/footer_debug.html
+/footer_debug2.html
+/admin-giris.png
+/sil-hardadir.png
+
+# System junk
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Dependencies (if installed later)
+/vendor/
+/node_modules/

@@ -1,0 +1,19 @@
+{
+  "name": "Skyweb.az — Rəqəmsal Gələcəyin Ekosistemi",
+  "short_name": "Skyweb.az",
+  "description": "Azərbaycanın yeni nəsil rəqəmsal ekosistemi. Freelance, biznes həlləri, ağıllı CV və gamification.",
+  "start_url": "./index.php",
+  "display": "standalone",
+  "background_color": "#080a1c",
+  "theme_color": "#080a1c",
+  "orientation": "portrait-primary",
+  "categories": ["business", "utilities"],
+  "icons": [
+    {
+      "src": "assets/uploads/1b7acda823126b63d3350ccc5fe1bfe3.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
