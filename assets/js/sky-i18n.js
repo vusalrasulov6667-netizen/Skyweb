@@ -370,9 +370,9 @@
 
     applyTitle(lang, from);
 
-    // Keep demo deep-links in sync with the active language.
-    // Demo pages also contain their own language pills whose hrefs point at
-    // demo-* URLs — never rewrite those, or the visitor cannot switch at all.
+    // Keep demo deep-links in sync with the active language so the choice
+    // made on the homepage follows the visitor everywhere. The language
+    // selector itself lives on the homepage only.
     document.querySelectorAll('.sky-demo-btn-open, a[href*="modules/web-demos/demo-"]').forEach(function (link) {
       if (link.matches('.lang-btn, .lang-pill, .sky-lang-option, .sky-lang-mobile-item')) return;
       const href = link.getAttribute('href');

@@ -2,7 +2,41 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-24 (demo dil düymələri + HTML-i18n + SkyBot məntiqi ✅)**
+Son yenilənmə: **2026-11-24 (dil seçicisi yalnız ana səhifədə ✅)**
+
+## 2026-11-24 (12) — Dil seçicisi yalnız ana səhifədə ✅
+
+**Tələb:** dil paketi dəyişimi yalnız Skyweb-in ana səhifəsində olsun; demo/xidmət və digər
+səhifələrdə düymə görünməsin, amma ana səhifədə seçilən dil bütün saytda qorunsun.
+
+### Dəyişikliklər
+- `config/lang.php`: `sky_is_homepage()` — `SCRIPT_NAME` + `SITE_URL` əsasında, `basename()`
+  istifadə olunmur (modulların `index.php`-si ana səhifə hesab olunmaz). `render_language_switcher()`
+  və `render_mobile_language_selector()` digər səhifələrdə boş sətir qaytarır. Bu, 9 çağrı nöqtəsini
+  bir yerdə idarə edir: `blog/faq/privacy/terms`, `auth/login|register`, `modules/games|analytics|cv-builder`.
+- 11 × `modules/web-demos/demo-*.php`: daxili `.lang-pills` / `.lang-switcher` blokları və
+  onların CSS qaydaları silindi. `$lang`, `lang_url()`, deep-link `?lang=` və hreflang toxunulmadı.
+- `assets/js/sky-i18n.js`: köhnə "demo dil pill-ləri" şərhi yeniləndi; demo link sinxronizasiyası
+  və `persist()` (`localStorage` + cookie + `api/set-lang.php`) olduğu kimi qalır.
+- `scratch/cdp_cv_folder_check.js`: 1 seçici əvəzinə **0 seçici** gözləyir; keçid `?lang=` ilə edilir.
+- `scratch/audit_switch_check.js`: demolar `?lang=` (SSR), digər səhifələr `SkyI18n.switchLang()`
+  ilə yoxlanır — UI olmadan da client keçidi test olunur.
+- `scratch/cdp_header_probe.js`: default URL `index.php` (dil ölçümü ana səhifədə mənalıdır).
+- Yeni testlər: `scratch/lang_scope_check.php`, `scratch/cdp_lang_scope_check.js`.
+
+### Yoxlama
+- `lang_scope_check.php`: **22 səhifə** `?lang=en` → yalnız index-də 1 desktop + 1 mobil seçici,
+  digərlərində 0; cookie jar ilə TR seçimi index → blog/demo/cv/auth (5 hal) miras alınır → **ALL PASS**.
+- `cdp_lang_scope_check.js`: real brauzerdə ana səhifədə EN keçidi → blog/demo `?lang=`-sız EN,
+  geri qayıdanda EN aktiv, RU keçidi → cv-builder RU, JS xətası 0 → **13 PASS / 0 FAIL**.
+- `audit_switch_check.js`: 8 səhifə × 3 dil = **24 hal → 0 qalan AZ mətn, 0 SKIP**.
+- `cdp_cv_folder_check.js` **19/19**, `cdp_skybot_check.js` **17/17**, `parity.php` **0/0/0**,
+  `pages_smoke.php` **20/20**, `cdp_errors.js` 4 dil → 0, `cdp_measure.js` 12 en → daşma yox,
+  `php -l` (12 fayl) + `node --check` (6 JS) təmiz.
+
+### Qeyd
+`?lang=` hər yerdə işləyir (davamlılıq və deep-linklər üçün); qaldırılan yalnız **görünən UI**-dır.
+Admin panelində dil seçici yox idi, dəyişməyib.
 
 ## 2026-11-24 (10) — Dil auditi + SkyBot: yarımçıq qalan yekun doğrulama ✅
 

@@ -1058,16 +1058,6 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
       border: 1px solid rgba(255,255,255,0.1);
     }
     .demo-btn-back:hover { color: #fff; border-color: var(--neon-cyan); }
-    .lang-pills { display: flex; gap: 4px; background: rgba(0,0,0,0.4); padding: 2px; border-radius: 6px; }
-    .lang-pill {
-      font-size: 12px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .lang-pill.active { background: var(--neon-cyan); color: var(--on-accent); }
 
     /* Salon Navbar */
     .beauty-nav {
@@ -2127,12 +2117,6 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
                   title="<?= htmlspecialchars($th['label']) ?>"
                   aria-label="<?= htmlspecialchars($th['label']) ?>"></button>
         <?php endforeach; ?>
-      </div>
-      <div class="lang-pills">
-        <a href="?lang=az" class="lang-pill <?= $lang === 'az' ? 'active' : '' ?>">AZ</a>
-        <a href="?lang=en" class="lang-pill <?= $lang === 'en' ? 'active' : '' ?>">EN</a>
-        <a href="?lang=tr" class="lang-pill <?= $lang === 'tr' ? 'active' : '' ?>">TR</a>
-        <a href="?lang=ru" class="lang-pill <?= $lang === 'ru' ? 'active' : '' ?>">RU</a>
       </div>
       <a href="../../index.php?lang=<?= e($lang) ?>#contact" class="demo-btn-sky"><?= htmlspecialchars($t['order_site']) ?> →</a>
       <a href="../../index.php?lang=<?= e($lang) ?>" class="demo-btn-back">← <?= htmlspecialchars($t['back_to_sky']) ?></a>

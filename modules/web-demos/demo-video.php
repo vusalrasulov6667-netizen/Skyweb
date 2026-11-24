@@ -399,16 +399,6 @@ $video_items = [
       transition: all 0.2s;
     }
     .demo-btn-back:hover { color: #fff; border-color: var(--neon-cyan); }
-    .lang-pills { display: flex; gap: 4px; background: rgba(0,0,0,0.4); padding: 2px; border-radius: 6px; }
-    .lang-pill {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .lang-pill.active { background: var(--neon-cyan); color: #01141a; }
 
     /* Studio Header */
     .studio-nav {
@@ -1018,12 +1008,6 @@ $video_items = [
       <span class="demo-text"><?= e($t['demo_banner']) ?></span>
     </div>
     <div class="demo-bar-right">
-      <div class="lang-pills">
-        <a href="?lang=az" class="lang-pill <?= $lang === 'az' ? 'active' : '' ?>">AZ</a>
-        <a href="?lang=en" class="lang-pill <?= $lang === 'en' ? 'active' : '' ?>">EN</a>
-        <a href="?lang=tr" class="lang-pill <?= $lang === 'tr' ? 'active' : '' ?>">TR</a>
-        <a href="?lang=ru" class="lang-pill <?= $lang === 'ru' ? 'active' : '' ?>">RU</a>
-      </div>
       <a href="../../index.php?lang=<?= e($lang) ?>" class="demo-btn-back">← <?= e($t['back_to_sky']) ?></a>
       <a href="https://wa.me/994503936998?text=Salam,%20CineSky%20video%20saytı%20haqqında%20məlumat%20almaq%20istəyirəm" target="_blank" class="demo-btn-sky">
         <?= e($t['order_site']) ?> →

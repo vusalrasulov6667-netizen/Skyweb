@@ -235,9 +235,6 @@ $dishes = [
     .demo-btn-sky { background: var(--neon-cyan); color: #001a1a; padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; transition: 0.25s; }
     .demo-btn-sky:hover { box-shadow: var(--neon-glow); transform: translateY(-1px); }
     .demo-btn-back { color: var(--text-muted); font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); }
-    .lang-pills { display: flex; gap: 4px; background: rgba(0,0,0,0.4); padding: 2px; border-radius: 6px; }
-    .lang-pill { font-size: 11px; padding: 2px 7px; border-radius: 4px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-    .lang-pill.active { background: var(--neon-cyan); color: #001a1a; }
     .resto-nav { background: rgba(0, 20, 24, 0.88); border-bottom: 1px solid rgba(0, 255, 255, 0.12); backdrop-filter: blur(16px); padding: 14px 24px; position: sticky; top: 41px; z-index: 900; }
     .nav-wrap { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
     .brand-title { font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: #fff; line-height: 1.1; }
@@ -319,12 +316,6 @@ $dishes = [
       <span style="color:var(--text-muted); font-weight:500;"><?= htmlspecialchars($t['demo_banner']) ?></span>
     </div>
     <div style="display:flex; align-items:center; gap:10px;">
-      <div class="lang-pills">
-        <a href="?lang=az" class="lang-pill <?= $lang === 'az' ? 'active' : '' ?>">AZ</a>
-        <a href="?lang=en" class="lang-pill <?= $lang === 'en' ? 'active' : '' ?>">EN</a>
-        <a href="?lang=tr" class="lang-pill <?= $lang === 'tr' ? 'active' : '' ?>">TR</a>
-        <a href="?lang=ru" class="lang-pill <?= $lang === 'ru' ? 'active' : '' ?>">RU</a>
-      </div>
       <a href="../../index.php?lang=<?= htmlspecialchars($lang) ?>#contact" class="demo-btn-sky"><?= htmlspecialchars($t['order_site']) ?> →</a>
       <a href="../../index.php?lang=<?= htmlspecialchars($lang) ?>" class="demo-btn-back">← <?= htmlspecialchars($t['back_to_sky']) ?></a>
     </div>

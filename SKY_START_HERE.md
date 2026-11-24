@@ -3,9 +3,29 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-24 (demo dil düymələri + HTML-i18n + SkyBot məntiqi ✅)**
+> Son yenilənmə: **2026-11-24 (dil seçicisi yalnız ana səhifədə ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-24 son əlavə — dil seçicisi yalnız ana səhifədə ✅
+
+- **Qayda:** dil düyməsi/menyusu yalnız `index.php`-də (desktop + mobil bar) görünür.
+  `blog/faq/privacy/terms`, `auth/*`, `modules/games|analytics|cv-builder` və **11 demo**
+  üzərində heç bir dil seçici yoxdur.
+- `config/lang.php`: yeni `sky_is_homepage()` (SCRIPT_NAME + SITE_URL; `basename()` deyil —
+  modulların `index.php`-si yanlış ana səhifə sayılmasın). Hər iki render funksiyası
+  (`render_language_switcher()`, `render_mobile_language_selector()`) digər səhifələrdə `''` qaytarır.
+- Demo pill-ləri və onların CSS-i 11 `demo-*.php` faylından silindi; `$lang`, `lang_url()`,
+  `?lang=` deep-linkləri və hreflang saxlanıldı.
+- **Dil davamlılığı dəyişmədi:** ana səhifədə seçim cookie/session + `api/set-lang.php` ilə
+  bütün səhifələrə keçir; demo linklərinə `sky-i18n.js` aktiv dili əlavə edir. `?lang=` hər yerdə işləyir.
+- Yoxlama: `scratch/lang_scope_check.php` **22 səhifə + 5 davamlılıq halı ALL PASS**;
+  `scratch/cdp_lang_scope_check.js` **13/13 PASS**; `audit_switch_check.js` **24 hal → 0**;
+  `cdp_cv_folder_check.js` 19/19, `cdp_skybot_check.js` 17/17, `parity.php` 0/0/0,
+  `pages_smoke.php` 20/20, `cdp_errors.js` 0, `cdp_measure.js` daşma yox, `php -l` + `node --check` təmiz.
+- Test yenilənmələri: `cdp_cv_folder_check.js` artıq 0 seçici gözləyir; `audit_switch_check.js`
+  demoları `?lang=` ilə, digər səhifələri `SkyI18n.switchLang()` ilə yoxlayır; `cdp_header_probe.js`
+  defolt olaraq `index.php`-ni ölçür.
 
 ## ✅ AKTUAL VƏZİYYƏT — dil dəyişdirmə (2026-11-23)
 

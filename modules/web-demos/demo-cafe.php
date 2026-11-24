@@ -393,21 +393,6 @@ $pastries = [
       font-weight: 600;
     }
     .demo-back-btn:hover { text-shadow: 0 0 10px var(--neon-cyan); }
-    .lang-switcher { display: flex; gap: 6px; }
-    .lang-btn {
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.06);
-      transition: all 0.2s;
-    }
-    .lang-btn.active, .lang-btn:hover {
-      color: #000;
-      background: var(--neon-cyan);
-      box-shadow: 0 0 10px var(--neon-glow);
-    }
 
     /* Navbar */
     .navbar {
@@ -860,13 +845,6 @@ $pastries = [
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
         <?= e($t['back_to_sky']) ?>
       </a>
-      <div class="lang-switcher">
-        <?php foreach (['az', 'en', 'tr', 'ru'] as $code): ?>
-          <a href="<?= e(lang_url($code)) ?>" class="lang-btn <?= $code === $lang ? 'active' : '' ?>">
-            <?= strtoupper($code) ?>
-          </a>
-        <?php endforeach; ?>
-      </div>
     </div>
   </div>
 

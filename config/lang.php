@@ -331,6 +331,28 @@ function lang_url(string $lang_code): string {
 }
 
 /**
+ * True only for the site homepage (index.php in the web root).
+ *
+ * The language switcher is intentionally available on the homepage alone.
+ * Every other page still honours ?lang=, the cookie and the session — it just
+ * does not expose the selector UI. Use SCRIPT_NAME (not basename()) so that
+ * module index.php files are not mistaken for the homepage.
+ */
+function sky_is_homepage(): bool {
+    $script = str_replace('\\', '/', (string)($_SERVER['SCRIPT_NAME'] ?? ''));
+    if ($script === '') {
+        return false;
+    }
+    if (defined('SITE_URL')) {
+        $base = rtrim((string)parse_url(SITE_URL, PHP_URL_PATH), '/');
+        $home = $base === '' ? '/index.php' : $base . '/index.php';
+        return $script === $home;
+    }
+    // Fallback for contexts where config/config.php is not loaded.
+    return (bool)preg_match('#^(?:sky/)?index\.php$#i', ltrim($script, '/'));
+}
+
+/**
  * Render JSON Script Tag containing all language dictionaries for JS
  */
 function render_i18n_script(): string {
@@ -368,6 +390,10 @@ function render_i18n_script(): string {
  * Render Language Switcher HTML (Desktop Header)
  */
 function render_language_switcher(string $custom_class = ''): string {
+    // Homepage only — other pages inherit the selected language silently.
+    if (!sky_is_homepage()) {
+        return '';
+    }
     $current  = current_lang();
     $languages = all_languages();
     $curLang  = $languages[$current];
@@ -428,6 +454,10 @@ function render_language_switcher(string $custom_class = ''): string {
  * Render Mobile Language Selector HTML
  */
 function render_mobile_language_selector(): string {
+    // Homepage only — mobile bar follows the same rule as the desktop menu.
+    if (!sky_is_homepage()) {
+        return '';
+    }
     $current   = current_lang();
     $languages = all_languages();
 
