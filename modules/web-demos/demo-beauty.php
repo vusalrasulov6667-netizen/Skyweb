@@ -3,6 +3,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
 require_once __DIR__ . '/../../config/beauty-bookings.php';
 require_once __DIR__ . '/../../config/beauty-reviews.php';
 require_once __DIR__ . '/../../config/beauty-staff.php';
+require_once __DIR__ . '/../../config/beauty-media.php';
 
 if (!function_exists('e')) {
     function e(string $str): string {
@@ -778,6 +779,16 @@ if (is_file($gallery_json)) {
     $gallery_items = array_reverse($gallery_items);
 }
 $mediaBase = '../../uploads/beauty/';
+
+// Yükləmə bölməsi yalnız panelə giriş etmiş salon sahibinə görünür.
+$galleryAdmin = !empty($_SESSION['bp_ok']);
+$galleryLimits = beauty_media_limits();
+$galleryFlash = [];
+if ($galleryAdmin && !empty($_SESSION['bp_flash']) && is_array($_SESSION['bp_flash'])) {
+    $galleryFlash = $_SESSION['bp_flash'];
+    unset($_SESSION['bp_flash']);
+}
+
 $brandConf = $BD['brand'];
 $themes    = $BD['themes'];
 $themeKey  = $BD['theme'] ?? 'rose';
@@ -1673,6 +1684,53 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
       padding: 34px 20px;
       background: rgba(0, 0, 0, .18);
     }
+    /* Yalnız sahibə görünən yükləmə bölməsi */
+    .gallery-admin {
+      margin: 0 0 24px;
+      padding: 18px 20px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(var(--rose-rgb), .28);
+      background: linear-gradient(135deg, rgba(var(--rose-rgb), .09), rgba(var(--cyan-rgb), .05));
+    }
+    .ga-head { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; margin-bottom: 16px; }
+    .ga-badge {
+      font-size: 10px; font-weight: 800; letter-spacing: .14em;
+      padding: 5px 10px; border-radius: 999px;
+      color: var(--beauty-rose); border: 1px solid rgba(var(--rose-rgb), .45);
+      background: rgba(var(--rose-rgb), .1);
+    }
+    .ga-head h3 { margin: 0; font-family: var(--font-heading); font-size: 17px; font-weight: 600; color: var(--text-main); }
+    .ga-head p { margin: 0; flex: 1 1 320px; font-size: 12.5px; line-height: 1.6; color: var(--text-muted); }
+    .ga-panel-link { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--beauty-rose); white-space: nowrap; }
+    .ga-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .ga-form {
+      display: flex; flex-direction: column; gap: 9px;
+      padding: 14px; border-radius: 12px;
+      border: 1px solid var(--sky-border); background: rgba(var(--sky-surface-rgb), .55);
+    }
+    .ga-form label { font-size: 12.5px; font-weight: 700; color: var(--text-main); }
+    .ga-form input[type=text] {
+      width: 100%; padding: 9px 11px; border-radius: 9px;
+      border: 1px solid var(--sky-border); background: var(--sky-card); color: var(--text-main); font-size: 13px;
+    }
+    .ga-form input[type=file] { width: 100%; font-size: 12px; color: var(--text-muted); }
+    .ga-hint { font-size: 11.5px; color: var(--text-muted); min-height: 16px; }
+    .ga-hint.is-error { color: #f87171; }
+    .ga-submit {
+      align-self: flex-start; padding: 9px 16px; border: 0; border-radius: 9px;
+      background: var(--beauty-rose); color: #fff; font-size: 12.5px; font-weight: 700; cursor: pointer;
+    }
+    .gallery-flash {
+      margin-bottom: 14px; padding: 11px 14px; border-radius: 11px; font-size: 13px;
+      border: 1px solid rgba(var(--rose-rgb), .35); background: rgba(var(--rose-rgb), .1); color: var(--text-main);
+    }
+    .gallery-flash.ok { border-color: rgba(34, 197, 94, .42); background: rgba(34, 197, 94, .12); }
+    .gallery-flash.err { border-color: rgba(248, 113, 113, .45); background: rgba(248, 113, 113, .12); }
+    @media (max-width: 620px) {
+      .ga-grid { grid-template-columns: 1fr; }
+      .ga-head p { flex-basis: 100%; }
+      .ga-panel-link { margin-left: 0; }
+    }
     /* Qalereya üçün yüngül lightbox */
     .gallery-lightbox {
       position: fixed; inset: 0; z-index: 4000; display: none;
@@ -2442,6 +2500,48 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
       <h2><?= htmlspecialchars($t['gallery_title']) ?></h2>
       <p><?= htmlspecialchars($t['gallery_desc']) ?></p>
     </div>
+
+    <?php foreach ($galleryFlash as $gf): ?>
+      <div class="gallery-flash <?= ($gf['type'] ?? '') === 'ok' ? 'ok' : 'err' ?>"><?= htmlspecialchars((string)($gf['msg'] ?? '')) ?></div>
+    <?php endforeach; ?>
+
+    <?php if ($galleryAdmin): ?>
+      <div class="gallery-admin" id="galleryUpload">
+        <div class="ga-head">
+          <span class="ga-badge">YALNIZ SAHİBƏ</span>
+          <h3>Qalereyaya iş yüklə</h3>
+          <p>Foto — JPG/PNG/WEBP, max <?= (int)$galleryLimits['photo_mb'] ?> MB. Video — MP4, max <?= (int)$galleryLimits['video_mb'] ?> MB və <?= (int)$galleryLimits['video_sec'] ?> saniyə. Hər fayla loqo watermark-ı vurulur.</p>
+          <a class="ga-panel-link" href="beauty-panel.php?tab=gallery">Paneldə idarə et ↗</a>
+        </div>
+        <div class="ga-grid">
+          <form class="ga-form" method="post" enctype="multipart/form-data" action="beauty-panel.php" data-demo-media="photo">
+            <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+            <input type="hidden" name="action" value="upload_media">
+            <input type="hidden" name="media_type" value="photo">
+            <input type="hidden" name="return_to" value="gallery">
+            <input type="hidden" name="return_lang" value="<?= htmlspecialchars($lang) ?>">
+            <label for="gaPhoto">Şəkil seç</label>
+            <input type="file" id="gaPhoto" name="media" accept="image/jpeg,image/png,image/webp" required>
+            <input type="text" name="media_title" maxlength="80" placeholder="İşin adı (isteğe bağlı)">
+            <span class="ga-hint">Max <?= (int)$galleryLimits['photo_mb'] ?> MB</span>
+            <button class="ga-submit" type="submit">Şəkli əlavə et</button>
+          </form>
+          <form class="ga-form" method="post" enctype="multipart/form-data" action="beauty-panel.php" data-demo-media="video">
+            <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+            <input type="hidden" name="action" value="upload_media">
+            <input type="hidden" name="media_type" value="video">
+            <input type="hidden" name="return_to" value="gallery">
+            <input type="hidden" name="return_lang" value="<?= htmlspecialchars($lang) ?>">
+            <label for="gaVideo">Video seç (MP4, max <?= (int)$galleryLimits['video_sec'] ?> s)</label>
+            <input type="file" id="gaVideo" name="media" accept="video/mp4" required>
+            <input type="text" name="media_title" maxlength="80" placeholder="Çəkilişin adı (isteğe bağlı)">
+            <span class="ga-hint">Max <?= (int)$galleryLimits['video_mb'] ?> MB · <?= (int)$galleryLimits['video_sec'] ?> saniyə</span>
+            <button class="ga-submit" type="submit">Videonu əlavə et</button>
+          </form>
+        </div>
+      </div>
+    <?php endif; ?>
+
     <?php if (!$gallery_items): ?>
       <div class="gallery-empty">✨ <?= htmlspecialchars($t['gallery_empty']) ?></div>
     <?php else: ?>
@@ -2943,6 +3043,50 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
     }
 
     function showToast(text, type) { DK.toast(text, type); }
+
+    /* Sahib yükləmə formaları: MB və video uzunluğu əvvəlcə brauzerdə yoxlanır */
+    (function () {
+      var limits = <?= json_encode($galleryLimits) ?>;
+      document.querySelectorAll('[data-demo-media]').forEach(function (form) {
+        var input = form.querySelector('input[type=file]');
+        var hint = form.querySelector('.ga-hint');
+        if (!input || !hint) return;
+        var kind = form.dataset.demoMedia;
+        var maxMb = kind === 'photo' ? limits.photo_mb : limits.video_mb;
+        var base = 'Max ' + maxMb + ' MB' + (kind === 'video' ? ' · ' + limits.video_sec + ' saniyə' : '');
+        input.addEventListener('change', function () {
+          hint.classList.remove('is-error');
+          var f = input.files && input.files[0];
+          hint.textContent = f ? (f.size / 1048576).toFixed(1) + ' MB' : base;
+        });
+        form.addEventListener('submit', function (e) {
+          var f = input.files && input.files[0];
+          if (!f) return;
+          if (f.size > maxMb * 1048576) {
+            e.preventDefault();
+            hint.classList.add('is-error');
+            hint.textContent = 'Fayl çox böyük — max ' + maxMb + ' MB.';
+            return;
+          }
+          if (kind !== 'video') return;
+          e.preventDefault();
+          var url = URL.createObjectURL(f);
+          var probe = document.createElement('video');
+          probe.preload = 'metadata';
+          probe.onloadedmetadata = function () {
+            URL.revokeObjectURL(url);
+            if (isFinite(probe.duration) && probe.duration > limits.video_sec + 0.2) {
+              hint.classList.add('is-error');
+              hint.textContent = 'Video ' + limits.video_sec + ' saniyədən uzundur (' + Math.round(probe.duration) + ' s).';
+            } else {
+              form.submit();
+            }
+          };
+          probe.onerror = function () { URL.revokeObjectURL(url); form.submit(); };
+          probe.src = url;
+        });
+      });
+    })();
 
     /* Qalereya lightbox: foto + video, klaviatura və mobil dəstəyi */
     (function () {

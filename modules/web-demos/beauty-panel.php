@@ -69,6 +69,17 @@ function bp_redirect_query(array $params): void {
     exit;
 }
 
+/** Demo qalereyasindan gelen yüklemelerde sahibi sayta qaytar (open-redirect yox). */
+function bp_return_requested(): bool {
+    return ($_POST['return_to'] ?? '') === 'gallery';
+}
+function bp_back_to_gallery(): void {
+    $lang = strtolower((string)($_POST['return_lang'] ?? 'az'));
+    if (!in_array($lang, BEAUTY_LANGS, true)) $lang = 'az';
+    header('Location: demo-beauty.php?lang=' . $lang . '#gallery');
+    exit;
+}
+
 /** Panel daxilində status etiketləri (panelin özü tam AZ-dır). */
 function bp_status_label(string $s): string {
     $m = [
@@ -687,6 +698,7 @@ if ($authed && bp_is_post()) {
                 }
             }
         }
+        if (bp_return_requested()) bp_back_to_gallery();
         bp_redirect();
     }
 
@@ -711,6 +723,7 @@ if ($authed && bp_is_post()) {
         } else {
             bp_flash('err', 'Fayl adı düzgün deyil.');
         }
+        if (bp_return_requested()) bp_back_to_gallery();
         bp_redirect();
     }
 }

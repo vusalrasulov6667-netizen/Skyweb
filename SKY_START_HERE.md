@@ -3,7 +3,7 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-25 (gözəllik qalereyası: foto/video limitləri + modern lightbox ✅)**
+> Son yenilənmə: **2026-11-25 (qalereya limitləri + lightbox + demo üzərindən sahib yükləməsi ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
 
@@ -25,6 +25,12 @@
   `lang_scope_check.php` ALL PASS; `cdp_errors.js` demo 4 dil + panel → 0; `php -l` təmiz.
 - Test skriptləri mövcud `data/beauty-gallery.json` və `uploads/beauty/` fayllarını **snapshot/restore**
   edir — istifadəçinin real qalereyası zədələnmir. Ekran şəkilləri: `scratch/gallery-final-{desktop,mobile}.png`.
+- **Demo üzərindən yükləmə (istifadəçi tələbi):** yükləmə bölməsi indi birbaşa saytın
+  «Ustaların əl işləri» hissəsində də var, lakin **yalnız panelə giriş etmiş salon sahibinə** görünür
+  (`id="galleryUpload"`; ziyarətçiyə heç bir forma/HTML düşmür). Foto + video formaları CSRF ilə
+  `beauty-panel.php`-ə post edir, limitlər brauzerdə və serverdə yoxlanır, uğur/xəta bildirişi
+  demo səhifəsində `#gallery` üzərində göstərilir. Open-redirect yoxdur (`return_to=gallery` tokeni,
+  `return_lang` yalnız az/en/tr/ru). Yoxlama: `beauty_demo_upload_e2e.php` **17/17 OK**.
 
 ### 2026-11-24 son əlavə — dil seçicisi yalnız ana səhifədə ✅
 
