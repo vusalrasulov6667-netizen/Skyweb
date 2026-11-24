@@ -479,8 +479,40 @@
     });
   }
 
+  // ── Hard scope guard: no legacy language pills anywhere ───────────
+  // The only visible selector is the homepage dropdown/mobile bar. The old
+  // demo pills (.lang-pills/.lang-pill/.lang-switcher/.lang-btn) must never
+  // survive on any page — including HTML replayed from a stale browser cache.
+  // Nodes are removed (not merely hidden) so their click handlers die too.
+  const LEGACY_PILLS = '.lang-pills, .lang-pill, .lang-btn, .lang-switcher';
+  function purgeLegacyPills () {
+    let nodes;
+    try { nodes = document.querySelectorAll(LEGACY_PILLS); } catch (e) { return; }
+    for (let i = 0; i < nodes.length; i++) nodes[i].remove();
+  }
+  function watchLegacyPills () {
+    purgeLegacyPills();
+    if (!('MutationObserver' in window)) return;
+    const pillObserver = new MutationObserver(function (mutations) {
+      let hit = false;
+      for (let i = 0; i < mutations.length && !hit; i++) {
+        const m = mutations[i];
+        if (m.type !== 'childList') continue;
+        for (let j = 0; j < m.addedNodes.length; j++) {
+          const n = m.addedNodes[j];
+          if (n.nodeType !== 1) continue;
+          if ((n.matches && n.matches(LEGACY_PILLS)) ||
+              (n.querySelector && n.querySelector(LEGACY_PILLS))) { hit = true; break; }
+        }
+      }
+      if (hit) purgeLegacyPills();
+    });
+    pillObserver.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
   // ── Init ───────────────────────────────────────────────────────────
   function init () {
+    watchLegacyPills();
     const lang = detectLang();
     activeLang = lang;
     renderedLang = lang;

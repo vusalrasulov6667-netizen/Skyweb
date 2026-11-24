@@ -3,7 +3,7 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-24 (dil seçicisi yalnız ana səhifədə ✅)**
+> Son yenilənmə: **2026-11-25 (dil seçicisi yalnız ana səhifədə + cached pill qoruması ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
 
@@ -19,6 +19,10 @@
   `?lang=` deep-linkləri və hreflang saxlanıldı.
 - **Dil davamlılığı dəyişmədi:** ana səhifədə seçim cookie/session + `api/set-lang.php` ilə
   bütün səhifələrə keçir; demo linklərinə `sky-i18n.js` aktiv dili əlavə edir. `?lang=` hər yerdə işləyir.
+- **Sərt qoruma (cached HTML üçün):** `assets/js/sky-i18n.js` hər səhifədə köhnə
+  `.lang-pills/.lang-pill/.lang-btn/.lang-switcher` düyünlərini DOM-dan silir (MutationObserver
+  ilə dinamik əlavə olunanları da). Ana səhifənin `.sky-lang-*` seçicisinə toxunmur.
+  `sw.js` artıq HTML-i keşləmir və köhnə keşi silir.
 - Yoxlama: `scratch/lang_scope_check.php` **22 səhifə + 5 davamlılıq halı ALL PASS**;
   `scratch/cdp_lang_scope_check.js` **13/13 PASS**; `audit_switch_check.js` **24 hal → 0**;
   `cdp_cv_folder_check.js` 19/19, `cdp_skybot_check.js` 17/17, `parity.php` 0/0/0,
@@ -655,7 +659,9 @@ PHP curl massiv POST-da nested massivi (`role[az]`) mötərizəsiz göndərir �
 - Admin panelində **«Saytda bölmə ↗»** linki var — footer-i açıb düymələri göstərir.
 - Dəyişiklikdən sonra brauzerdə **Ctrl+F5** lazımdır.
 - CSS/JS `?v=<?= time() ?>` ilə yüklənir — köhnə fayl keşdə qalmır.
-- `sw.js` (PWA) şəbəkə-əvvəlcə işləyir; HTML-i də keşə yazır, amma onlayn olduqda həmişə təzə səhifə qaytarır.
+- `sw.js` (PWA) yalnız **statik faylları** (`manifest.json`, `sky.css`, `main.js`) keşə yazır;
+  **HTML/PHP sənədləri heç vaxt keşlənmir** — köhnə demo pill-ləri cached HTML-dən qayıda bilməz.
+  Keş adı `skyweb-shell-v2`; köhnə `skyweb-az-cache-v1` aktivasiyada avtomatik silinir.
 - `data/` qovluğu veb-dən əlçatmazdır (403). Loqolar: `uploads/partners/`.
 - Ehtiyat nüsxələr: `_backup_apps/` və `_backup_how/`.
 

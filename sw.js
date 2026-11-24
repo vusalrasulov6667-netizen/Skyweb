@@ -1,5 +1,7 @@
-// sw.js
-const CACHE_NAME = 'skyweb-az-cache-v1';
+// sw.js — app-shell cache for static assets only.
+// HTML/PHP pages are NEVER cached: a cached demo page could replay an old
+// language switcher long after it was removed from the source.
+const CACHE_NAME = 'skyweb-shell-v2';
 const ASSETS_TO_CACHE = [
   './manifest.json',
   './assets/css/sky.css',
@@ -8,52 +10,46 @@ const ASSETS_TO_CACHE = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(ASSETS_TO_CACHE))
+      .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            return caches.delete(cache);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
+    caches.keys()
+      .then((keys) => Promise.all(
+        keys.map((key) => (key !== CACHE_NAME ? caches.delete(key) : Promise.resolve(false)))
+      ))
+      .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+  const request = event.request;
+  const url = new URL(request.url);
 
-  if (event.request.method !== 'GET' || !url.protocol.startsWith('http')) {
-    event.respondWith(fetch(event.request));
+  if (request.method !== 'GET' || !url.protocol.startsWith('http')) {
+    return;
+  }
+
+  // Never intercept documents — always go to the network so visitors see the
+  // current HTML (no stale pills, no stale markup of any kind).
+  const acceptsHtml = (request.headers.get('accept') || '').indexOf('text/html') !== -1;
+  if (request.mode === 'navigate' || acceptsHtml || /\.php(?:[?#]|$)/.test(url.pathname)) {
     return;
   }
 
   event.respondWith(
-    fetch(event.request)
+    fetch(request)
       .then((response) => {
         if (response && response.status === 200 && (response.type === 'basic' || response.type === 'cors')) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
         }
         return response;
       })
-      .catch(() => {
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          return null;
-        });
-      })
+      .catch(() => caches.match(request).then((cached) => cached || Response.error()))
   );
 });

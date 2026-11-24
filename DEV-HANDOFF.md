@@ -2,7 +2,7 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-24 (dil seçicisi yalnız ana səhifədə ✅)**
+Son yenilənmə: **2026-11-25 (dil seçicisi yalnız ana səhifədə + cached pill qoruması ✅)**
 
 ## 2026-11-24 (12) — Dil seçicisi yalnız ana səhifədə ✅
 
@@ -37,6 +37,27 @@ səhifələrdə düymə görünməsin, amma ana səhifədə seçilən dil bütü
 ### Qeyd
 `?lang=` hər yerdə işləyir (davamlılıq və deep-linklər üçün); qaldırılan yalnız **görünən UI**-dır.
 Admin panelində dil seçici yox idi, dəyişməyib.
+
+## 2026-11-25 — Cached pill düymələrinə qarşı sərt qoruma ✅
+
+**Problem:** istifadəçi demoların içində AZ/EN/TR/RU pill düymələrini görməkdə davam edirdi;
+kodda və GitHub-da onlar artıq yox idi. Səbəb: `sw.js` bütün GET cavablarını (o cümlədən
+demo HTML-ini) keşə yazırdı — köhnə HTML brauzerdə qalırdı.
+
+### Dəyişikliklər
+- `sw.js`: keş adı `skyweb-shell-v2`; aktivasiyada bütün köhnə `skyweb-*` keşləri silinir;
+  **HTML/PHP sənədləri (navigate, `accept: text/html`, `.php`) ümumiyyətlə intercept edilmir** —
+  həmişə şəbəkədən gəlir. Yalnız `manifest.json`, `sky.css`, `main.js` statik olaraq keşlənir.
+- `assets/js/sky-i18n.js`: `watchLegacyPills()` — köhnə `.lang-pills/.lang-pill/.lang-btn/
+  .lang-switcher` elementlərini init-də və `MutationObserver` ilə dinamik əlavə olunduqda
+  **DOM-dan silir** (gizlətmir). Ana səhifənin `.sky-lang-*` dropdown/mobil barına toxunmur.
+- Yeni testlər: `scratch/cdp_legacy_pill_purge.js` (9/9), `scratch/cdp_sw_cache_check.js` (HTML keş 0).
+
+### Yoxlama
+- `cdp_legacy_pill_purge.js`: demo-cafe, demo-beauty və blog-a köhnə pill HTML-i əl ilə
+  əlavə edilir → 500 ms sonra hamısı silinir; index.php-də desktop + mobil seçici qalır → **9 PASS / 0 FAIL**.
+- `cdp_sw_cache_check.js`: `caches.keys()` = `["skyweb-shell-v2"]`, keş olunan HTML/PHP = **0**.
+- Regressiya: `lang_scope_check.php` ALL PASS, `cdp_lang_scope_check.js` 13/13, `cdp_errors.js` 0 xəta.
 
 ## 2026-11-24 (10) — Dil auditi + SkyBot: yarımçıq qalan yekun doğrulama ✅
 
