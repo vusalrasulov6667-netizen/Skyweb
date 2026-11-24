@@ -43,7 +43,7 @@ yükləmə görünmür. Soruşulan variantdan **«yalnız sahibə görünən»**
 - `beauty-panel.php`: `bp_return_requested()` / `bp_back_to_gallery()` — yalnız `return_to=gallery`
   tokeni ilə, sabit `demo-beauty.php?lang=<az|en|tr|ru>#gallery` ünvanına qayıdış; open-redirect yox.
   CSRF və `bp_ok` yoxlamaları dəyişməyib.
-- Yoxlama: `php -l` təmiz; `beauty_demo_upload_e2e.php` **17/17 OK** (anonimdə forma yox, sahibdə
+- Yoxlama: `php -l` təmiz; `beauty_demo_upload_e2e.php` **18/18 OK** (anonimdə forma yox, sahibdə
   2 forma, demo→panel→demo axını, foto + 5 s video qəbul, 35 s rədd, bildirişlər, JSON bərpa);
   `cdp_gallery_lightbox.js` 13/13, `cdp_errors.js` 0, `lang_scope_check.php` ALL PASS — reqressiya yox.
 

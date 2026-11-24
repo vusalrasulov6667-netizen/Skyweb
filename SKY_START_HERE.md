@@ -30,7 +30,7 @@
   (`id="galleryUpload"`; ziyarətçiyə heç bir forma/HTML düşmür). Foto + video formaları CSRF ilə
   `beauty-panel.php`-ə post edir, limitlər brauzerdə və serverdə yoxlanır, uğur/xəta bildirişi
   demo səhifəsində `#gallery` üzərində göstərilir. Open-redirect yoxdur (`return_to=gallery` tokeni,
-  `return_lang` yalnız az/en/tr/ru). Yoxlama: `beauty_demo_upload_e2e.php` **17/17 OK**.
+  `return_lang` yalnız az/en/tr/ru). Yoxlama: `beauty_demo_upload_e2e.php` **18/18 OK**.
 
 ### 2026-11-24 son əlavə — dil seçicisi yalnız ana səhifədə ✅
 
