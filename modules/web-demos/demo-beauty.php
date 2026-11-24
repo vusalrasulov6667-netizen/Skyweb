@@ -90,6 +90,7 @@ $demo_texts = [
     'gallery_empty' => 'Ustalarımızın işlərindən nümunələr tezliklə burada görünəcək.',
     'gallery_photo' => 'FOTO',
     'gallery_video' => 'VİDEO',
+    'gallery_view' => 'Böyüt',
     'booking_sub' => 'Xidmət, usta və vaxtı seçin. Bron üçün beh: qiymətin %p%-i (min %m AZN).',
     'booking_success_title' => 'Bron qeydə alındı!',
     'booking_success_desc' => 'Rezervasiyanız menecer təsdiqini gözləyir. Bron kodunu yadda saxlayın.',
@@ -245,6 +246,7 @@ $demo_texts = [
     'gallery_empty' => 'Examples of our masters’ work will appear here soon.',
     'gallery_photo' => 'PHOTO',
     'gallery_video' => 'VIDEO',
+    'gallery_view' => 'View',
     'booking_sub' => 'Choose a service, stylist and time. Deposit: %p% of the price (min %m AZN).',
     'booking_success_title' => 'Booking received!',
     'booking_success_desc' => 'Your reservation is awaiting manager confirmation. Please keep your booking code.',
@@ -400,6 +402,7 @@ $demo_texts = [
     'gallery_empty' => 'Ustalarımızın çalışmalarından örnekler yakında burada görünecek.',
     'gallery_photo' => 'FOTO',
     'gallery_video' => 'VİDEO',
+    'gallery_view' => 'Büyüt',
     'booking_sub' => "Hizmet, uzman ve saat seçin. Kapora: fiyatın %p%'i (min %m AZN).",
     'booking_success_title' => 'Randevu alındı!',
     'booking_success_desc' => 'Rezervasyonunuz yönetici onayını bekliyor. Randevu kodunu saklayın.',
@@ -555,6 +558,7 @@ $demo_texts = [
     'gallery_empty' => 'Примеры работ наших мастеров скоро появятся здесь.',
     'gallery_photo' => 'ФОТО',
     'gallery_video' => 'ВИДЕО',
+    'gallery_view' => 'Открыть',
     'booking_sub' => 'Выберите услугу, мастера и время. Депозит: %p% от цены (мин. %m AZN).',
     'booking_success_title' => 'Запись оформлена!',
     'booking_success_desc' => 'Ваша запись ожидает подтверждения менеджера. Сохраните код брони.',
@@ -761,9 +765,14 @@ if (is_file($gallery_json)) {
         if (!is_array($it)) continue;
         $file = basename((string)($it['file'] ?? ''));
         if ($file === '' || !is_file(__DIR__ . '/../../uploads/beauty/' . $file)) continue;
+        $poster = basename((string)($it['poster'] ?? ''));
+        if ($poster !== '' && !is_file(__DIR__ . '/../../uploads/beauty/' . $poster)) $poster = '';
         $gallery_items[] = [
-            'file' => $file,
-            'type' => (($it['type'] ?? '') === 'video') ? 'video' : 'photo',
+            'file'     => $file,
+            'type'     => (($it['type'] ?? '') === 'video') ? 'video' : 'photo',
+            'poster'   => $poster,
+            'title'    => trim((string)($it['title'] ?? '')),
+            'duration' => isset($it['duration']) && is_numeric($it['duration']) ? (float)$it['duration'] : null,
         ];
     }
     $gallery_items = array_reverse($gallery_items);
@@ -1575,50 +1584,86 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
       font-weight: 800;
       color: var(--beauty-rose);
     }
-    /* Gallery Section */
-    .gallery-section {
-      max-width: 1240px;
-      margin: 0 auto 80px;
-      padding: 0 24px;
-    }
+    /* Gallery — redaksiya üslubunda, cansız şablon görünüşü yox */
+    .gallery-section { max-width: 1240px; margin: 0 auto 88px; padding: 0 24px; }
+    .gallery-section .section-head { margin-bottom: 28px; }
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-auto-flow: dense;
+      gap: 16px;
     }
     .gallery-card {
       position: relative;
       margin: 0;
-      border-radius: 14px;
+      min-height: 220px;
       overflow: hidden;
-      background: rgba(var(--sky-surface-rgb), 0.6);
-      border: 1px solid var(--sky-border);
-      aspect-ratio: 4 / 3;
+      border-radius: 16px;
+      background: var(--sky-card);
+      border: 1px solid rgba(var(--rose-rgb), .14);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, .14);
     }
-    .gallery-card a { display: block; width: 100%; height: 100%; }
+    .gallery-card:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .gallery-card:nth-child(4n+4),
+    .gallery-card.is-video { grid-column: span 2; }
+    .gallery-trigger {
+      position: absolute; inset: 0; display: block; width: 100%; height: 100%;
+      padding: 0; border: 0; background: none; cursor: zoom-in; color: inherit;
+    }
     .gallery-card img,
     .gallery-card video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform .4s ease;
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform .7s cubic-bezier(.2, .7, .2, 1);
     }
-    .gallery-card:hover img { transform: scale(1.05); }
-    .gallery-tag {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      padding: 3px 9px;
-      border-radius: 20px;
-      background: rgba(0, 0, 0, .62);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, .18);
-      pointer-events: none;
+    .gallery-card:hover img,
+    .gallery-card:hover video { transform: scale(1.05); }
+    .gallery-card::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(180deg, rgba(8, 7, 12, .06) 38%, rgba(8, 7, 12, .72) 100%);
     }
+    .gallery-tag,
+    .gallery-duration {
+      position: absolute; top: 14px; z-index: 2; pointer-events: none;
+      display: inline-flex; align-items: center; gap: 7px;
+      border-radius: 999px; padding: 6px 11px;
+      font-size: 10px; font-weight: 800; letter-spacing: .14em;
+      color: #fff; background: rgba(12, 11, 16, .58);
+      border: 1px solid rgba(255, 255, 255, .2);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    }
+    .gallery-tag { left: 14px; }
+    .gallery-duration { right: 14px; letter-spacing: .06em; font-size: 11px; }
+    .gallery-play {
+      position: absolute; z-index: 2; left: 50%; top: 50%;
+      width: 54px; height: 54px; border-radius: 50%;
+      display: grid; place-items: center; pointer-events: none;
+      background: rgba(255, 255, 255, .94); color: #17131a;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+      transform: translate(-50%, -50%);
+      transition: transform .35s ease, background .35s ease, color .35s ease;
+    }
+    .gallery-play svg { width: 18px; height: 18px; fill: currentColor; margin-left: 3px; }
+    .gallery-card:hover .gallery-play {
+      transform: translate(-50%, -50%) scale(1.09);
+      background: var(--beauty-rose); color: #fff;
+    }
+    .gallery-caption {
+      position: absolute; z-index: 2; left: 0; right: 0; bottom: 0;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+      padding: 20px 18px 16px; pointer-events: none;
+    }
+    .gallery-caption strong {
+      font-family: var(--font-heading); font-size: 15px; font-weight: 600;
+      line-height: 1.3; color: #fff; text-shadow: 0 2px 12px rgba(0, 0, 0, .45);
+      text-wrap: pretty;
+    }
+    .gallery-card:nth-child(1) .gallery-caption strong { font-size: 20px; }
+    .gallery-view {
+      margin-left: auto; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(255, 255, 255, .9);
+    }
+    .gallery-view svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.8; }
     .gallery-empty {
       text-align: center;
       color: var(--text-muted);
@@ -1627,6 +1672,60 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
       border-radius: 14px;
       padding: 34px 20px;
       background: rgba(0, 0, 0, .18);
+    }
+    /* Qalereya üçün yüngül lightbox */
+    .gallery-lightbox {
+      position: fixed; inset: 0; z-index: 4000; display: none;
+      align-items: center; justify-content: center; padding: 24px;
+      background: rgba(8, 7, 12, .94);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    }
+    .gallery-lightbox.is-open { display: flex; }
+    body.gl-locked { overflow: hidden; }
+    .gl-stage { display: flex; align-items: center; justify-content: center; width: min(1120px, 100%); }
+    .gl-stage img,
+    .gl-stage video {
+      max-width: 100%; max-height: 82vh; width: auto; height: auto;
+      border-radius: 12px; box-shadow: 0 24px 80px rgba(0, 0, 0, .6); background: #000;
+    }
+    .gl-btn {
+      position: absolute; z-index: 2; display: grid; place-items: center;
+      width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, .22); background: rgba(255, 255, 255, .08);
+      color: #fff; font-size: 24px; line-height: 1;
+      transition: background .25s ease, border-color .25s ease;
+    }
+    .gl-btn:hover { background: var(--beauty-rose); border-color: var(--beauty-rose); }
+    .gl-close { top: 20px; right: 24px; font-size: 21px; }
+    .gl-prev { left: 24px; top: 50%; transform: translateY(-50%); }
+    .gl-next { right: 24px; top: 50%; transform: translateY(-50%); }
+    .gl-foot {
+      position: absolute; left: 0; right: 0; bottom: 18px; z-index: 2;
+      display: flex; justify-content: center; align-items: center; gap: 14px;
+      color: rgba(255, 255, 255, .78); font-size: 12px; letter-spacing: .06em;
+      padding: 0 80px; text-align: center;
+    }
+    .gl-count { font-variant-numeric: tabular-nums; color: var(--beauty-rose); font-weight: 800; }
+    @media (max-width: 960px) {
+      .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .gallery-card:nth-child(1) { grid-column: span 2; grid-row: auto; min-height: 260px; }
+      .gallery-card:nth-child(4n+4) { grid-column: span 1; }
+    }
+    @media (max-width: 560px) {
+      .gallery-section { padding: 0 16px; }
+      .gallery-grid { grid-template-columns: 1fr; gap: 13px; }
+      .gallery-card,
+      .gallery-card:nth-child(1),
+      .gallery-card:nth-child(4n+4),
+      .gallery-card.is-video { grid-column: span 1; grid-row: auto; min-height: 230px; }
+      .gallery-caption strong,
+      .gallery-card:nth-child(1) .gallery-caption strong { font-size: 15px; }
+    }
+    @media (max-width: 620px) {
+      .gallery-lightbox { padding: 14px; }
+      .gl-prev { left: 10px; } .gl-next { right: 10px; }
+      .gl-stage img, .gl-stage video { max-height: 76vh; }
+      .gl-foot { bottom: 10px; padding: 0 56px; }
     }
 
     /* Stylists Section */
@@ -2347,22 +2446,64 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
       <div class="gallery-empty">✨ <?= htmlspecialchars($t['gallery_empty']) ?></div>
     <?php else: ?>
       <div class="gallery-grid">
-        <?php foreach ($gallery_items as $it): ?>
-          <figure class="gallery-card">
-            <?php if ($it['type'] === 'video'): ?>
-              <video src="<?= htmlspecialchars($mediaBase . $it['file']) ?>" controls preload="metadata" playsinline></video>
-              <span class="gallery-tag"><?= htmlspecialchars($t['gallery_video']) ?></span>
-            <?php else: ?>
-              <a href="<?= htmlspecialchars($mediaBase . $it['file']) ?>" target="_blank" rel="noopener">
-                <img src="<?= htmlspecialchars($mediaBase . $it['file']) ?>" alt="<?= htmlspecialchars($t['gallery_title']) ?>" loading="lazy">
-              </a>
-              <span class="gallery-tag"><?= htmlspecialchars($t['gallery_photo']) ?></span>
-            <?php endif; ?>
+        <?php foreach ($gallery_items as $galleryIdx => $it): ?>
+          <?php
+            $isVideo  = $it['type'] === 'video';
+            $src      = htmlspecialchars($mediaBase . $it['file'], ENT_QUOTES, 'UTF-8');
+            $poster   = htmlspecialchars((string)$it['poster'], ENT_QUOTES, 'UTF-8');
+            $label    = (string)$it['title'];
+            $labelEsc = htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
+            $durText  = $it['duration'] !== null ? gmdate('i:s', (int)round($it['duration'])) : '';
+          ?>
+          <figure class="gallery-card<?= $isVideo ? ' is-video' : '' ?>">
+            <button class="gallery-trigger" type="button"
+                    data-gl-index="<?= (int)$galleryIdx ?>"
+                    data-gl-src="<?= $src ?>"
+                    data-gl-type="<?= $isVideo ? 'video' : 'photo' ?>"
+                    data-gl-poster="<?= $isVideo ? $poster : '' ?>"
+                    data-gl-title="<?= $labelEsc ?>"
+                    aria-label="<?= $labelEsc ?> — <?= htmlspecialchars($t['gallery_view'], ENT_QUOTES, 'UTF-8') ?>">
+              <?php if ($isVideo): ?>
+                <?php if ($it['poster'] !== ''): ?>
+                  <img src="<?= htmlspecialchars($mediaBase . $it['poster'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= $labelEsc ?>" loading="lazy">
+                <?php else: ?>
+                  <video src="<?= $src ?>" preload="metadata" playsinline muted></video>
+                <?php endif; ?>
+                <span class="gallery-play" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+                <?php if ($durText !== ''): ?><span class="gallery-duration"><?= htmlspecialchars($durText) ?></span><?php endif; ?>
+              <?php else: ?>
+                <img src="<?= $src ?>" alt="<?= $labelEsc ?>" loading="lazy">
+              <?php endif; ?>
+              <span class="gallery-tag"><?= htmlspecialchars($isVideo ? $t['gallery_video'] : $t['gallery_photo']) ?></span>
+              <span class="gallery-caption">
+                <?php if ($label !== ''): ?><strong><?= $labelEsc ?></strong><?php endif; ?>
+                <span class="gallery-view"><?= htmlspecialchars($t['gallery_view']) ?>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                </span>
+              </span>
+            </button>
           </figure>
         <?php endforeach; ?>
       </div>
     <?php endif; ?>
   </section>
+
+  <div class="gallery-lightbox" id="galleryLightbox" role="dialog" aria-modal="true"
+       aria-label="<?= htmlspecialchars($t['gallery_title'], ENT_QUOTES, 'UTF-8') ?>" aria-hidden="true">
+    <button class="gl-btn gl-close" type="button" data-gl-close aria-label="Close">×</button>
+    <button class="gl-btn gl-prev" type="button" data-gl-prev aria-label="Previous">‹</button>
+    <div class="gl-stage">
+      <img data-gl-image alt="" hidden>
+      <video data-gl-video controls playsinline preload="metadata" hidden></video>
+    </div>
+    <button class="gl-btn gl-next" type="button" data-gl-next aria-label="Next">›</button>
+    <div class="gl-foot">
+      <span class="gl-count" data-gl-count></span>
+      <span data-gl-caption></span>
+    </div>
+  </div>
 
   <!-- Stylists Team Section -->
   <section class="stylists-section" id="stylists">
@@ -2802,6 +2943,77 @@ $og_locales = ['az' => 'az_AZ', 'en' => 'en_US', 'ru' => 'ru_RU', 'tr' => 'tr_TR
     }
 
     function showToast(text, type) { DK.toast(text, type); }
+
+    /* Qalereya lightbox: foto + video, klaviatura və mobil dəstəyi */
+    (function () {
+      var box = document.getElementById('galleryLightbox');
+      if (!box) return;
+      var cards = Array.prototype.slice.call(document.querySelectorAll('.gallery-trigger[data-gl-index]'));
+      if (!cards.length) return;
+      var image = box.querySelector('[data-gl-image]');
+      var video = box.querySelector('[data-gl-video]');
+      var count = box.querySelector('[data-gl-count]');
+      var caption = box.querySelector('[data-gl-caption]');
+      var closeBtn = box.querySelector('[data-gl-close]');
+      var current = -1;
+      var lastFocus = null;
+
+      function clear() {
+        try { video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load(); } catch (e) {}
+        image.removeAttribute('src');
+        image.hidden = true;
+        video.hidden = true;
+      }
+      function show(i) {
+        current = (i + cards.length) % cards.length;
+        var data = cards[current].dataset;
+        var isVideo = data.glType === 'video';
+        clear();
+        caption.textContent = data.glTitle || '';
+        count.textContent = (current + 1) + ' / ' + cards.length;
+        if (isVideo) {
+          if (data.glPoster) video.poster = data.glPoster;
+          video.src = data.glSrc;
+          video.hidden = false;
+          var play = video.play();
+          if (play && typeof play.catch === 'function') play.catch(function () {});
+        } else {
+          image.src = data.glSrc;
+          image.alt = data.glTitle || '';
+          image.hidden = false;
+        }
+      }
+      function openGallery(i) {
+        lastFocus = document.activeElement;
+        box.classList.add('is-open');
+        box.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('gl-locked');
+        show(i);
+        if (closeBtn) closeBtn.focus();
+      }
+      function closeGallery() {
+        box.classList.remove('is-open');
+        box.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('gl-locked');
+        clear();
+        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      }
+      cards.forEach(function (btn, i) {
+        btn.addEventListener('click', function () { openGallery(i); });
+      });
+      box.addEventListener('click', function (e) { if (e.target === box) closeGallery(); });
+      if (closeBtn) closeBtn.addEventListener('click', closeGallery);
+      var prev = box.querySelector('[data-gl-prev]');
+      var next = box.querySelector('[data-gl-next]');
+      if (prev) prev.addEventListener('click', function () { show(current - 1); });
+      if (next) next.addEventListener('click', function () { show(current + 1); });
+      document.addEventListener('keydown', function (e) {
+        if (!box.classList.contains('is-open')) return;
+        if (e.key === 'Escape') { e.preventDefault(); closeGallery(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); show(current - 1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); show(current + 1); }
+      });
+    })();
 
   </script>
 </body>

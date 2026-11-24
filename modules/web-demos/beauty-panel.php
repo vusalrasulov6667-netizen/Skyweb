@@ -230,6 +230,7 @@ $authed = !empty($_SESSION['bp_ok']);
 $state  = bp_state($jsonPath, $CFG);
 $gallery = beauty_gallery_read();
 $mediaBase = '../../uploads/beauty/';
+$mediaLimits = beauty_media_limits();
 
 /* ───────────────────────── Rezervasiya / davamiyyət / hesabat dataları ───────────────────────── */
 
@@ -612,68 +613,100 @@ if ($authed && bp_is_post()) {
         bp_redirect();
     }
 
-    /* ── Qalereya: şəkil / video yükləmə (watermark avtomatik) ── */
+    /* ── Qalereya: şəkil / video yükləmə (limitlər + watermark) ── */
     if ($action === 'upload_media') {
-        $type = (string)($_POST['media_type'] ?? 'photo');
-        $f = $_FILES['media'] ?? null;
-        $dir = beauty_media_dir();
+        $type  = (string)($_POST['media_type'] ?? 'photo');
+        $title = trim((string)($_POST['media_title'] ?? ''));
+        $title = function_exists('mb_substr') ? mb_substr($title, 0, 80) : substr($title, 0, 240);
+        $f     = $_FILES['media'] ?? null;
+        $dir   = beauty_media_dir();
+        $lim   = beauty_media_limits();
         if (!is_dir($dir)) @mkdir($dir, 0775, true);
         $g = beauty_gallery_read();
 
         if (!$f || ($f['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
             bp_flash('err', 'Fayl seçilmədi.');
         } elseif ($type === 'photo') {
-            if ($f['size'] > 10 * 1024 * 1024) {
-                bp_flash('err', 'Şəkil 10 MB-dan böyük olmamalıdır.');
-            } elseif (!@getimagesize($f['tmp_name'])) {
-                bp_flash('err', 'Şəkil faylı düzgün deyil (JPG, PNG, WEBP).');
+            $info = @getimagesize($f['tmp_name']);
+            $mime = is_array($info) ? (string)($info['mime'] ?? '') : '';
+            if ($f['size'] > (int)$lim['photo_mb'] * 1048576) {
+                bp_flash('err', 'Şəkil ' . (int)$lim['photo_mb'] . ' MB-dan böyük olmamalıdır.');
+            } elseif (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true)) {
+                bp_flash('err', 'Şəkil düzgün deyil — JPG, PNG və ya WEBP seçin.');
             } else {
                 $name = 'photo-' . bin2hex(random_bytes(6)) . '.jpg';
                 $tmp  = $dir . '/_upl-' . bin2hex(random_bytes(4));
                 if (move_uploaded_file($f['tmp_name'], $tmp) && beauty_watermark_image($tmp, $dir . '/' . $name)) {
                     @unlink($tmp);
-                    $g['items'][] = ['file' => $name, 'type' => 'photo', 'added' => date('c')];
+                    $item = ['file' => $name, 'type' => 'photo', 'added' => date('c')];
+                    if ($title !== '') $item['title'] = $title;
+                    $g['items'][] = $item;
                     beauty_gallery_write($g);
-                    bp_flash('ok', 'Şəkil yükləndi və loqo watermark-ı vuruldu.');
+                    bp_flash('ok', 'Şəkil qalereyaya əlavə edildi.');
                 } else {
                     @unlink($tmp);
                     bp_flash('err', 'Şəkil emal olunmadı.');
                 }
             }
         } elseif ($type === 'video') {
-            $ext = strtolower(pathinfo((string)($f['name'] ?? ''), PATHINFO_EXTENSION));
+            $ext    = strtolower(pathinfo((string)($f['name'] ?? ''), PATHINFO_EXTENSION));
+            $maxSec = (int)$lim['video_sec'];
             if ($ext !== 'mp4') {
                 bp_flash('err', 'Video yalnız MP4 formatında olmalıdır.');
-            } elseif ($f['size'] > 25 * 1024 * 1024) {
-                bp_flash('err', 'Video 25 MB-dan böyük olmamalıdır.');
-            } elseif (beauty_find_ffmpeg() === '') {
-                bp_flash('err', 'ffmpeg tapılmadı — video watermark mümkün deyil.');
+            } elseif ($f['size'] > (int)$lim['video_mb'] * 1048576) {
+                bp_flash('err', 'Video ' . (int)$lim['video_mb'] . ' MB-dan böyük olmamalıdır.');
+            } elseif (beauty_find_ffmpeg() === '' || beauty_find_ffprobe() === '') {
+                bp_flash('err', 'ffmpeg/ffprobe tapılmadı — video emal edilə bilmir.');
             } else {
-                $name = 'video-' . bin2hex(random_bytes(6)) . '.mp4';
-                $tmp  = $dir . '/_upl-' . bin2hex(random_bytes(4)) . '.mp4';
-                if (move_uploaded_file($f['tmp_name'], $tmp) && beauty_watermark_video($tmp, $dir . '/' . $name)) {
+                $name  = 'video-' . bin2hex(random_bytes(6)) . '.mp4';
+                $tmp   = $dir . '/_upl-' . bin2hex(random_bytes(4)) . '.mp4';
+                $moved = move_uploaded_file($f['tmp_name'], $tmp);
+                $dur   = $moved ? beauty_video_duration($tmp) : null;
+                if ($dur !== null && $dur > $maxSec + 0.2) {
                     @unlink($tmp);
-                    $g['items'][] = ['file' => $name, 'type' => 'video', 'added' => date('c')];
+                    bp_flash('err', 'Video ' . $maxSec . ' saniyədən uzundur (' . round($dur) . ' s). Qısaldıb yenidən yükləyin.');
+                } elseif ($moved && beauty_watermark_video($tmp, $dir . '/' . $name)) {
+                    @unlink($tmp);
+                    $item = [
+                        'file' => $name,
+                        'type' => 'video',
+                        'added' => date('c'),
+                        'duration' => $dur !== null ? round($dur, 1) : null,
+                    ];
+                    $poster = 'poster-' . bin2hex(random_bytes(6)) . '.jpg';
+                    if (beauty_video_poster($dir . '/' . $name, $dir . '/' . $poster)) {
+                        $item['poster'] = $poster;
+                    }
+                    if ($title !== '') $item['title'] = $title;
+                    $g['items'][] = $item;
                     beauty_gallery_write($g);
-                    bp_flash('ok', 'Video yükləndi və loqo watermark-ı vuruldu.');
+                    bp_flash('ok', 'Video qalereyaya əlavə edildi (max ' . $maxSec . ' saniyə).');
                 } else {
                     @unlink($tmp);
-                    bp_flash('err', 'Video emal olunmadı.');
+                    bp_flash('err', 'Video emal olunmadı — MP4 kodeyini yoxlayın.');
                 }
             }
         }
         bp_redirect();
     }
 
-    /* ── Qalereyadan silmə ── */
+    /* ── Qalereyadan silmə (poster də silinir) ── */
     if ($action === 'delete_media') {
         $file = basename((string)($_POST['file'] ?? ''));
-        if (preg_match('/^(photo|video)-[a-f0-9]{8,}\.(jpg|mp4)$/', $file)) {
+        if (preg_match('/^(photo|video|poster)-[a-f0-9]{8,}\.(jpg|mp4)$/', $file)) {
             $g = beauty_gallery_read();
+            foreach ($g['items'] as $it) {
+                if (($it['poster'] ?? '') === $file) {
+                    $file = (string)$it['file'];
+                    break;
+                }
+            }
             $g['items'] = array_values(array_filter($g['items'], fn($it) => ($it['file'] ?? '') !== $file));
             beauty_gallery_write($g);
-            $p = beauty_media_dir() . '/' . $file;
-            if (is_file($p)) @unlink($p);
+            foreach ([$file, preg_replace('/^video-/', 'poster-', preg_replace('/\.mp4$/', '.jpg', $file))] as $p) {
+                $p = beauty_media_dir() . '/' . basename((string)$p);
+                if (is_file($p)) @unlink($p);
+            }
             bp_flash('ok', 'Fayl qalereyadan silindi.');
         } else {
             bp_flash('err', 'Fayl adı düzgün deyil.');
@@ -758,6 +791,8 @@ $demoUrl = 'demo-beauty.php?lang=az';
   .media-item{background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .media-item img,.media-item video{width:100%;height:140px;object-fit:cover;display:block;background:#000}
   .media-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 11px}
+  .media-title{font-size:12px;color:var(--txt);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+  .field .hint{display:block;font-size:11.5px;color:var(--mut);margin-top:4px}
   .tag{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--cyan);background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);border-radius:6px;padding:3px 7px}
   .btn.sm{padding:6px 12px;font-size:12.5px;border-radius:8px}
   .btn.sm.ok{background:rgba(34,197,94,.16);border:1px solid rgba(34,197,94,.45);color:#86efac}
@@ -1190,27 +1225,39 @@ $demoUrl = 'demo-beauty.php?lang=az';
 
       <div class="card">
         <h2>Qalereya — foto və video</h2>
-        <p class="sub" style="margin-bottom:14px">Şəkil: JPG/PNG/WEBP, max <b>10 MB</b>. Video: yalnız <b>MP4</b>, max <b>25 MB</b>. Watermark yükləmə zamanı «yandırılır».</p>
+        <p class="sub" style="margin-bottom:14px">
+          Şəkil: JPG / PNG / WEBP, max <b><?= (int)$mediaLimits['photo_mb'] ?> MB</b>.
+          Video: MP4, max <b><?= (int)$mediaLimits['video_mb'] ?> MB</b> və <b><?= (int)$mediaLimits['video_sec'] ?> saniyə</b>.
+          Hər fayla loqo watermark-ı vurulur; videodan önizləmə kadrı avtomatik alınır.
+        </p>
         <div class="grid2">
-          <form method="post" enctype="multipart/form-data" class="upload-box">
+          <form method="post" enctype="multipart/form-data" class="upload-box" data-media-form="photo">
             <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
             <input type="hidden" name="action" value="upload_media">
             <input type="hidden" name="media_type" value="photo">
             <div class="field">
-              <label for="ph">Şəkil yüklə</label>
+              <label for="ph">Şəkil seç</label>
               <input type="file" id="ph" name="media" accept="image/jpeg,image/png,image/webp" required>
             </div>
-            <button class="btn" type="submit">Şəkli yüklə</button>
+            <div class="field">
+              <label for="ph-title">İşin adı <span style="font-weight:400">(isteğe bağlı)</span></label>
+              <input type="text" id="ph-title" name="media_title" maxlength="80" placeholder="Məs: Klassik kəsim və boyama">
+            </div>
+            <button class="btn" type="submit">Şəkli əlavə et</button>
           </form>
-          <form method="post" enctype="multipart/form-data" class="upload-box">
+          <form method="post" enctype="multipart/form-data" class="upload-box" data-media-form="video">
             <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
             <input type="hidden" name="action" value="upload_media">
             <input type="hidden" name="media_type" value="video">
             <div class="field">
-              <label for="vd">Video yüklə (MP4)</label>
+              <label for="vd">Video seç <span style="font-weight:400">(MP4, max <?= (int)$mediaLimits['video_sec'] ?> s)</span></label>
               <input type="file" id="vd" name="media" accept="video/mp4" required>
             </div>
-            <button class="btn" type="submit">Videonu yüklə</button>
+            <div class="field">
+              <label for="vd-title">Çəkilişin adı <span style="font-weight:400">(isteğe bağlı)</span></label>
+              <input type="text" id="vd-title" name="media_title" maxlength="80" placeholder="Məs: Model çəkilişi — payız kolleksiyası">
+            </div>
+            <button class="btn" type="submit">Videonu əlavə et</button>
           </form>
         </div>
       </div>
@@ -1222,15 +1269,28 @@ $demoUrl = 'demo-beauty.php?lang=az';
         <?php else: ?>
           <div class="media-grid">
             <?php foreach (array_reverse($gallery['items']) as $it): ?>
-              <?php $file = basename((string)($it['file'] ?? '')); $isVideo = ($it['type'] ?? '') === 'video'; ?>
+              <?php
+                $file = basename((string)($it['file'] ?? ''));
+                $poster = basename((string)($it['poster'] ?? ''));
+                $isVideo = ($it['type'] ?? '') === 'video';
+                $seconds = isset($it['duration']) ? (float)$it['duration'] : null;
+                $label = trim((string)($it['title'] ?? ''));
+              ?>
               <div class="media-item">
                 <?php if ($isVideo): ?>
-                  <video src="<?= bp_e($mediaBase . $file) ?>" controls preload="metadata"></video>
+                  <?php if ($poster !== '' && is_file(beauty_media_dir() . '/' . $poster)): ?>
+                    <img src="<?= bp_e($mediaBase . $poster) ?>" alt="<?= bp_e($label) ?>" loading="lazy">
+                  <?php else: ?>
+                    <video src="<?= bp_e($mediaBase . $file) ?>" preload="metadata" playsinline></video>
+                  <?php endif; ?>
                 <?php else: ?>
-                  <img src="<?= bp_e($mediaBase . $file) ?>" alt="" loading="lazy">
+                  <img src="<?= bp_e($mediaBase . $file) ?>" alt="<?= bp_e($label) ?>" loading="lazy">
                 <?php endif; ?>
                 <div class="media-meta">
-                  <span class="tag"><?= $isVideo ? 'VIDEO' : 'FOTO' ?></span>
+                  <div style="min-width:0">
+                    <span class="tag"><?= $isVideo ? 'VIDEO' : 'FOTO' ?><?= $seconds !== null ? ' · ' . gmdate('i:s', (int)round($seconds)) : '' ?></span>
+                    <?php if ($label !== ''): ?><div class="media-title" title="<?= bp_e($label) ?>"><?= bp_e($label) ?></div><?php endif; ?>
+                  </div>
                   <form method="post" onsubmit="return confirm('Silinsin?');" style="margin:0">
                     <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
                     <input type="hidden" name="action" value="delete_media">
@@ -2211,6 +2271,52 @@ $demoUrl = 'demo-beauty.php?lang=az';
       if (el) el.click();
     }
   } catch (e) {}
+
+  /* Qalereya limitləri: brauzer tez cavab verir, server yenə yoxlayır. */
+  var mediaLimits = <?= json_encode($mediaLimits) ?>;
+  document.querySelectorAll('[data-media-form]').forEach(function (form) {
+    var input = form.querySelector('input[type=file]');
+    var note = document.createElement('span');
+    note.className = 'hint';
+    input.insertAdjacentElement('afterend', note);
+    var kind = form.dataset.mediaForm;
+    var maxMb = kind === 'photo' ? mediaLimits.photo_mb : mediaLimits.video_mb;
+    function baseHint(f) {
+      if (!f) return 'Max ' + maxMb + ' MB' + (kind === 'video' ? ', ' + mediaLimits.video_sec + ' saniyə' : '') + '.';
+      return (f.size / 1048576).toFixed(1) + ' MB' + (kind === 'video' ? ' · uzunluq yoxlanılır' : '');
+    }
+    input.addEventListener('change', function () {
+      note.style.color = '';
+      note.textContent = baseHint(input.files && input.files[0]);
+    });
+    note.textContent = baseHint(null);
+    form.addEventListener('submit', function (e) {
+      var f = input.files && input.files[0];
+      if (!f) return;
+      if (f.size > maxMb * 1048576) {
+        e.preventDefault();
+        note.style.color = '#f87171';
+        note.textContent = 'Fayl çox böyük — max ' + maxMb + ' MB.';
+        return;
+      }
+      if (kind !== 'video') return;
+      e.preventDefault();
+      var url = URL.createObjectURL(f);
+      var probe = document.createElement('video');
+      probe.preload = 'metadata';
+      probe.onloadedmetadata = function () {
+        URL.revokeObjectURL(url);
+        if (isFinite(probe.duration) && probe.duration > mediaLimits.video_sec + 0.2) {
+          note.style.color = '#f87171';
+          note.textContent = 'Video ' + mediaLimits.video_sec + ' saniyədən uzundur (' + Math.round(probe.duration) + ' s).';
+        } else {
+          form.submit();
+        }
+      };
+      probe.onerror = function () { URL.revokeObjectURL(url); form.submit(); };
+      probe.src = url;
+    });
+  });
 </script>
 </body>
 </html>

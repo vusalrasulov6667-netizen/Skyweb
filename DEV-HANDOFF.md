@@ -2,7 +2,34 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-25 (dil seçicisi yalnız ana səhifədə + cached pill qoruması ✅)**
+Son yenilənmə: **2026-11-25 (gözəllik qalereyası: limitlər + modern lightbox ✅)**
+
+## 2026-11-25 — «Ustaların əl işləri» qalereyası ✅
+
+**Tələb:** gözəllik salonu demosunda foto + video yükləmə olsun; hansı limitin neçə MB, videonun
+neçə saniyə olacağını köməkçi təyin etsin (istifadəçi 30 saniyəni məsləhət gördü; model/çəkiliş
+klipləri göstərilə bilsin); bölmə «AI ilə yığılmış» görünməsin, müasir dizaynda olsun.
+
+### Dəyişikliklər
+- `config/beauty-media.php`: `beauty_media_limits()` → **foto 10 MB · video 40 MB · 30 s**;
+  `beauty_video_duration()` (`ffprobe`, `beauty_find_ffprobe()`), `beauty_video_poster()` (ilk kadr),
+  `beauty_watermark_video()` indi `-t 30` ilə də kəsilir.
+- `modules/web-demos/beauty-panel.php`: yükləmədə ölçü/MIME/format + **real video uzunluğu** yoxlanır;
+  başlıq (`title`), `duration`, `poster` JSON-a yazılır; silmə posteri də silir. Panel UI limitləri
+  `$mediaLimits`-dən göstərir, fayl seçiləndə brauzer MB və video uzunluğunu əvvəlcədən yoxlayır.
+- `modules/web-demos/demo-beauty.php`: qalereya məlumatı `poster/title/duration` oxuyur; köhnə bərabər
+  grid əvəzinə redaksiya grid (ilk kart 2×2, video kartları geniş), poster + play + müddət nişanı,
+  başlıq, yumşaq hover overlay; **lightbox** (foto/video, `←/→`, `Esc`, fon kliklə bağlanma,
+  `aria-modal`, scroll kilidi). `gallery_view` açarı 4 dilə əlavə olundu.
+- Dil seçicisi qaydasına (yalnız ana səhifə) toxunulmadı.
+
+### Yoxlama
+- `php -l` (3 fayl) təmiz; `beauty_media_limits_check.php` **24/24 OK** — 5 s video qəbul olunur,
+  35 s rədd edilir, 16.5 MB foto rədd edilir, poster/duration/başlıq yazılır, demo 4 dildə render olunur.
+  Skript JSON-u və faylları əvvəlki vəziyyətə qaytarır (istorik qalereya qorunur).
+- `cdp_gallery_lightbox.js` **13/13 OK** — grid, geniş video kartı, lightbox açma/keçid/Esc,
+  desktop və mobildə yatay daşma yox, JS xətası 0.
+- Regressiya: `lang_scope_check.php` **ALL PASS**, `cdp_errors.js` (demo 4 dil + panel) **0 xəta**.
 
 ## 2026-11-24 (12) — Dil seçicisi yalnız ana səhifədə ✅
 

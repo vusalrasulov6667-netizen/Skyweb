@@ -3,9 +3,28 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-25 (dil seçicisi yalnız ana səhifədə + cached pill qoruması ✅)**
+> Son yenilənmə: **2026-11-25 (gözəllik qalereyası: foto/video limitləri + modern lightbox ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-25 son əlavə — «Ustaların əl işləri» qalereyası ✅
+
+- **Limitlər mərkəzdə:** `config/beauty-media.php` → `beauty_media_limits()`: foto **10 MB**,
+  video **40 MB** və **30 saniyə**. Panel və demo eyni massivdən oxuyur; brauzer tez xəbərdarlıq verir,
+  server (`ffprobe` ilə real uzunluq) yenidən yoxlayır. 30 s-dan uzun MP4 rədd olunur;
+  `ffmpeg -t 30` ilə əlavə qoruma var.
+- **Video emalı:** hər yüklənən videoya watermark + avtomatik poster kadrı (`poster-*.jpg`) və
+  `duration` metadatası yazılır; isteğe bağlı iş/çəkiliş başlığı saxlanılır. Silmə posteri də silir.
+- **Demo qalereyası:** bərabər bənzər grid əvəzinə **4 sütunlu redaksiya grid** — ilk kart 2×2,
+  hər 4-cü və bütün video kartları geniş; video poster + play ikonu + `00:30` nişanı, başlıq,
+  yumşaq hover overlay. Mobil 390 px-də tək sütun. Klikləyəndə yüngül **lightbox** açılır:
+  foto/video, ox düymələri (dövr edir), Esc, fon kliklə bağlanma, scroll kilidi, ARIA.
+- Yeni `gallery_view` açarı 4 dildə: **Böyüt / View / Büyüt / Открыть**. Dil seçicisi qaydası dəyişməyib.
+- Yoxlama: `beauty_media_limits_check.php` **24/24 OK** (5 s video qəbul, 35 s rədd, 16.5 MB foto rədd,
+  poster/duration/başlıq, demo render, 4 dil); `cdp_gallery_lightbox.js` **13/13 OK**;
+  `lang_scope_check.php` ALL PASS; `cdp_errors.js` demo 4 dil + panel → 0; `php -l` təmiz.
+- Test skriptləri mövcud `data/beauty-gallery.json` və `uploads/beauty/` fayllarını **snapshot/restore**
+  edir — istifadəçinin real qalereyası zədələnmir. Ekran şəkilləri: `scratch/gallery-final-{desktop,mobile}.png`.
 
 ### 2026-11-24 son əlavə — dil seçicisi yalnız ana səhifədə ✅
 
@@ -221,7 +240,8 @@ Virtual studio saxlanıldı (daha toxunulmadı); salon demosu müştəriyə gös
   (ID 900+). Demo `data/demo-beauty.json`-dakı `custom: true` xidmətləri default kataloqa əlavə edir;
   sahibkarın dəyişiklikləri JSON-da qorunur.
 - **Qalereya aktivdir:** `data/beauty-gallery.json` 3 foto + 1 local MP4 (hər biri salon loqosu ilə
-  watermark-lanıb) ilə dolduruldu. Video `<video controls playsinline>` ilə oynayır (5 s, H.264).
+  watermark-lanıb) ilə dolduruldu. Video artıq kart üzərində `controls` ilə deyil, **lightbox** içində
+  oynayır (poster + play ikonu; 5 s, H.264). Limitlər: foto 10 MB, video 40 MB / 30 saniyə.
 - **Sosiallar:** footer-dəki yazı pilləkləri müasir inline SVG iconlarla (Instagram, TikTok,
   Facebook, **WhatsApp** daxil) əvəz olundu.
 - **Rəy sloganı:** «Dəyərli müştərilərimiz, fikirləriniz bizim üçün vacibdir.» (4 dildə) rəylər
@@ -522,7 +542,8 @@ Fayllar: `config/demo-beauty.php`, `data/demo-beauty.json` (runtime), `modules/w
 - **#2 Təklif qiymətləri:** 90/150, 75/120, 19/25, 25/35, 49/65, 39/55, 22/30, 35/50 AZN;
   köhnə qiymət üstündən xəttli + `−N%` nişanı; panelden redaktə.
 - **#3 Qalereya:** «Ustaların əl işləri» bölməsi (foto + video). Panelden loqo/foto/MP4 yüklənir;
-  şəkilə GD (CLI alt-proses), videoya ffmpeg ilə **avtomatik loqo watermark** vurulur. Video limiti **25 MB**.
+  şəkilə GD (CLI alt-proses), videoya ffmpeg ilə **avtomatik loqo watermark** vurulur. Limitlər:
+  foto **10 MB**, video **40 MB / 30 saniyə** (2026-11-25; əvvəl 25 MB idi).
 - **#5-A 10 tema:** Rose (pink), Gold, Emerald, Aqua, Sapphire, Violet, Sunset, Crimson, Teal, Mono —
   həm panelden, həm demo üstündəki rəng nöqtələrindən.
 - **#6 Sosial/WhatsApp:** footer-də Instagram/TikTok/Facebook + `wa.me` düyməsi; telefon/WhatsApp panelden.
