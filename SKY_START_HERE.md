@@ -3,9 +3,19 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-27 (oyunlar: qiymət paketləri/qeydiyyat və slot oyunu silindi ✅)**
+> Son yenilənmə: **2026-11-27 (oyunlar: çarx/kart şans oyunları da silindi ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — qumar/kazino tipli şans oyunları silindi
+
+- Oyunlar panelindən `Fırlanan Çarx` (🎡), `3D Şans Çarxı` (🎪),
+  `Uğur Kartı Oyunu` (🃏), çarx kateqoriya tabı və TechStore tarixçə qeydi çıkarıldı.
+- `lang/{az,en,ru,tr}.php` → `games_cat_wheel`, `games_item1_*` açarları silindi;
+  `games_panel_desc` indi `Viktorina, Tapmaca, İdman` haqqındadır.
+- `config/i18n-literals.php` → çarx/karta aid 10 literal açar silindi.
+- Yoxlama: `parity.php` 0/0/0; `games_bottom_check.php` → şans oyunları `GONE`,
+  qorunan elementlər `KEEP`. Ana səhifə/chatbot istinadları bu tapşırığa daxil deyil.
 
 ### 2026-11-27 qeydi — oyunlar paneli təmizləndi
 

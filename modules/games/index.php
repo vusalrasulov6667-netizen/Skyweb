@@ -11,7 +11,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="<?= e(__('games_panel_desc', 'Skyweb.az — Biznesiniz üçün Fırlanan Çarx, Viktorina, Tapmaca kimi interaktiv mini oyunlar sifariş edin.')) ?>">
+  <meta name="description" content="<?= e(__('games_panel_desc', 'Skyweb.az — Biznesiniz üçün Viktorina, Tapmaca, İdman kimi interaktiv mini oyunlar sifariş edin.')) ?>">
   <title><?= e(__('games_panel_title', 'Oyun Sifariş Paneli')) ?> — <?= SITE_NAME ?></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -248,7 +248,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
       <div class="section-label-sm">// Oyun Kateqoriyaları</div>
       <div class="categories-tabs" id="catTabs">
         <button class="cat-tab active" onclick="filterGames(this,'all')">🎲 Hamısı</button>
-        <button class="cat-tab" onclick="filterGames(this,'carx')">🎡 Çarx Oyunları</button>
         <button class="cat-tab" onclick="filterGames(this,'quiz')">❓ Viktorina</button>
         <button class="cat-tab" onclick="filterGames(this,'puzzle')">🧩 Tapmacalar</button>
         <button class="cat-tab" onclick="filterGames(this,'other')">⚡ Digər</button>
@@ -257,47 +256,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
 
     <!-- Game Cards -->
     <div class="games-grid" id="gamesGrid">
-
-      <div class="game-card" data-cat="carx">
-        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(6,182,212,0.1));">
-          <span style="position:relative;z-index:2;">🎡</span>
-          <div class="game-badge badge-popular">Populyar</div>
-        </div>
-        <div class="game-card-body">
-          <div class="game-name">Fırlanan Çarx</div>
-          <div class="game-desc">Müştərilər çarxı fırladır, endirim kodu, hədiyyə və ya xüsusi təklif qazanır. Sayta trafiği artırır, müştərini geri qaytarır.</div>
-          <div class="game-features">
-            <span class="game-feat-tag">Web &amp; Wap</span>
-            <span class="game-feat-tag">Brend uyğunluğu</span>
-            <span class="game-feat-tag">CRM inteqrasiyası</span>
-            <span class="game-feat-tag">QR kod</span>
-          </div>
-          <div class="game-price-row">
-            <div><div class="game-price-from">Başlayan qiymət</div><div class="game-price" style="color:var(--neon-green)">180 ₼</div></div>
-            <button class="game-order-btn" onclick="openPayModal('Fırlanan Çarx',180)">Sifariş Et</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="game-card" data-cat="carx">
-        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(245,158,11,0.08));">
-          <span style="position:relative;z-index:2;">🎪</span>
-          <div class="game-badge badge-new">Yeni</div>
-        </div>
-        <div class="game-card-body">
-          <div class="game-name">3D Şans Çarxı</div>
-          <div class="game-desc">Klassik fırlanan çarxın müasir 3D animasiyalı versiyası. Daha cəlbedici vizual effektlər ilə müştəri diqqətini cəlb edin.</div>
-          <div class="game-features">
-            <span class="game-feat-tag">3D Animasiya</span>
-            <span class="game-feat-tag">Sosial paylaşım</span>
-            <span class="game-feat-tag">Real vaxt statistika</span>
-          </div>
-          <div class="game-price-row">
-            <div><div class="game-price-from">Başlayan qiymət</div><div class="game-price" style="color:var(--neon-green)">280 ₼</div></div>
-            <button class="game-order-btn" onclick="openPayModal('3D Şans Çarxı',280)">Sifariş Et</button>
-          </div>
-        </div>
-      </div>
 
       <div class="game-card" data-cat="quiz">
         <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.1));">
@@ -360,26 +318,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
       </div>
 
       <div class="game-card" data-cat="other">
-        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(244,63,94,0.12),rgba(139,92,246,0.08));">
-          <span style="position:relative;z-index:2;">🃏</span>
-          <div class="game-badge badge-new">Yeni</div>
-        </div>
-        <div class="game-card-body">
-          <div class="game-name">Uğur Kartı Oyunu</div>
-          <div class="game-desc">Müştərilər kart çevirir, gizli mükafat qazanır. E-ticarət saytları üçün alış-verişdən sonra müştəri məmnuniyyətini artırır.</div>
-          <div class="game-features">
-            <span class="game-feat-tag">E-ticarət uyumlu</span>
-            <span class="game-feat-tag">E-poçt inteqrasiyası</span>
-            <span class="game-feat-tag">Özelləşdirilə bilər</span>
-          </div>
-          <div class="game-price-row">
-            <div><div class="game-price-from">Başlayan qiymət</div><div class="game-price" style="color:var(--neon-rose)">200 ₼</div></div>
-            <button class="game-order-btn" onclick="openPayModal('Uğur Kartı Oyunu',200)" style="background:linear-gradient(135deg,#f43f5e,#8b5cf6);">Sifariş Et</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="game-card" data-cat="other">
         <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(56,189,248,0.08));">
           <span style="position:relative;z-index:2;">⚽</span>
         </div>
@@ -405,15 +343,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
       <div class="section-label-sm">// Son Sifarişlər</div>
       <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1.25rem;">Sifariş Tarixçəsi</h2>
       <div class="history-cards">
-        <div class="history-card">
-          <div class="history-icon">🎡</div>
-          <div class="history-info">
-            <div class="history-name">Fırlanan Çarx — "TechStore" üçün</div>
-            <div class="history-meta">Sifariş tarixi: 5 İyun 2026 · Sifariş #SKY-2847</div>
-          </div>
-          <div class="history-price">180 ₼</div>
-          <span class="history-status-badge hs-delivered">✓ Çatdırıldı</span>
-        </div>
         <div class="history-card">
           <div class="history-icon">❓</div>
           <div class="history-info">

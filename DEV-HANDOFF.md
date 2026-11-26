@@ -2,7 +2,31 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-27 (oyunlar: aşağı bölmələr + slot oyunu silindi ✅)**
+Son yenilənmə: **2026-11-27 (oyunlar: çarx/kart şans oyunları da silindi ✅)**
+
+## 2026-11-27 — Oyunlar paneli: qumar/kazino tipli şans oyunları silindi ✅
+
+**Analiz və düzəliş:** Oyunlar panelində qalan 3 şans/mükafat oyunu qumar/kazino
+tipli hesab olunaraq çıkarıldı:
+- `Fırlanan Çarx` (data-cat="carx", 🎡) və onun kateqoriya tabı `🎡 Çarx Oyunları`;
+- `3D Şans Çarxı` (🎪);
+- `Uğur Kartı Oyunu` (🃏);
+- son sifarişlərdəki `Fırlanan Çarx — "TechStore" üçün` qeydi və meta təsvirindəki
+  çarx istinadı.
+
+`lang/{az,en,ru,tr}.php` → `games_cat_wheel`, `games_item1_desc`,
+`games_item1_title` açarları silindi; `games_panel_desc` 4 dildə
+`Viktorina, Tapmaca, İdman` istiqamətində yeniləndi.
+`config/i18n-literals.php` → çarx/kart oyunlarına aid 10 literal açar silindi.
+Ehtiyat: `_backup_apps/games-index.before_chance_games_remove.bak`.
+
+**Yoxlama:** `php -l` təmiz; `parity.php` **0/0/0**;
+`scratch/games_bottom_check.php` → `Fırlanan Çarx`, `3D Şans Çarxı`,
+`Uğur Kartı`, `Çarx Oyunları`, `TechStore`, `🎡`, `🎪`, `🃏` hamısı `GONE`;
+qorunan elementlər `KEEP`.
+
+Qeyd: Ana səhifə/chatbot (`svc_chip_wheel`, `video_demo_game_title`, skybot
+knowledge) bu tapşırığın oyunlar paneli çərçivəsindən kənarda qaldı.
 
 ## 2026-11-27 — Oyunlar paneli: təmizləmə və slot oyununun silinməsi ✅
 
