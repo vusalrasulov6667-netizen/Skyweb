@@ -3,9 +3,21 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-27 (oyunlar: çarx/kart şans oyunları da silindi ✅)**
+> Son yenilənmə: **2026-11-27 (oyunlar: kart qiymətləri və AzurMart bölməsi silindi ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — qiymətlər və AzurMart tarixçəsi silindi
+
+- Oyun kartlarındakı `Başlayan qiymət` və `220 / 340 / 160 / 320 ₼` qiymətləri silindi.
+  `Sifariş Et` düymələri vahid, tam enli və kart altında sabit görünüşlüdür.
+- Ödəniş modalından `Bir dəfəlik ödəniş`, `Cəmi: — AZN`, `psum-total`, `_payPrice`
+  çıkarıldı; modal yalnız seçilmiş oyunu göstərir.
+- Aşağıdakı `AzurMart` sifariş tarixçəsi bölməsi və onun CSS-i tamamilə silindi.
+- `config/i18n-literals.php` → istifadə olunmayan 10 literal açar silindi;
+  `Cəmi:` analitika modulu üçün qorundu.
+- Yoxlama: `parity.php` 0/0/0; `games_bottom_check.php` → qiymətlər/AzurMart `GONE`,
+  oyun kartları və modal `KEEP`.
 
 ### 2026-11-27 qeydi — qumar/kazino tipli şans oyunları silindi
 

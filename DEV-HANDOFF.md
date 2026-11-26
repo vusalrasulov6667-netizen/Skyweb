@@ -2,7 +2,30 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-27 (oyunlar: çarx/kart şans oyunları da silindi ✅)**
+Son yenilənmə: **2026-11-27 (oyunlar: kart qiymətləri və AzurMart bölməsi silindi ✅)**
+
+## 2026-11-27 — Oyunlar paneli: qiymətlər silindi, kartlar və modal səliqəyə salındı ✅
+
+**Düzəliş:**
+- Oyun kartlarındakı **«Başlayan qiymət»** və `220 / 340 / 160 / 320 ₼` qiymətləri
+  tamamilə çıkarıldı. `Sifariş Et` düymələri indi kartın altında tam eni olan,
+  vahid görünüşlü düymədir; köhnə fərqli gradient inline stilləri silindi.
+- Kart gövdəsi `flex` sütununa çevrildi, xüsusiyyət etiketləri yuxarıya,
+  düymə isə aşağıya sabitlendi — kart hündürlükləri bərabər görünür.
+- Ödəniş modalındakı **«Növ: Bir dəfəlik ödəniş»** və **«Cəmi: — AZN»** sətrləri,
+  `psum-total` və `_payPrice` JS dəyişəni silindi; modal indi yalnız seçilmiş oyunu
+  göstərir.
+- Aşağıdakı **«AzurMart»** sifariş tarixçəsi bölməsi (`// Son Sifarişlər`,
+  `Sifariş Tarixçəsi`, status nişanları) CSS-i ilə birlikdə tamamilə silindi.
+- `config/i18n-literals.php` → istifadə olunmayan 10 literal açar silindi
+  (`Başlayan qiymət`, `Bir dəfəlik ödəniş`, tarixçə/status açarları).
+  `Cəmi:` açarı analitika modulunda istifadə olunduğu üçün qorundu.
+
+Ehtiyat: `_backup_apps/games-index.before_price_history_remove.bak`.
+
+**Yoxlama:** `php -l` təmiz; `parity.php` **0/0/0**;
+`scratch/games_bottom_check.php` → qiymətlər, `AzurMart`, tarixçə və modal
+qiymət sətrləri hamısı `GONE`; oyun kartları və modal `KEEP`.
 
 ## 2026-11-27 — Oyunlar paneli: qumar/kazino tipli şans oyunları silindi ✅
 

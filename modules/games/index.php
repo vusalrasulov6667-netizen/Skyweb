@@ -97,48 +97,22 @@ ob_start(static function (string $html): string { return sky_translate_document_
     }
     .badge-new { background:rgba(16,185,129,0.9);color:#fff; }
     .badge-popular { background:rgba(99,102,241,0.9);color:#fff; }
-    .badge-hot { background:rgba(244,63,94,0.9);color:#fff; }
 
-    .game-card-body { padding:1.25rem 1.5rem 1.5rem; }
+    .game-card-body { padding:1.25rem 1.5rem 1.5rem;display:flex;flex-direction:column; }
     .game-name { font-size:1.1rem;font-weight:800;margin-bottom:0.4rem; }
     .game-desc { font-size:0.84rem;color:var(--text-muted);line-height:1.6;margin-bottom:1rem; }
-    .game-features { display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.25rem; }
+    .game-features { display:flex;flex-wrap:wrap;gap:0.4rem;margin:0 0 1.25rem; }
     .game-feat-tag {
       padding:0.2rem 0.6rem;border-radius:6px;font-size:0.72rem;font-weight:600;
       background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);
     }
-    .game-price-row { display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap; }
-    .game-price { font-size:1.4rem;font-weight:900; }
-    .game-price-from { font-size:0.75rem;color:var(--text-muted);font-weight:500; }
     .game-order-btn {
-      padding:0.6rem 1.4rem;border-radius:var(--radius-sm);
+      width:100%;margin-top:auto;padding:0.7rem 1.4rem;border-radius:var(--radius-sm);
       background:linear-gradient(135deg,var(--neon-green),#0d9488);
       color:#fff;font-size:0.85rem;font-weight:700;
       border:none;cursor:pointer;transition:var(--transition);
     }
     .game-order-btn:hover { box-shadow:0 0 20px rgba(16,185,129,0.4);transform:translateY(-2px); }
-
-    /* Order History */
-    .history-section { margin-bottom:3rem; }
-    .history-cards { display:flex;flex-direction:column;gap:0.75rem; }
-    .history-card {
-      background:var(--sky-card);border:1px solid var(--sky-border);
-      border-radius:var(--radius-md);padding:1.1rem 1.5rem;
-      display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;
-      transition:var(--transition);
-    }
-    .history-card:hover { border-color:var(--sky-border-glow); }
-    .history-icon { font-size:2rem;flex-shrink:0; }
-    .history-info { flex:1;min-width:150px; }
-    .history-name { font-weight:700;font-size:0.95rem;margin-bottom:0.2rem; }
-    .history-meta { font-size:0.78rem;color:var(--text-muted); }
-    .history-price { font-weight:800;font-size:1.1rem;color:var(--neon-green); }
-    .history-status-badge {
-      padding:0.25rem 0.8rem;border-radius:999px;font-size:0.72rem;font-weight:700;
-    }
-    .hs-delivered { background:rgba(16,185,129,0.15);color:var(--neon-green); }
-    .hs-inprogress { background:rgba(99,102,241,0.15);color:#a5b4fc; }
-    .hs-pending { background:rgba(245,158,11,0.15);color:var(--neon-amber); }
 
     /* Pay Modal */
     .pay-modal-overlay {
@@ -180,7 +154,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
       border-radius:var(--radius-sm);padding:1rem;margin:1.25rem 0;
     }
     .pay-summary-row { display:flex;justify-content:space-between;font-size:0.85rem;padding:0.2rem 0; }
-    .pay-summary-row.total { font-weight:700;font-size:1rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.08);margin-top:0.3rem; }
     .pay-submit {
       width:100%;padding:1rem;border:none;cursor:pointer;
       background:linear-gradient(135deg,var(--neon-green),#0d9488);
@@ -271,10 +244,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Mükafat sistemi</span>
             <span class="game-feat-tag">Avtomatik hesab</span>
           </div>
-          <div class="game-price-row">
-            <div><div class="game-price-from">Başlayan qiymət</div><div class="game-price" style="color:#a5b4fc)">220 ₼</div></div>
-            <button class="game-order-btn" onclick="openPayModal('Brend Viktorinası',220)" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">Sifariş Et</button>
-          </div>
+          <button class="game-order-btn" onclick="openPayModal('Brend Viktorinası')">Sifariş Et</button>
         </div>
       </div>
 
@@ -291,10 +261,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">İnstagram uyumlu</span>
             <span class="game-feat-tag">Moderasiya paneli</span>
           </div>
-          <div class="game-price-row">
-            <div><div class="game-price-from">Başlayan qiymət</div><div class="game-price" style="color:#a5b4fc">340 ₼</div></div>
-            <button class="game-order-btn" onclick="openPayModal('Canlı Viktorina Müsabiqəsi',340)" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">Sifariş Et</button>
-          </div>
+          <button class="game-order-btn" onclick="openPayModal('Canlı Viktorina Müsabiqəsi')">Sifariş Et</button>
         </div>
       </div>
 
@@ -310,10 +277,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Çətinlik səviyyəsi</span>
             <span class="game-feat-tag">Analitika</span>
           </div>
-          <div class="game-price-row">
-            <div><div class="game-price-from">Başlayan qiymət</div><div class="game-price" style="color:var(--neon-cyan)">160 ₼</div></div>
-            <button class="game-order-btn" onclick="openPayModal('Brend Tapmacaları',160)" style="background:linear-gradient(135deg,#38bdf8,#6366f1);">Sifariş Et</button>
-          </div>
+          <button class="game-order-btn" onclick="openPayModal('Brend Tapmacaları')">Sifariş Et</button>
         </div>
       </div>
 
@@ -329,31 +293,11 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Turnir rejimi</span>
             <span class="game-feat-tag">Liderlik cədvəli</span>
           </div>
-          <div class="game-price-row">
-            <div><div class="game-price-from">Başlayan qiymət</div><div class="game-price" style="color:var(--neon-cyan)">320 ₼</div></div>
-            <button class="game-order-btn" onclick="openPayModal('Brend İdman Oyunu',320)" style="background:linear-gradient(135deg,#38bdf8,#10b981);">Sifariş Et</button>
-          </div>
+          <button class="game-order-btn" onclick="openPayModal('Brend İdman Oyunu')">Sifariş Et</button>
         </div>
       </div>
 
     </div><!-- /games-grid -->
-
-    <!-- Order History -->
-    <div class="history-section">
-      <div class="section-label-sm">// Son Sifarişlər</div>
-      <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:1.25rem;">Sifariş Tarixçəsi</h2>
-      <div class="history-cards">
-        <div class="history-card">
-          <div class="history-icon">❓</div>
-          <div class="history-info">
-            <div class="history-name">Brend Viktorinası — "AzurMart" üçün</div>
-            <div class="history-meta">Sifariş tarixi: 10 İyun 2026 · Sifariş #SKY-2863</div>
-          </div>
-          <div class="history-price">220 ₼</div>
-          <span class="history-status-badge hs-inprogress">⚙ Hazırlanır</span>
-        </div>
-      </div>
-    </div>
 
   </div>
 </main>
@@ -385,8 +329,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
       </div>
       <div class="pay-summary">
         <div class="pay-summary-row"><span>Oyun:</span><span id="psum-game">—</span></div>
-        <div class="pay-summary-row"><span>Növ:</span><span>Bir dəfəlik ödəniş</span></div>
-        <div class="pay-summary-row total"><span>Cəmi:</span><span id="psum-total">— AZN</span></div>
       </div>
       <button class="pay-submit" onclick="submitGamePay(event)">🔐 Sifarişi Təsdiqlə</button>
       <div class="pay-secure">🔒 Məlumatlarınız şifrələnmiş kanalda təhlükəsiz ötürülür</div>
@@ -412,12 +354,11 @@ function filterGames(btn, cat) {
 }
 
 // Pay modal
-let _payGame='', _payPrice=0;
-function openPayModal(game, price) {
-  _payGame=game; _payPrice=price;
-  document.getElementById('payModalSub').textContent = 'Seçdiyiniz oyun: '+game+' — '+price+' AZN';
+let _payGame='';
+function openPayModal(game) {
+  _payGame=game;
+  document.getElementById('payModalSub').textContent = 'Seçdiyiniz oyun: '+game;
   document.getElementById('psum-game').textContent = game;
-  document.getElementById('psum-total').textContent = price+' AZN';
   document.getElementById('payFormSection').style.display='';
   document.getElementById('paySuccess').style.display='none';
   document.getElementById('payModal').classList.add('open');
