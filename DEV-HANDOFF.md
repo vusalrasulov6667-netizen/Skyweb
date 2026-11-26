@@ -37,6 +37,13 @@ bloklama və ertəsi gün açılma, guest gate, səviyyələr, toast yeri, 4 dil
 `games_quiz_i18n_check.php` 25 sual / 101 literal / 4 dil OK;
 `cdp_games_quiz_check.js` **36 OK / 0 FAIL**; cleanup və logo parity qorunur.
 
+**Deploy:** `ab9008f` (`Add daily limits, registration gate and leaderboard to riddles`)
+`86dd95c..ab9008f` olaraq GitHub `main`-ə push edildi, Railway production-a yerləşdi.
+Production üzərində yenidən yoxlandı: `check_games_prod.php` (hamısı GONE/KEEP),
+`games_riddles_i18n_check.php` (127/4 dil), `games_quiz_i18n_check.php` (101/4 dil),
+`riddles_board_check.php` (GET shape, POST 401), `cdp_games_riddles_check.js` **89 OK / 0 FAIL**,
+`cdp_games_quiz_check.js` **36 OK / 0 FAIL**. `git status --short` boş — iş ağacı təmiz.
+
 ## 2026-11-27 — Brend Tapmacaları: sonsuz gündəlik tapmaca oyunu ✅
 
 **Düzəliş:**

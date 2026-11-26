@@ -22,6 +22,10 @@
 - 127 unikal mətn AZ/EN/RU/TR; yoxlamalar: riddle i18n 15/127/4 dil OK,
   riddle CDP **89 OK / 0 FAIL**, board check OK, viktorina CDP **36 OK / 0 FAIL**,
   `parity.php` 0/0/0.
+- **Status:** `ab9008f` commit-i GitHub `main`-ə push edildi, Railway production-a
+  yerləşdi (`https://skyweb-production.up.railway.app/modules/games/`). Bütün
+  production yoxlamaları keçdi: cleanup, 4-dil SSR, board endpoint (POST→401),
+  riddle CDP **89/0**, quiz CDP **36/0**. İş ağacı **təmiz** — yeni tapşırıqla davam et.
 
 ### 2026-11-27 qeydi — Brend Tapmacaları: sonsuz gündəlik oyun
 
