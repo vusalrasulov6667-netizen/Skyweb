@@ -2,7 +2,24 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-27 (oyunlar: kateqoriya tabları silindi, logo tam ana səhifə ilə eyni ✅)**
+Son yenilənmə: **2026-11-27 (Brend Viktorinası indi oynanabilir demo ✅)**
+
+## 2026-11-27 — Brend Viktorinası: tam işlək demo oyun ✅
+
+**Düzəliş:**
+- İlk oyun kartındakı `Demo / Yeni Ön Baxış` düyməsi (`#quizDemoBtn`, `onclick` yox,
+  `addEventListener`) indi səhifə daxilində **oynanabilir viktorina** açır.
+- 5 sual, hər biri 4 cavab variantı; düzgün/yanlış geribildirimi, doğru cavabın
+  göstərilməsi, progress çubuğu, 20 ballıq hesablama, nəticə ekranı, yenidən oynama.
+- Modal `✕`, fon klikləməsi və `Escape` ilə bağlanır; qeydiyyat/forma yoxdur.
+- Bütün UI və sual/cavab mətnləri `config/i18n-literals.php` üzərindən 4 dildədir;
+  dinamik mətnlər `SkyI18n.tr(..., 'az')` ilə aktiv dilə çevrilir.
+- Digər 3 kartın demo düymələri əvvəlki kimi statik qalır.
+
+**Yoxlama:** `php -l` təmiz; `parity.php` 0/0/0;
+`scratch/cdp_games_quiz_check.js` → **22 OK / 0 FAIL** (oynanış + EN/RU/TR dinamik mətn);
+`scratch/games_quiz_i18n_check.php` → AZ/EN/RU/TR OK (SSR UI);
+`scratch/games_bottom_check.php` və `games_logo_parity_check.php` → əvvəlki təmizlik qorunur.
 
 ## 2026-11-27 — Oyunlar paneli: kateqoriya tabları silindi, tam logo ✅
 

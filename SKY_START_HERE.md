@@ -3,9 +3,17 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-27 (oyunlar: kateqoriya tabları silindi, logo tam ana səhifə ilə eyni ✅)**
+> Son yenilənmə: **2026-11-27 (Brend Viktorinası indi oynanabilir demo ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — Brend Viktorinası oynanabilir demo
+
+- Birinci kartın `Demo / Yeni Ön Baxış` düyməsi indi səhifədə 5 suallıq viktorina açır
+  (4 variant, doğru/yanlış geribildirim, bal, nəticə, yenidən oyna).
+- Qeydiyyat/forma yox; bağlanma `✕`, fon klikləməsi və `Escape` ilə.
+- Bütün mətnlər `i18n-literals.php` vasitəsilə AZ/EN/RU/TR-dədir.
+- Yoxlama: `cdp_games_quiz_check.js` 22 OK / 0 FAIL; `games_quiz_i18n_check.php` 4 dil OK.
 
 ### 2026-11-27 qeydi — kateqoriya tabları silindi, logo tamamlandı
 

@@ -93,6 +93,62 @@ ob_start(static function (string $html): string { return sky_translate_document_
       border:none;cursor:pointer;transition:var(--transition);
     }
     .game-demo-btn:hover { box-shadow:0 0 20px rgba(16,185,129,0.4);transform:translateY(-2px); }
+
+    /* Playable brand quiz */
+    .quiz-overlay {
+      position:fixed;inset:0;z-index:10000;padding:1rem;
+      background:rgba(3,7,18,0.86);backdrop-filter:blur(8px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;visibility:hidden;transition:opacity 0.25s ease,visibility 0.25s ease;
+    }
+    .quiz-overlay.open { opacity:1;visibility:visible; }
+    .quiz-box {
+      width:100%;max-width:560px;max-height:92vh;overflow-y:auto;
+      background:#0d1127;border:1px solid var(--sky-border);
+      border-radius:var(--radius-xl);padding:2rem;
+      box-shadow:0 30px 80px -30px rgba(16,185,129,0.35);
+      position:relative;transform:translateY(16px);transition:transform 0.25s ease;
+    }
+    .quiz-overlay.open .quiz-box { transform:translateY(0); }
+    .quiz-close {
+      position:absolute;top:0.9rem;right:0.9rem;width:34px;height:34px;
+      display:flex;align-items:center;justify-content:center;cursor:pointer;
+      background:rgba(255,255,255,0.06);border:1px solid var(--sky-border);
+      border-radius:8px;color:var(--text-muted);font-size:1rem;transition:var(--transition);
+    }
+    .quiz-close:hover { background:rgba(244,63,94,0.15);color:var(--neon-rose); }
+    .quiz-kicker { font-size:0.78rem;font-weight:800;color:var(--neon-green);letter-spacing:0.6px;text-transform:uppercase; }
+    .quiz-counter { font-size:0.82rem;color:var(--text-muted);margin:0.35rem 0 0.9rem; }
+    .quiz-progress { height:6px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-bottom:1.5rem; }
+    .quiz-progress-bar { height:100%;width:20%;border-radius:999px;background:linear-gradient(90deg,var(--neon-green),var(--neon-cyan));transition:width 0.3s ease; }
+    .quiz-question { font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:1.25rem; }
+    .quiz-options { display:grid;gap:0.6rem; }
+    .quiz-option {
+      width:100%;text-align:left;padding:0.85rem 1rem;cursor:pointer;
+      background:rgba(255,255,255,0.04);border:1px solid var(--sky-border);
+      border-radius:var(--radius-sm);color:var(--text-primary);
+      font-size:0.9rem;font-family:var(--font-main);transition:var(--transition);
+    }
+    .quiz-option:hover:not(:disabled) { border-color:rgba(16,185,129,0.55);background:rgba(16,185,129,0.08);transform:translateX(3px); }
+    .quiz-option.is-correct { border-color:var(--neon-green);background:rgba(16,185,129,0.16);color:#6ee7b7; }
+    .quiz-option.is-wrong { border-color:var(--neon-rose);background:rgba(244,63,94,0.12);color:#fda4af; }
+    .quiz-option.is-muted { opacity:0.45; }
+    .quiz-feedback { margin-top:1rem;font-size:0.88rem;font-weight:700;line-height:1.6; }
+    .quiz-feedback-answer { display:block;font-weight:500;color:var(--text-muted);margin-top:0.2rem; }
+    .quiz-next {
+      width:100%;margin-top:1.25rem;padding:0.8rem 1.2rem;cursor:pointer;
+      background:linear-gradient(135deg,var(--neon-green),#0d9488);
+      border:none;border-radius:var(--radius-sm);color:#fff;
+      font-size:0.9rem;font-weight:700;font-family:var(--font-main);transition:var(--transition);
+    }
+    .quiz-next:hover { box-shadow:0 0 24px rgba(16,185,129,0.4);transform:translateY(-2px); }
+    .quiz-result { text-align:center;padding:1rem 0 0.25rem; }
+    .quiz-result-icon { font-size:3rem;margin-bottom:0.75rem; }
+    .quiz-result-title { font-size:1.35rem;font-weight:800;margin-bottom:0.35rem; }
+    .quiz-result-score { color:var(--neon-green);font-weight:800;font-size:1.05rem;margin-bottom:0.5rem; }
+    .quiz-result-msg { color:var(--text-muted);font-size:0.9rem; }
+    .quiz-next[hidden],.quiz-feedback[hidden],.quiz-result[hidden],.quiz-feedback-answer[hidden] { display:none !important; }
+    @media(max-width:600px){ .quiz-box { padding:1.5rem 1.25rem; } .quiz-question { font-size:1.02rem; } }
   </style>
   <!-- Favicon (inline SVG) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 10 62 76'%3E%3Cdefs%3E%3ClinearGradient id='skySGradFav' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12,74 L42,74 C50,74 54,70 54,64 C54,58 48,54 40,52 L26,48 C16,45 10,39 10,30 C10,20 18,14 30,14 L56,14 L52,22 L30,22 C26,22 22,25 22,30 C22,35 26,37 30,39 L44,43 C54,46 64,51 64,64 C64,75 56,82 43,82 L12,82 Z' fill='url(%23skySGradFav)'/%3E%3C/svg%3E">
@@ -205,7 +261,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Mükafat sistemi</span>
             <span class="game-feat-tag">Avtomatik hesab</span>
           </div>
-          <button class="game-demo-btn" type="button">Demo / Yeni Ön Baxış</button>
+          <button class="game-demo-btn" id="quizDemoBtn" type="button">Demo / Yeni Ön Baxış</button>
         </div>
       </div>
 
@@ -263,5 +319,183 @@ ob_start(static function (string $html): string { return sky_translate_document_
   </div>
 </main>
 
-<script src="<?= SITE_URL ?>/assets/js/main.js"></script></body>
+<!-- Brend Viktorinası — oynanabilir demo -->
+<div class="quiz-overlay" id="quizOverlay" role="dialog" aria-modal="true" aria-label="Brend Viktorinası">
+  <div class="quiz-box">
+    <button class="quiz-close" id="quizClose" type="button" aria-label="Oyunu bağla">✕</button>
+    <div class="quiz-kicker">❓ Brend Viktorinası</div>
+    <div class="quiz-counter"><span>Sual</span> <span id="quizQNum">1</span> / <span id="quizQTotal">5</span></div>
+    <div class="quiz-progress"><div class="quiz-progress-bar" id="quizProgressBar"></div></div>
+
+    <div id="quizPlay">
+      <h2 class="quiz-question" id="quizQuestion"></h2>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-feedback" id="quizFeedback" aria-live="polite" hidden>
+        <span id="quizFeedbackText"></span>
+        <span class="quiz-feedback-answer" id="quizFeedbackAnswerWrap" hidden><span>Doğru cavab:</span> <span id="quizFeedbackAnswer"></span></span>
+      </div>
+      <button class="quiz-next" id="quizNext" type="button" hidden>Növbəti sual</button>
+    </div>
+
+    <div class="quiz-result" id="quizResult" hidden>
+      <div class="quiz-result-icon">🏆</div>
+      <h2 class="quiz-result-title">Oyun bitdi!</h2>
+      <p class="quiz-result-score"><span>Bal:</span> <span id="quizScore">0</span></p>
+      <p class="quiz-result-msg" id="quizResultMsg"></p>
+      <button class="quiz-next" id="quizRestart" type="button">Yenidən oyna</button>
+    </div>
+  </div>
+</div>
+
+<script src="<?= SITE_URL ?>/assets/js/main.js"></script>
+<script>
+(function () {
+  var overlay     = document.getElementById('quizOverlay');
+  var openBtn     = document.getElementById('quizDemoBtn');
+  var closeBtn    = document.getElementById('quizClose');
+  var play        = document.getElementById('quizPlay');
+  var result      = document.getElementById('quizResult');
+  var questionEl  = document.getElementById('quizQuestion');
+  var optionsEl   = document.getElementById('quizOptions');
+  var qNum        = document.getElementById('quizQNum');
+  var qTotal      = document.getElementById('quizQTotal');
+  var progress    = document.getElementById('quizProgressBar');
+  var feedback    = document.getElementById('quizFeedback');
+  var feedbackTxt = document.getElementById('quizFeedbackText');
+  var answerWrap  = document.getElementById('quizFeedbackAnswerWrap');
+  var answerEl    = document.getElementById('quizFeedbackAnswer');
+  var nextBtn     = document.getElementById('quizNext');
+  var restartBtn  = document.getElementById('quizRestart');
+  var scoreEl     = document.getElementById('quizScore');
+  var resultMsg   = document.getElementById('quizResultMsg');
+
+  if (!overlay || !openBtn) return;
+
+  var questions = [
+    {
+      q: 'Veb saytda istifadəçinin diqqətini ilk növbədə nə cəlb edir?',
+      options: ['Aydın başlıq', 'Çox reklam', 'Kiçik şrift', 'Qaranlıq fon'],
+      answer: 0
+    },
+    {
+      q: 'Brend loqosu hansı məqsədə xidmət edir?',
+      options: ['Brendi tanıtmaq', 'Sürəti artırmaq', 'Xərcləri azaltmaq', 'Mətn yazmaq'],
+      answer: 0
+    },
+    {
+      q: 'Müştəri loyallığını artırmaq üçün hansı üsul daha təsirlidir?',
+      options: ['Fərdi təkliflər', 'Təkrar reklam', 'Uzun gözləmə', 'Az məlumat'],
+      answer: 0
+    },
+    {
+      q: 'Viktorina oyununda iştirakçını motivasiya edən əsas amil nədir?',
+      options: ['Maraqlı suallar və mükafat', 'Uzun formalar', 'Çətin qeydiyyat', 'Sakit ekran'],
+      answer: 0
+    },
+    {
+      q: 'Mobil cihaz üçün oyun hazırlayarkən nə vacibdir?',
+      options: ['Tez yüklənmə və rahat idarə', 'Böyük fayllar', 'Çox addımlı qeydiyyat', 'Kiçik düymələr'],
+      answer: 0
+    }
+  ];
+
+  var index = 0;
+  var score = 0;
+  var locked = false;
+
+  // Use the site i18n engine so every dynamically generated string follows
+  // the active language just like the SSR-translated markup above.
+  function qt(text) {
+    if (window.SkyI18n && typeof window.SkyI18n.tr === 'function') {
+      return window.SkyI18n.tr(text, undefined, 'az');
+    }
+    return text;
+  }
+
+  function renderQuestion() {
+    var item = questions[index];
+    qNum.textContent = String(index + 1);
+    qTotal.textContent = String(questions.length);
+    progress.style.width = ((index + 1) / questions.length * 100) + '%';
+    questionEl.textContent = qt(item.q);
+    optionsEl.innerHTML = '';
+    item.options.forEach(function (option, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quiz-option';
+      btn.textContent = qt(option);
+      btn.addEventListener('click', function () { choose(i); });
+      optionsEl.appendChild(btn);
+    });
+    feedback.hidden = true;
+    answerWrap.hidden = true;
+    nextBtn.hidden = true;
+    locked = false;
+  }
+
+  function choose(i) {
+    if (locked) return;
+    locked = true;
+    var item = questions[index];
+    var correct = i === item.answer;
+    if (correct) {
+      score += 20;
+      feedbackTxt.textContent = qt('Doğru cavab!');
+      answerWrap.hidden = true;
+    } else {
+      feedbackTxt.textContent = qt('Yanlış cavab.');
+      answerEl.textContent = qt(item.options[item.answer]);
+      answerWrap.hidden = false;
+    }
+    feedback.hidden = false;
+    Array.prototype.forEach.call(optionsEl.children, function (btn, j) {
+      btn.disabled = true;
+      btn.classList.add(j === item.answer ? 'is-correct' : (j === i ? 'is-wrong' : 'is-muted'));
+    });
+    nextBtn.textContent = qt(index === questions.length - 1 ? 'Nəticəni gör' : 'Növbəti sual');
+    nextBtn.hidden = false;
+  }
+
+  function showResult() {
+    play.hidden = true;
+    result.hidden = false;
+    scoreEl.textContent = String(score);
+    resultMsg.textContent = qt(score >= 80 ? 'Əla nəticə!' : (score >= 40 ? 'Yaxşı başlanğıc!' : 'Yenidən cəhd edin!'));
+  }
+
+  function reset() {
+    index = 0;
+    score = 0;
+    locked = false;
+    play.hidden = false;
+    result.hidden = true;
+    scoreEl.textContent = '0';
+    renderQuestion();
+  }
+
+  function openQuiz() {
+    reset();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function closeQuiz() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', openQuiz);
+  closeBtn.addEventListener('click', closeQuiz);
+  restartBtn.addEventListener('click', reset);
+  nextBtn.addEventListener('click', function () {
+    if (index === questions.length - 1) showResult();
+    else { index += 1; renderQuestion(); }
+  });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeQuiz(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeQuiz();
+  });
+})();
+</script></body>
 </html>
