@@ -3,9 +3,18 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-26 (avtobioqrafiyada skrinşotdakı 2 AZ etiketi + TR imlası ✅)**
+> Son yenilənmə: **2026-11-27 (oyunlar: qiymət paketləri/qeydiyyat və slot oyunu silindi ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — oyunlar paneli təmizləndi
+
+- `modules/games/index.php` → aşağıdakı «Qiymət Cədvəli» və «Oyun Sifariş Formu»
+  bölmələri CSS/JS ilə birlikdə silindi; oyun kartları, ödəniş modalı və sifariş
+  tarixçəsi qaldı.
+- Slot oyunu tamamilə çıkarıldı: kateqoriya tabı, kart, tarixçə qeydi, 4 dildə
+  `games_cat_slot` / `games_item3_*` açarları və literal lüğətdəki slot açarları.
+- Yoxlama: `parity.php` 0/0/0, `games_bottom_check.php` → silinənlər `GONE`, qorunanlar `KEEP`.
 
 ### 2026-11-26 qeydi — avtobioqrafiya: son 2 etiket 4 dildə ✅
 

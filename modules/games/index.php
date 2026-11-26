@@ -11,7 +11,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="<?= e(__('games_panel_desc', 'Skyweb.az — Biznesiniz üçün Fırlanan Çarx, Viktorina, Mini Slot, Tapmaca kimi interaktiv mini oyunlar sifariş edin.')) ?>">
+  <meta name="description" content="<?= e(__('games_panel_desc', 'Skyweb.az — Biznesiniz üçün Fırlanan Çarx, Viktorina, Tapmaca kimi interaktiv mini oyunlar sifariş edin.')) ?>">
   <title><?= e(__('games_panel_title', 'Oyun Sifariş Paneli')) ?> — <?= SITE_NAME ?></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -117,56 +117,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
       border:none;cursor:pointer;transition:var(--transition);
     }
     .game-order-btn:hover { box-shadow:0 0 20px rgba(16,185,129,0.4);transform:translateY(-2px); }
-
-    /* Order Form Section */
-    .order-section {
-      background:var(--sky-card);border:1px solid var(--sky-border);
-      border-radius:var(--radius-xl);padding:2.5rem;margin-bottom:3rem;
-    }
-    .order-section-title { font-size:1.4rem;font-weight:800;margin-bottom:0.5rem; }
-    .order-section-desc { color:var(--text-muted);font-size:0.9rem;margin-bottom:2rem; }
-    .order-form-grid {
-      display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
-    }
-    @media(max-width:700px){ .order-form-grid { grid-template-columns:1fr; } }
-    .form-group { margin-bottom:1.25rem; }
-    .form-label { display:block;font-size:0.83rem;font-weight:600;color:var(--text-secondary);margin-bottom:0.45rem; }
-    .form-input, .form-select, .form-textarea {
-      width:100%;padding:0.8rem 1rem;
-      background:rgba(255,255,255,0.04);border:1px solid var(--sky-border);
-      border-radius:var(--radius-sm);color:var(--text-primary);
-      font-size:0.9rem;outline:none;font-family:var(--font-main);
-      transition:var(--transition);
-    }
-    .form-input:focus,.form-select:focus,.form-textarea:focus {
-      border-color:var(--neon-green);background:rgba(16,185,129,0.04);
-    }
-    .form-input::placeholder,.form-textarea::placeholder { color:var(--text-muted); }
-    .form-select option { background:#0d1127; }
-    .form-textarea { min-height:110px;resize:vertical; }
-    .form-note { font-size:0.77rem;color:var(--text-muted);margin-top:0.35rem; }
-
-    /* Packages Table */
-    .pkg-table-section { margin-bottom:3rem; }
-    .pricing-table {
-      width:100%;border-collapse:collapse;margin-top:1rem;
-      background:var(--sky-card);border:1px solid var(--sky-border);border-radius:var(--radius-md);overflow:hidden;
-    }
-    .pricing-table th {
-      padding:1rem 1.25rem;text-align:left;font-size:0.78rem;
-      font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;
-      background:rgba(255,255,255,0.02);border-bottom:1px solid var(--sky-border);
-    }
-    .pricing-table td {
-      padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);
-      font-size:0.85rem;color:var(--text-secondary);vertical-align:middle;
-    }
-    .pricing-table tr:last-child td { border-bottom:none; }
-    .pricing-table tr:hover td { background:rgba(16,185,129,0.03); }
-    .pricing-table .check { color:var(--neon-green);font-weight:700; }
-    .pricing-table .cross { color:var(--text-muted);opacity:0.4; }
-    .pricing-table .featured-col { background:rgba(99,102,241,0.05); }
-    .pkg-name-cell { font-weight:700;color:var(--text-primary); }
 
     /* Order History */
     .history-section { margin-bottom:3rem; }
@@ -283,7 +233,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
         <h1 class="games-hero-title">Brendinizə <span class="gradient-text">Mini Oyun</span> Sifariş Edin</h1>
         <p class="games-hero-desc">İstənilən biznes üçün müştəri cəlb edəcək, loyallığı artıracaq interaktiv mini oyunlar hazırlayırıq. Web &amp; Wap uyumlu, tam hazır çatdırılır.</p>
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem;">
-          <a href="#order-form" class="btn-primary"><span>🎯 İndi Sifariş Ver</span></a>
           <a href="#game-categories" class="btn-ghost"><span>Oyunlara Bax</span></a>
         </div>
       </div>
@@ -301,7 +250,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
         <button class="cat-tab active" onclick="filterGames(this,'all')">🎲 Hamısı</button>
         <button class="cat-tab" onclick="filterGames(this,'carx')">🎡 Çarx Oyunları</button>
         <button class="cat-tab" onclick="filterGames(this,'quiz')">❓ Viktorina</button>
-        <button class="cat-tab" onclick="filterGames(this,'slot')">🎰 Slot Oyunları</button>
         <button class="cat-tab" onclick="filterGames(this,'puzzle')">🧩 Tapmacalar</button>
         <button class="cat-tab" onclick="filterGames(this,'other')">⚡ Digər</button>
       </div>
@@ -392,27 +340,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
         </div>
       </div>
 
-      <div class="game-card" data-cat="slot">
-        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(249,115,22,0.1));">
-          <span style="position:relative;z-index:2;">🎰</span>
-          <div class="game-badge badge-hot">🔥 İsti</div>
-        </div>
-        <div class="game-card-body">
-          <div class="game-name">Kazino Slot Oyunu</div>
-          <div class="game-desc">Brend rənglərinizdə hazırlanmış əyləncəli slot maşını. Müştərini saytda saxlamaq və təkrar ziyarəti artırmaq üçün güclü alətdir.</div>
-          <div class="game-features">
-            <span class="game-feat-tag">Brend dizayn</span>
-            <span class="game-feat-tag">Uduş statistikası</span>
-            <span class="game-feat-tag">Kupon sistemi</span>
-            <span class="game-feat-tag">Mobil uyumlu</span>
-          </div>
-          <div class="game-price-row">
-            <div><div class="game-price-from">Başlayan qiymət</div><div class="game-price" style="color:var(--neon-amber)">380 ₼</div></div>
-            <button class="game-order-btn" onclick="openPayModal('Kazino Slot Oyunu',380)" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">Sifariş Et</button>
-          </div>
-        </div>
-      </div>
-
       <div class="game-card" data-cat="puzzle">
         <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(99,102,241,0.08));">
           <span style="position:relative;z-index:2;">🧩</span>
@@ -473,106 +400,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
 
     </div><!-- /games-grid -->
 
-    <!-- Pricing Table -->
-    <div class="pkg-table-section">
-      <div class="section-label-sm">// Qiymət Cədvəli</div>
-      <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:0.5rem;">Oyun Paketlərinin Müqayisəsi</h2>
-      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.25rem;">Layihənizin həcminə uyğun paketi seçin.</p>
-      <div style="overflow-x:auto;">
-        <table class="pricing-table">
-          <thead>
-            <tr>
-              <th>Xüsusiyyət</th>
-              <th>Standart (160-220 ₼)</th>
-              <th class="featured-col" style="color:#a5b4fc;">Peşəkar (280-380 ₼)</th>
-              <th>Premium (400+ ₼)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td class="pkg-name-cell">Oyun növü</td><td>1 oyun</td><td class="featured-col">1 oyun (premium)</td><td>2+ oyun</td></tr>
-            <tr><td class="pkg-name-cell">Brend dizayn uyğunlaşması</td><td><span class="check">✓</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-            <tr><td class="pkg-name-cell">Mobil uyumluluq</td><td><span class="check">✓</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-            <tr><td class="pkg-name-cell">Analitika paneli</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-            <tr><td class="pkg-name-cell">CRM/E-poçt inteqrasiyası</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-            <tr><td class="pkg-name-cell">Çox oyunçu dəstəyi</td><td><span class="cross">—</span></td><td class="featured-col"><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
-            <tr><td class="pkg-name-cell">API inteqrasiyası</td><td><span class="cross">—</span></td><td class="featured-col"><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
-            <tr><td class="pkg-name-cell">Çatdırılma müddəti</td><td>5-7 iş günü</td><td class="featured-col">3-5 iş günü</td><td>7-14 iş günü</td></tr>
-            <tr><td class="pkg-name-cell">Sonradan dəyişiklik</td><td>1 dəfə pulsuz</td><td class="featured-col">3 dəfə pulsuz</td><td>Limitsiz (3 ay)</td></tr>
-            <tr><td class="pkg-name-cell">Dəstək</td><td>E-poçt</td><td class="featured-col">WhatsApp</td><td>Dedike menecer</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Order Form -->
-    <div class="order-section" id="order-form">
-      <div class="order-section-title">🎮 Oyun Sifariş Formu</div>
-      <div class="order-section-desc">Aşağıdakı formu doldurun, 24 saat ərzində sizinlə əlaqə saxlayacağıq.</div>
-      <form id="gameOrderForm" onsubmit="submitOrderForm(event)">
-        <div class="order-form-grid">
-          <div>
-            <div class="form-group">
-              <label class="form-label" for="ord-name">Ad Soyad *</label>
-              <input class="form-input" id="ord-name" type="text" placeholder="Əli Həsənov" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="ord-phone">Telefon *</label>
-              <input class="form-input" id="ord-phone" type="tel" placeholder="+994 55 xxx xx xx" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="ord-email">E-poçt *</label>
-              <input class="form-input" id="ord-email" type="email" placeholder="info@biznes.az" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="ord-company">Şirkət adı</label>
-              <input class="form-input" id="ord-company" type="text" placeholder="Şirkətinizin adı">
-            </div>
-          </div>
-          <div>
-            <div class="form-group">
-              <label class="form-label" for="ord-game">Oyun növü *</label>
-              <select class="form-select" id="ord-game" required>
-                <option value="">— Seçin —</option>
-                <option value="carx">🎡 Fırlanan Çarx</option>
-                <option value="3d-carx">🎪 3D Şans Çarxı</option>
-                <option value="viktorina">❓ Brend Viktorinası</option>
-                <option value="canli-vikt">🧠 Canlı Viktorina</option>
-                <option value="slot">🎰 Kazino Slot</option>
-                <option value="tapmaca">🧩 Brend Tapmacaları</option>
-                <option value="kart">🃏 Uğur Kartı</option>
-                <option value="idman">⚽ Brend İdman Oyunu</option>
-                <option value="diger">⚡ Digər (qeyddə izah edin)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="ord-budget">Büdcə çərçivəsi</label>
-              <select class="form-select" id="ord-budget">
-                <option value="">— Seçin —</option>
-                <option value="160-220">160 – 220 AZN (Standart)</option>
-                <option value="280-380">280 – 380 AZN (Peşəkar)</option>
-                <option value="400+">400+ AZN (Premium)</option>
-                <option value="muza">Razılaşma ilə</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="ord-deadline">İstədiyiniz çatdırılma tarixi</label>
-              <input class="form-input" id="ord-deadline" type="date">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="ord-desc">Layihə haqqında qeyd *</label>
-              <textarea class="form-textarea" id="ord-desc" placeholder="Oyunun məqsədi, hədəf auditoriya, xüsusi istəklər..." required></textarea>
-              <div class="form-note">* Nə qədər ətraflı yazılsa, bir o qədər dəqiq təklif hazırlayırıq.</div>
-            </div>
-          </div>
-        </div>
-        <div style="display:flex;gap:1rem;justify-content:flex-end;flex-wrap:wrap;">
-          <button type="submit" class="btn-primary" style="padding:0.9rem 2.5rem;">
-            <span>📩 Formu Göndər</span>
-          </button>
-        </div>
-      </form>
-    </div>
-
     <!-- Order History -->
     <div class="history-section">
       <div class="section-label-sm">// Son Sifarişlər</div>
@@ -595,15 +422,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
           </div>
           <div class="history-price">220 ₼</div>
           <span class="history-status-badge hs-inprogress">⚙ Hazırlanır</span>
-        </div>
-        <div class="history-card">
-          <div class="history-icon">🎰</div>
-          <div class="history-info">
-            <div class="history-name">Kazino Slot — "GoldCafe" üçün</div>
-            <div class="history-meta">Sifariş tarixi: 15 İyun 2026 · Sifariş #SKY-2891</div>
-          </div>
-          <div class="history-price">380 ₼</div>
-          <span class="history-status-badge hs-pending">⏳ Gözlənilir</span>
         </div>
       </div>
     </div>
@@ -692,16 +510,6 @@ async function submitGamePay(e) {
   btn.textContent='🔐 Sifarişi Təsdiqlə'; btn.disabled=false;
 }
 
-// Order form
-async function submitOrderForm(e) {
-  e.preventDefault();
-  const btn=e.target.querySelector('[type="submit"]');
-  btn.innerHTML='<span>Göndərilir...</span>'; btn.disabled=true;
-  await new Promise(r=>setTimeout(r,1200));
-  if(typeof skyToast==='function') skyToast('Sifarişiniz qəbul edildi! Tezliklə əlaqə saxlayacağıq. 🎮','✅',4000);
-  e.target.reset();
-  btn.innerHTML='<span>📩 Formu Göndər</span>'; btn.disabled=false;
-}
 </script>
 </body>
 </html>

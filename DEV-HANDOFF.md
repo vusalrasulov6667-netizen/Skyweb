@@ -2,7 +2,25 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-26 (avtobioqrafiya: 2 qalan AZ etiketi + TR "Yeniden" ✅)**
+Son yenilənmə: **2026-11-27 (oyunlar: aşağı bölmələr + slot oyunu silindi ✅)**
+
+## 2026-11-27 — Oyunlar paneli: təmizləmə və slot oyununun silinməsi ✅
+
+**Düzəliş:**
+- `modules/games/index.php` → aşağıdakı **«Qiymət Cədvəli»** (paket müqayisəsi) və
+  **«Oyun Sifariş Formu»** (qeydiyyat) bölmələri, onların CSS/JS hissələri və ölü
+  `#order-form` CTA-sı tamamilə çıkarıldı. Oyun kartları, `Sifariş Et` düymələri,
+  ödəniş modalı və `Sifariş Tarixçəsi` qorundu.
+- Slot oyunu → kateqoriya tabı, `Kazino Slot Oyunu` kartı, son sifarişlərdəki slot
+  qeydi və meta təsvirindəki «Mini Slot» silindi.
+- `lang/{az,en,ru,tr}.php` → `games_cat_slot`, `games_item3_desc`, `games_item3_title`
+  açarları silindi; `games_panel_desc` 4 dildə slotsuz yeniləndi.
+- `config/i18n-literals.php` → slot-a aid 5 literal açar silindi.
+- Ehtiyat: `_backup_apps/games-index.before_remove_bottom.bak`,
+  `_backup_apps/games-index.before_slot_remove.bak`.
+
+**Yoxlama:** `php -l` təmiz; `parity.php` **0/0/0**; `scratch/games_bottom_check.php`
+→ bütün silinən elementlər `GONE`, qorunanlar `KEEP`.
 
 ## 2026-11-26 — Avtobioqrafiya: skrinşotdakı 2 etiket 4 dilə ✅
 
