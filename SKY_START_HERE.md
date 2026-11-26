@@ -3,9 +3,18 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-25 (qalereya limitləri + lightbox + demo üzərindən sahib yükləməsi ✅)**
+> Son yenilənmə: **2026-11-26 (avtobioqrafiyada skrinşotdakı 2 AZ etiketi + TR imlası ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-26 qeydi — avtobioqrafiya: son 2 etiket 4 dildə ✅
+
+- Skrinşotda işarələnən «sertifikatlar qazanmaq» (RU-da yalnız "Yeni" → "Новое" olmuşdu) və
+  «Kollec / Subbakalavr» etiketləri `config/i18n-literals.php`-ə tam açarlarla əlavə olundu.
+  `lang/tr.php`-də `autobio_rewrite` → «Yeniden Yaz» düzəldildi.
+- Həm `?lang=` ilə birbaşa yükləmə, həm də dil düyməsi ilə **reload olmadan** keçid işləyir.
+- Yoxlama: `goal_cert_i18n_check.php` 44/44, `cdp_goal_cert_switch.js` 8/8,
+  `cdp_autobio_dom_scan.js` 0 AZ izi, `parity.php` 0/0/0.
 
 ### 2026-11-25 son əlavə — «Ustaların əl işləri» qalereyası ✅
 

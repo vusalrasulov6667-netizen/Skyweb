@@ -2,7 +2,28 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-25 (qalereya + demo üzərindən sahib üçün yükləmə ✅)**
+Son yenilənmə: **2026-11-26 (avtobioqrafiya: 2 qalan AZ etiketi + TR "Yeniden" ✅)**
+
+## 2026-11-26 — Avtobioqrafiya: skrinşotdakı 2 etiket 4 dilə ✅
+
+**Problem:** istifadəçi `Desktop\avtobigrafiya.png` skrinşotunda 2 yeri işarələdi:
+1) RU rejimində «Новое **sertifikatlar qazanmaq**» (yalnız "Yeni" sözü tərcümə olunurdu,
+   qalan hissə AZ qalırdı); 2) «**Kollec / Subbakalavr**» (Təhsillər siyahısı) heç bir dildə
+   dəyişmirdi. Səbəb: bu hardcoded literal-lar `config/i18n-literals.php` qatı ilə tərcümə
+   olunur, lakin birinci açar lüğətdə yox idi, ikincisi isə qismən ("Yeni" → "Новое")
+   tərcümə olunurdu. Həmçinin `lang/tr.php`-də `autobio_rewrite` AZ imlasında qalmışdı.
+
+**Düzəliş:**
+- `config/i18n-literals.php` → tam açarlar: `'Yeni sertifikatlar qazanmaq'` (en *Earn new
+  certificates*, ru *Получить новые сертификаты*, tr *Yeni sertifikalar kazanmak*) və
+  `'Kollec / Subbakalavr'` (en *College / Associate Degree*, ru *Колледж / Младший
+  бакалавриат*, tr *Kolej / Önlisans*). Uzun açar qısa `'Yeni'` açarından əvvəl gəlir.
+- `lang/tr.php` → `autobio_rewrite`: «Yenidən Yaz» → «Yeniden Yaz».
+- Ehtiyat: `_backup_apps/i18n-literals.php.before_goal_cert_translate.bak`.
+
+**Yoxlama:** `scratch/goal_cert_i18n_check.php` **44/44 OK** (2 element × 4 dil × SSR + payload);
+`scratch/cdp_goal_cert_switch.js` **8/8 OK** (reload olmadan EN/RU/TR/AZ);
+`scratch/cdp_autobio_dom_scan.js` → EN/RU/TR **0 AZ izi**; `parity.php` **0/0/0**; `php -l` təmiz.
 
 ## 2026-11-25 — «Ustaların əl işləri» qalereyası ✅
 

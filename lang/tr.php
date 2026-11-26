@@ -111,7 +111,7 @@ return array (
   'autobio_patronymic_ph' => 'Murad oğlu',
   'autobio_pdf' => 'PDF İndir / Yazdır',
   'autobio_personal_info' => 'Kişisel Bilgiler',
-  'autobio_rewrite' => 'Yenidən Yaz',
+  'autobio_rewrite' => 'Yeniden Yaz',
   'autobio_sectors_current' => 'Halen çalışıyorum',
   'autobio_sectors_end_ph' => 'Ayrılış yılı',
   'autobio_sectors_place_ph' => 'Çalışılan yer (kurum/şirket adı - manuel girin)',
