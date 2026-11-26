@@ -2,7 +2,42 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-27 (Brend Viktorinası indi oynanabilir demo ✅)**
+Son yenilənmə: **2026-11-27 (Brend Viktorinası 25 suallıq, loqo yeniləndi ✅)**
+
+## 2026-11-27 — Brend Viktorinası: 25 sual, 5 mövzu, yeni loqo ✅
+
+**Düzəliş:**
+- Playful demo 5 ümumi sualdan **25 Azərbaycan sualına** genişləndirildi:
+  coğrafiya, tarix, idman, incəsənət/mədəniyyət və təbiət — hər mövzuda 5 sual.
+- Ərazisi (86,600 km²), ərazisinə görə ən böyük şəhər (Bakı), əhaliyə görə
+  üçüncü şəhər (Gəncə), ən yüksək zirvə (Bazardüzü), 5 quru sərhəd ölkəsi,
+  Zəfər Günü (8 noyabr 2020), 44 gün, Şuşa, 1991 müstəqilliyi, üçtərəfli
+  bəyanat, Tofiq Bəhramov, Elnur Məmmədli, Rəfael Ağayev, Vüqar Həşimov,
+  Toğrul Əsgərov, Üzeyir Hacıbəyov, Qara Qarayev, Səttar Bəhlulzadə,
+  Xurşidbanu Natəvan, fars bəbiri, ağ nərə, qızıl qartal, ceyran və muflon
+  kimi faktlar stat.gov.az, azerbaijan.az, MFA/prezident.az, Olimpiya və
+  federation mənbələrindən yoxlanıldı.
+- Cavablar hər sualda **4 variantdan biri**; variantlar sual indeksinə görə
+  `optionShift = index % 4` ilə fırladılır ki, düzgün cavab həmişə birinci
+  yerdə olmasın. `data-option-index` yalnız E2E yoxlaması üçün əlavə olundu.
+- Hesablama **4 bal/sual** (25 × 4 = 100); 80/40 nəticə astanaları qorundu.
+- Modalda mövzu etiketi (`quizTopic`) və hər mövzu üçün ayrı dil tərcüməsi var.
+- Brend viktorinasının vizualı modernləşdirildi: kart önizləməsində və modal
+  başlığında gradient **SVG sual nişanı** (`game-quiz-mark`, `quiz-brand-mark`)
+  və `25 Azərbaycan sualı` alt başlığı. **Navbar logosu ana səhifə ilə eyni
+  tam SVG olaraq qaldı** — dəyişiklik yalnız oyun kartı/modal brendinə aiddir.
+- `config/i18n-literals.php` → 101 unikal sual/mövzu/variant/UI sətri üçün
+  AZ/EN/RU/TR tərcümə əlavə olundu; dinamik mətnlər `SkyI18n.tr()` ilə işləyir.
+- Digər 3 oyun kartı statik qaldı; qiymət, qeydiyyat, kateqoriya tabı və
+  şans/qumar elementləri yenidən gətirilmədi.
+
+**Yoxlama:** `php -l` təmiz; `parity.php` **0/0/0**;
+`scratch/games_quiz_i18n_check.php` → **QUESTIONS 25, LITERALS 101, SCORING 4,
+OPTION ROTATION OK**, AZ/EN/RU/TR UI OK;
+`scratch/cdp_games_quiz_check.js` → **36 OK / 0 FAIL** (25 sual, fırlanan
+cavablar, 5 mövzu etiketi, 100 bal, restart, 4 dil);
+`scratch/games_bottom_check.php` → əvvəlki təmizlik qorunur;
+`scratch/games_logo_parity_check.php` → **LOGO PARITY OK**.
 
 ## 2026-11-27 — Brend Viktorinası: tam işlək demo oyun ✅
 

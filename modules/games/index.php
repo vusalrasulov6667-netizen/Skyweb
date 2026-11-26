@@ -117,8 +117,41 @@ ob_start(static function (string $html): string { return sky_translate_document_
       border-radius:8px;color:var(--text-muted);font-size:1rem;transition:var(--transition);
     }
     .quiz-close:hover { background:rgba(244,63,94,0.15);color:var(--neon-rose); }
-    .quiz-kicker { font-size:0.78rem;font-weight:800;color:var(--neon-green);letter-spacing:0.6px;text-transform:uppercase; }
-    .quiz-counter { font-size:0.82rem;color:var(--text-muted);margin:0.35rem 0 0.9rem; }
+
+    /* Modern quiz identity — shared by the card preview and the game modal */
+    .game-quiz-mark {
+      position:relative;z-index:2;width:66px;height:66px;border-radius:19px;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#38bdf8 0%,#818cf8 52%,#10b981 100%);
+      box-shadow:0 16px 34px -12px rgba(56,189,248,0.75),inset 0 1px 0 rgba(255,255,255,0.45);
+      transform:rotate(-6deg);transition:transform 0.3s ease;
+    }
+    .game-card:hover .game-quiz-mark { transform:rotate(0deg) scale(1.05); }
+    .game-quiz-mark svg { width:38px;height:38px; }
+    .quiz-brand { display:flex;align-items:center;gap:0.9rem;padding-right:2.5rem;margin-bottom:1.25rem; }
+    .quiz-brand-mark {
+      flex:0 0 48px;width:48px;height:48px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#38bdf8 0%,#818cf8 52%,#10b981 100%);
+      box-shadow:0 10px 26px -10px rgba(56,189,248,0.8),inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+    .quiz-brand-mark svg { width:28px;height:28px; }
+    .quiz-brand-copy { display:flex;flex-direction:column;gap:0.15rem;min-width:0; }
+    .quiz-brand-name {
+      font-family:'Outfit',var(--font-main);font-size:1.05rem;font-weight:800;
+      background:linear-gradient(90deg,var(--neon-cyan),var(--neon-green));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .quiz-brand-sub { font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted); }
+    .quiz-topic {
+      display:inline-flex;align-items:center;gap:0.4rem;
+      padding:0.3rem 0.7rem;margin-bottom:0.9rem;
+      border:1px solid rgba(56,189,248,0.35);border-radius:999px;
+      background:rgba(56,189,248,0.08);color:var(--neon-cyan);
+      font-size:0.74rem;font-weight:700;letter-spacing:0.3px;
+    }
+    .quiz-topic::before { content:'';width:6px;height:6px;border-radius:50%;background:var(--neon-green);box-shadow:0 0 8px var(--neon-green); }
+    .quiz-counter { font-size:0.82rem;color:var(--text-muted);margin:0 0 0.9rem; }
     .quiz-progress { height:6px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-bottom:1.5rem; }
     .quiz-progress-bar { height:100%;width:20%;border-radius:999px;background:linear-gradient(90deg,var(--neon-green),var(--neon-cyan));transition:width 0.3s ease; }
     .quiz-question { font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:1.25rem; }
@@ -249,7 +282,13 @@ ob_start(static function (string $html): string { return sky_translate_document_
 
       <div class="game-card">
         <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.1));">
-          <span style="position:relative;z-index:2;">❓</span>
+          <span class="game-quiz-mark" aria-hidden="true">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25 23a7 7 0 1 1 11 5.6c-2.2 1.7-4 2.7-4 5.4" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="32" cy="43" r="2.6" fill="#fff"/>
+              <path d="M49 7l1.4 4.1L54.5 12.5l-4.1 1.4L49 18l-1.4-4.1L43.5 12.5l4.1-1.4z" fill="#fff" opacity="0.9"/>
+            </svg>
+          </span>
           <div class="game-badge badge-popular">Populyar</div>
         </div>
         <div class="game-card-body">
@@ -323,8 +362,21 @@ ob_start(static function (string $html): string { return sky_translate_document_
 <div class="quiz-overlay" id="quizOverlay" role="dialog" aria-modal="true" aria-label="Brend Viktorinası">
   <div class="quiz-box">
     <button class="quiz-close" id="quizClose" type="button" aria-label="Oyunu bağla">✕</button>
-    <div class="quiz-kicker">❓ Brend Viktorinası</div>
-    <div class="quiz-counter"><span>Sual</span> <span id="quizQNum">1</span> / <span id="quizQTotal">5</span></div>
+    <div class="quiz-brand">
+      <span class="quiz-brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M25 23a7 7 0 1 1 11 5.6c-2.2 1.7-4 2.7-4 5.4" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="32" cy="43" r="2.6" fill="#fff"/>
+          <path d="M49 7l1.4 4.1L54.5 12.5l-4.1 1.4L49 18l-1.4-4.1L43.5 12.5l4.1-1.4z" fill="#fff" opacity="0.9"/>
+        </svg>
+      </span>
+      <span class="quiz-brand-copy">
+        <span class="quiz-brand-name">Brend Viktorinası</span>
+        <span class="quiz-brand-sub">25 Azərbaycan sualı</span>
+      </span>
+    </div>
+    <div class="quiz-topic" id="quizTopic">Azərbaycan coğrafiyası</div>
+    <div class="quiz-counter"><span>Sual</span> <span id="quizQNum">1</span> / <span id="quizQTotal">25</span></div>
     <div class="quiz-progress"><div class="quiz-progress-bar" id="quizProgressBar"></div></div>
 
     <div id="quizPlay">
@@ -355,6 +407,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
   var closeBtn    = document.getElementById('quizClose');
   var play        = document.getElementById('quizPlay');
   var result      = document.getElementById('quizResult');
+  var topicEl     = document.getElementById('quizTopic');
   var questionEl  = document.getElementById('quizQuestion');
   var optionsEl   = document.getElementById('quizOptions');
   var qNum        = document.getElementById('quizQNum');
@@ -371,31 +424,148 @@ ob_start(static function (string $html): string { return sky_translate_document_
 
   if (!overlay || !openBtn) return;
 
+  // 25 Azerbaijan questions — 5 topics x 5 questions. AZ source strings are
+  // translated through the shared SkyI18n literal map, so every option follows
+  // the active language exactly like the rest of the site.
   var questions = [
+    /* Coğrafiya */
     {
-      q: 'Veb saytda istifadəçinin diqqətini ilk növbədə nə cəlb edir?',
-      options: ['Aydın başlıq', 'Çox reklam', 'Kiçik şrift', 'Qaranlıq fon'],
-      answer: 0
+      topic: 'Azərbaycan coğrafiyası',
+      q: 'Azərbaycanın ərazisi neçə kvadrat kilometrdir?',
+      options: ['86,600 km²', '186,600 km²', '56,600 km²', '126,600 km²'], answer: 0
     },
     {
-      q: 'Brend loqosu hansı məqsədə xidmət edir?',
-      options: ['Brendi tanıtmaq', 'Sürəti artırmaq', 'Xərcləri azaltmaq', 'Mətn yazmaq'],
-      answer: 0
+      topic: 'Azərbaycan coğrafiyası',
+      q: 'Ərazisinə görə Azərbaycanın ən böyük şəhəri hansıdır?',
+      options: ['Bakı', 'Sumqayıt', 'Gəncə', 'Naxçıvan'], answer: 0
     },
     {
-      q: 'Müştəri loyallığını artırmaq üçün hansı üsul daha təsirlidir?',
-      options: ['Fərdi təkliflər', 'Təkrar reklam', 'Uzun gözləmə', 'Az məlumat'],
-      answer: 0
+      topic: 'Azərbaycan coğrafiyası',
+      q: 'Əhalisinin sayına görə Azərbaycanda üçüncü ən böyük şəhər hansıdır?',
+      options: ['Gəncə', 'Sumqayıt', 'Xırdalan', 'Mingəçevir'], answer: 0
     },
     {
-      q: 'Viktorina oyununda iştirakçını motivasiya edən əsas amil nədir?',
-      options: ['Maraqlı suallar və mükafat', 'Uzun formalar', 'Çətin qeydiyyat', 'Sakit ekran'],
-      answer: 0
+      topic: 'Azərbaycan coğrafiyası',
+      q: 'Azərbaycanın ən yüksək dağ zirvəsi hansıdır?',
+      options: ['Bazardüzü', 'Şahdağ', 'Tufandağ', 'Qapıcıq'], answer: 0
     },
     {
-      q: 'Mobil cihaz üçün oyun hazırlayarkən nə vacibdir?',
-      options: ['Tez yüklənmə və rahat idarə', 'Böyük fayllar', 'Çox addımlı qeydiyyat', 'Kiçik düymələr'],
-      answer: 0
+      topic: 'Azərbaycan coğrafiyası',
+      q: 'Azərbaycanın quru sərhədinin olduğu ölkələr hansılardır?',
+      options: [
+        'Rusiya, Gürcüstan, Ermənistan, İran və Türkiyə',
+        'Rusiya, Ukrayna, İran və Türkiyə',
+        'Gürcüstan, Ermənistan, İraq və İran',
+        'İran, Türkiyə, Suriya və Rusiya'
+      ], answer: 0
+    },
+
+    /* Tarix */
+    {
+      topic: 'Azərbaycan tarixi',
+      q: 'İkinci Qarabağ müharibəsinin Zəfər Günü hansı tarixdir?',
+      options: ['8 noyabr 2020', '10 noyabr 2020', '27 sentyabr 2020', '9 may 1945'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan tarixi',
+      q: 'Vətən müharibəsi neçə gün davam etdi?',
+      options: ['44 gün', '28 gün', '100 gün', '30 gün'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan tarixi',
+      q: 'Zəfər Günündə azad edilən şəhər hansı oldu?',
+      options: ['Şuşa', 'Gəncə', 'Bərdə', 'Tərtər'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan tarixi',
+      q: 'Azərbaycan müstəqilliyini nə vaxt bərpa etdi?',
+      options: ['18 oktyabr 1991', '28 may 1918', '2 mart 1992', '10 noyabr 2020'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan tarixi',
+      q: 'Atəşkəs haqqında üçtərəfli bəyanat hansı tarixdə imzalandı?',
+      options: ['10 noyabr 2020', '8 noyabr 2020', '27 sentyabr 2020', '1 dekabr 2020'], answer: 0
+    },
+
+    /* İdman */
+    {
+      topic: 'Azərbaycan idmanı',
+      q: '1966-cı il Dünya Kuboku finalında qol qərarı ilə tanınan azərbaycanlı hakim kimdir?',
+      options: ['Tofiq Bəhramov', 'Rəfael Ağayev', 'Elnur Məmmədli', 'Vüqar Həşimov'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan idmanı',
+      q: '2008 Pekin Olimpiadasında cüdoda qızıl medal qazanan idmançı kimdir?',
+      options: ['Elnur Məmmədli', 'Rəfael Ağayev', 'Mariya Stadnik', 'Şəhriyar Məmmədyarov'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan idmanı',
+      q: 'Dünya karate çempionatlarında beş dəfə çempion olan idmançı kimdir?',
+      options: ['Rəfael Ağayev', 'Tofiq Bəhramov', 'Elnur Məmmədli', 'Vüqar Həşimov'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan idmanı',
+      q: '2009-cu ildə dünya reytinqində 6-cı yerə qədər yüksələn şahmatçı kimdir?',
+      options: ['Vüqar Həşimov', 'Şəhriyar Məmmədyarov', 'Tofiq Bəhramov', 'Rəfael Ağayev'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan idmanı',
+      q: '2012 London Olimpiadasında güləş üzrə qızıl medal qazanan azərbaycanlı idmançı kimdir?',
+      options: ['Toğrul Əsgərov', 'Mariya Stadnik', 'Rövşən Bayramov', 'Emin Əhmədov'], answer: 0
+    },
+
+    /* İncəsənət */
+    {
+      topic: 'Azərbaycan incəsənəti',
+      q: 'Azərbaycanda ilk operanı — "Leyli və Məcnun"u kim yazdı?',
+      options: ['Üzeyir Hacıbəyov', 'Qara Qarayev', 'Müslüm Maqomayev', 'Səttar Bəhlulzadə'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan incəsənəti',
+      q: '"Yeddi gözəl" baletinin bəstəkarı kimdir?',
+      options: ['Qara Qarayev', 'Üzeyir Hacıbəyov', 'Soltan Hacıbəyov', 'Müslüm Maqomayev'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan incəsənəti',
+      q: 'Rəssam Səttar Bəhlulzadə hansı mövzuda əsərləri ilə tanınır?',
+      options: ['Qarabağ təbiəti', 'Dəniz limanları', 'Şəhər küçələri', 'Zavodlar'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan incəsənəti',
+      q: '1962-ci ildə Kreml Sarayında çıxışı ilə şöhrət qazanan müğənni kimdir?',
+      options: ['Müslüm Maqomayev', 'Üzeyir Hacıbəyov', 'Qara Qarayev', 'Səttar Bəhlulzadə'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan incəsənəti',
+      q: 'Şuşada yaşayıb yaradan məşhur azərbaycanlı şairə kimdir?',
+      options: ['Xurşidbanu Natəvan', 'Səttar Bəhlulzadə', 'Müslüm Maqomayev', 'Qara Qarayev'], answer: 0
+    },
+
+    /* Təbiət */
+    {
+      topic: 'Azərbaycan təbiəti',
+      q: 'Hirkan meşələrində və Zəngəzurda rast gəlinən nadir iri pişik hansıdır?',
+      options: ['Fars bəbiri', 'Qəhvəyi ayı', 'Qızıl tülkü', 'Vaşaq'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan təbiəti',
+      q: 'Kürü üçün ən dəyərli Xəzər balıqlarından biri hansıdır?',
+      options: ['Ağ nərə (beluga)', 'Kütüm', 'Qızılbalıq', 'Sardina'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan təbiəti',
+      q: 'Azərbaycanın dağlıq ərazilərində yaşayan və markalarda təsvir edilən yırtıcı quş hansıdır?',
+      options: ['Qızıl qartal', 'Flaminqo', 'Leylək', 'Qara quzğun'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan təbiəti',
+      q: 'Şirvan Milli Parkı hansı heyvanın əsas yaşayış yeridir?',
+      options: ['Ceyranın', 'Qızıl qartalın', 'Fars bəbiri', 'Ağ nərənin'], answer: 0
+    },
+    {
+      topic: 'Azərbaycan təbiəti',
+      q: 'Naxçıvanda yaşayan yabanı dağ qoçu növü hansıdır?',
+      options: ['Muflon', 'Maral', 'Dağ keçisi', 'Qaban'], answer: 0
     }
   ];
 
@@ -412,21 +582,34 @@ ob_start(static function (string $html): string { return sky_translate_document_
     return text;
   }
 
+  // Rotate the four options by question index so the right answer is not
+  // always in the same place. data-option-index keeps the source position
+  // available for the end-to-end checks.
+  function optionShift() {
+    return index % 4;
+  }
+
   function renderQuestion() {
     var item = questions[index];
+    var shift = optionShift();
     qNum.textContent = String(index + 1);
     qTotal.textContent = String(questions.length);
     progress.style.width = ((index + 1) / questions.length * 100) + '%';
+    topicEl.textContent = qt(item.topic);
     questionEl.textContent = qt(item.q);
     optionsEl.innerHTML = '';
-    item.options.forEach(function (option, i) {
+    for (var j = 0; j < item.options.length; j++) {
+      var sourceIndex = (j + shift) % item.options.length;
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'quiz-option';
-      btn.textContent = qt(option);
-      btn.addEventListener('click', function () { choose(i); });
+      btn.dataset.optionIndex = String(sourceIndex);
+      btn.textContent = qt(item.options[sourceIndex]);
+      btn.addEventListener('click', (function (displayIndex) {
+        return function () { choose(displayIndex); };
+      })(j));
       optionsEl.appendChild(btn);
-    });
+    }
     feedback.hidden = true;
     answerWrap.hidden = true;
     nextBtn.hidden = true;
@@ -437,9 +620,10 @@ ob_start(static function (string $html): string { return sky_translate_document_
     if (locked) return;
     locked = true;
     var item = questions[index];
-    var correct = i === item.answer;
+    var correctDisplay = (item.answer - optionShift() + item.options.length) % item.options.length;
+    var correct = i === correctDisplay;
     if (correct) {
-      score += 20;
+      score += 4;
       feedbackTxt.textContent = qt('Doğru cavab!');
       answerWrap.hidden = true;
     } else {
@@ -450,7 +634,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
     feedback.hidden = false;
     Array.prototype.forEach.call(optionsEl.children, function (btn, j) {
       btn.disabled = true;
-      btn.classList.add(j === item.answer ? 'is-correct' : (j === i ? 'is-wrong' : 'is-muted'));
+      btn.classList.add(j === correctDisplay ? 'is-correct' : (j === i ? 'is-wrong' : 'is-muted'));
     });
     nextBtn.textContent = qt(index === questions.length - 1 ? 'Nəticəni gör' : 'Növbəti sual');
     nextBtn.hidden = false;

@@ -3,9 +3,21 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-27 (Brend Viktorinası indi oynanabilir demo ✅)**
+> Son yenilənmə: **2026-11-27 (Brend Viktorinası 25 suallıq, loqo yeniləndi ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — Brend Viktorinası 25 suallıq + yeni loqo
+
+- Demo artıq **25 Azərbaycan sualı** oynayır: 5 mövzu × 5 sual
+  (coğrafiya, tarix, idman, incəsənət, təbiət); cavablar mənbələrdən yoxlanılıb.
+- Hər sualın 4 variantı var; düzgün variant `index % 4` ilə fırladılır,
+  **4 bal/sual** və 25 sual = **100 bal**; 80/40 astanaları qalır.
+- Modalda mövzu etiketi və gradient SVG sual nişanı var; kart önizləməsi də
+  yenilənib. **Navbar logosu dəyişməyib** — ana səhifə ilə eyni tam SVG-dir.
+- 101 unikal mətn AZ/EN/RU/TR-də; `games_quiz_i18n_check.php` → 25 sual,
+  101 literal, 4 dil OK; `cdp_games_quiz_check.js` → **36 OK / 0 FAIL**.
+- Qiymət/qeydiyyat/kateqoriya/şans elementləri yoxdur; digər 3 kart statikdir.
 
 ### 2026-11-27 qeydi — Brend Viktorinası oynanabilir demo
 
