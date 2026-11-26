@@ -3,9 +3,25 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-27 (Brend Tapmacaları sonsuz oyun, reytinq, davam ✅; Brend Viktorinası 25 suallıq ✅)**
+> Son yenilənmə: **2026-11-27 (Brend Tapmacaları: 2 ipucu / 3 keç günlük limit, qeydiyyat gate, canlı reytinq cədvəli, Səviyyə 1–5 ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — Brend Tapmacaları: günlük limitlər və reytinq cədvəli
+
+- Gündə **2 ipucu**, **3 keç**; hər ikisi bitdikdən sonra yanlış cavab oyunu
+  **yerli vaxta görə** ertəsi günə qədər dayandırır (`blockedDate`, geri sayım).
+- Qeydiyyat olmayanlar yalnız **bir dəfə** oynayır; ikinci açılışda qeydiyyat/giriş
+  ekranı. Qeydiyyatdan sonra `skyweb_riddles_v1_u<userId>` və günlük limitlər işləyir.
+- `api/riddles-scores.php` ilə canlı **Reytinq cədvəli** (ilk 5 + `Sənin sıran`).
+  Giriş + CSRF ilə POST, `LOCK_EX` JSON, yalnız maksimal bal saxlanılır.
+- Rütbələr: `Səviyyə 1 · Yeni başlayan → 2 · Maraqlı → 3 · Tapmaca ustası →
+  4 · Reytinq lideri → 5 · Tapmaca əfsanəsi`. `Meraklı` → `Maraqlı`.
+- `Qaldığın yerdən davam et` tostu normal axışda, brand blokundan sonra;
+  heç bir mətnin üstünə düşmür.
+- 127 unikal mətn AZ/EN/RU/TR; yoxlamalar: riddle i18n 15/127/4 dil OK,
+  riddle CDP **89 OK / 0 FAIL**, board check OK, viktorina CDP **36 OK / 0 FAIL**,
+  `parity.php` 0/0/0.
 
 ### 2026-11-27 qeydi — Brend Tapmacaları: sonsuz gündəlik oyun
 

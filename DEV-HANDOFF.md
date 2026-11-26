@@ -2,7 +2,40 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-27 (Brend Tapmacaları sonsuz oyun, reytinq, davam ✅; Brend Viktorinası 25 suallıq ✅)**
+Son yenilənmə: **2026-11-27 (Brend Tapmacaları: günlük limitlər, qeydiyyat gate, canlı reytinq cədvəli, səviyyə rütbələri ✅)**
+
+## 2026-11-27 — Brend Tapmacaları: limitlər, qeydiyyat və reytinq cədvəli ✅
+
+**Düzəliş:**
+- Gündəlik limitlər cihazın **yerli vaxtı** ilə (`Date`, `dayKey()`) sıfırlanır:
+  **2 ipucu**, **3 keç**. Hər ikisi bitdikdən sonra yanlış cavab günün oyununu
+  dayandırır (`state.blockedDate`), doğru cavablarla oynamaq davam edir.
+  Ekranda geri sayım, doğru cavab və `Bağla` düyməsi var; yeni yerli gün başlayanda
+  limitlər avtomatik bərpa olunur (modal açıq qalsa belə).
+- Qeydiyyat olmayan istifadəçi **bir dəfə** oynaya bilər; ikinci açılışda
+  `Qeydiyyat tələb olunur` ekranı və `/auth/register.php` / `/auth/login.php`
+  linkləri göstərilir. Qeydiyyatdan sonra oyunçu `skyweb_riddles_v1_u<userId>`
+  anbarında günlük limitlərlə davam edir.
+- Yeni `api/riddles-scores.php` **GET top** və **POST save** endpointləri:
+  giriş + CSRF tələb olunur, `data/riddle-scores.json` faylına `LOCK_EX` ilə
+  yalnız maksimal bal yazılır. Modalda ilk 5 oyunçu və `Sənin sıran #N` göstərilir.
+- Rütbələr artıq rəsmi status kimi görünür: `Səviyyə 1 · Yeni başlayan`,
+  `Səviyyə 2 · Maraqlı`, `Səviyyə 3 · Tapmaca ustası`,
+  `Səviyyə 4 · Reytinq lideri`, `Səviyyə 5 · Tapmaca əfsanəsi`.
+  AZ `Meraklı` → **`Maraqlı`** düzəldildi.
+- `Qaldığın yerdən davam et` tostu artıq brand blokundan **sonra, normal axışda**
+  (`position: static`) yerləşir; mətnlərin üstünə binmir.
+- `config/i18n-literals.php` → **127 unikal mətn** AZ/EN/RU/TR-də (kart, limitlər,
+  gate, blocked ekranı, cədvəl, 5 səviyyə və 15 tapmaca). `Bağla` dublikatı silindi.
+
+**Yoxlama:** `php -l` təmiz; `parity.php` **0/0/0**;
+`games_riddles_i18n_check.php` → **DUPLICATE KEYS OK, RIDDLES 15, LITERALS 127,
+AZ/EN/RU/TR OK**;
+`cdp_games_riddles_check.js` → **89 OK / 0 FAIL** (limit sayğacları, 2 ipucu/3 keç,
+bloklama və ertəsi gün açılma, guest gate, səviyyələr, toast yeri, 4 dil);
+`riddles_board_check.php` → endpoint guardları, GET shape, POST 401 OK;
+`games_quiz_i18n_check.php` 25 sual / 101 literal / 4 dil OK;
+`cdp_games_quiz_check.js` **36 OK / 0 FAIL**; cleanup və logo parity qorunur.
 
 ## 2026-11-27 — Brend Tapmacaları: sonsuz gündəlik tapmaca oyunu ✅
 

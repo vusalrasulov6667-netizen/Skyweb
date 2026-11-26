@@ -274,8 +274,8 @@ ob_start(static function (string $html): string { return sky_translate_document_
     .riddle-feedback { margin-top:0.9rem;font-size:0.88rem;font-weight:700;line-height:1.6; }
     .riddle-feedback small { display:block;font-weight:500;color:var(--text-muted);margin-top:0.2rem; }
     .riddle-toast {
-      position:absolute;top:3.4rem;left:50%;transform:translateX(-50%);
-      padding:0.45rem 0.9rem;border-radius:999px;white-space:nowrap;
+      display:inline-block;margin:0 0 0.75rem;max-width:100%;
+      padding:0.45rem 0.9rem;border-radius:999px;white-space:normal;text-align:center;
       background:rgba(251,191,36,0.16);border:1px solid rgba(251,191,36,0.4);
       color:#fde68a;font-size:0.76rem;font-weight:700;
     }
@@ -287,14 +287,50 @@ ob_start(static function (string $html): string { return sky_translate_document_
       padding:0.15rem 0.5rem;border-radius:999px;font-weight:700;color:#fbcfe8;
       background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.28);
     }
-    .riddle-hint[hidden],.riddle-feedback[hidden],.riddle-toast[hidden],
-    .riddle-records[hidden],.riddle-feedback small[hidden],
-    .riddle-actions [hidden] { display:none !important; }
+    .riddle-overlay [hidden] { display:none !important; }
+    .riddle-limits { display:flex;gap:0.45rem;flex-wrap:wrap;align-items:center;margin:-0.2rem 0 0.7rem; }
+    .riddle-limit {
+      padding:0.22rem 0.6rem;border-radius:999px;font-size:0.7rem;font-weight:700;
+      background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);
+    }
+    .riddle-limit b { color:#fcd34d; }
+    .riddle-tz { margin-left:auto;font-size:0.66rem;color:var(--text-muted);opacity:0.8; }
+    .riddle-board {
+      margin-top:0.85rem;padding:0.75rem 0.85rem;border-radius:13px;
+      background:rgba(255,255,255,0.035);border:1px solid rgba(255,255,255,0.09);
+    }
+    .riddle-board-head { display:flex;justify-content:space-between;gap:0.5rem;align-items:center;margin-bottom:0.5rem; }
+    .riddle-board-head span:first-child { font-size:0.76rem;font-weight:800;color:#fbcfe8; }
+    .riddle-board-head span:last-child { font-size:0.7rem;font-weight:700;color:#fcd34d; }
+    .riddle-board ol { list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.28rem; }
+    .riddle-board li {
+      display:flex;justify-content:space-between;gap:0.5rem;font-size:0.74rem;
+      padding:0.28rem 0.5rem;border-radius:8px;background:rgba(255,255,255,0.03);
+    }
+    .riddle-board li.me { background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3); }
+    .riddle-board li i { font-style:normal;color:var(--text-muted);width:1.2rem; }
+    .riddle-board li b { color:#fde68a;margin-left:auto; }
+    .riddle-board-note { margin-top:0.5rem;font-size:0.68rem;color:var(--text-muted); }
+    .riddle-state { text-align:center;padding:1.2rem 0.4rem 0.4rem; }
+    .riddle-state-icon { font-size:2.2rem;margin-bottom:0.5rem; }
+    .riddle-state h2 { font-family:'Outfit',var(--font-main);font-size:1.2rem;margin:0 0 0.5rem;color:#fbcfe8; }
+    .riddle-state p { font-size:0.85rem;line-height:1.6;color:var(--text-muted);margin:0.35rem 0; }
+    .riddle-state-small { font-size:0.75rem !important; }
+    .riddle-wait { margin:0.9rem 0;font-family:'Outfit',var(--font-main);font-size:1.15rem;font-weight:800;color:#fcd34d; }
+    .riddle-state-answer {
+      margin:0.6rem auto;padding:0.5rem 0.75rem;border-radius:10px;max-width:100%;
+      background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.28);
+      font-size:0.82rem;color:#f9a8d4;
+    }
+    .riddle-gate-actions { display:flex;gap:0.55rem;margin-top:1rem; }
+    .riddle-gate-actions .riddle-btn { display:flex;align-items:center;justify-content:center;text-decoration:none; }
     @media(max-width:600px){
       .riddle-box { padding:1.5rem 1.2rem; }
       .riddle-options { grid-template-columns:1fr; }
       .riddle-text { font-size:1rem; }
       .riddle-brand { gap:0.65rem; }
+      .riddle-tz { margin-left:0;width:100%; }
+      .riddle-gate-actions { flex-direction:column; }
     }
   </style>
   <!-- Favicon (inline SVG) -->
@@ -448,12 +484,12 @@ ob_start(static function (string $html): string { return sky_translate_document_
         </div>
         <div class="game-card-body">
           <div class="game-name">Brend Tapmacaları</div>
-          <div class="game-desc">Tanış xalq tapmacaları, ipuçları və günlük seriya. Cavabladıqca reytinqin artır, istədiyin vaxt qaldığın yerdən davam edir.</div>
+          <div class="game-desc">Gündə 2 ipucu, 3 keç imkanı və canlı reytinq cədvəli. Qeydiyyatdan keç, hər gün qayıdıb sıralamada irəli get.</div>
           <div class="game-features">
             <span class="game-feat-tag">Sonsuz rejim</span>
-            <span class="game-feat-tag">Gündəlik seriya</span>
-            <span class="game-feat-tag">Şəxsi reytinq</span>
-            <span class="game-feat-tag">İpucu ilə</span>
+            <span class="game-feat-tag">Gündəlik limit</span>
+            <span class="game-feat-tag">Reytinq cədvəli</span>
+            <span class="game-feat-tag">Qeydiyyatla</span>
           </div>
           <button class="game-demo-btn" id="riddleDemoBtn" type="button">Demo / Yeni Ön Baxış</button>
         </div>
@@ -525,7 +561,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
 <div class="riddle-overlay" id="riddleOverlay" role="dialog" aria-modal="true" aria-label="Brend Tapmacaları">
   <div class="riddle-box">
     <button class="riddle-close" id="riddleClose" type="button" aria-label="Tapmaca oyununu bağla">✕</button>
-    <div class="riddle-toast" id="riddleToast" hidden></div>
     <div class="riddle-brand">
       <span class="riddle-brand-mark" aria-hidden="true">
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -536,17 +571,28 @@ ob_start(static function (string $html): string { return sky_translate_document_
       </span>
       <span class="riddle-brand-copy">
         <span class="riddle-brand-name">Brend Tapmacaları</span>
-        <span class="riddle-brand-sub">Sonsuz tapmaca seriyası</span>
+        <span class="riddle-brand-sub">Gündəlik reytinq seriyası</span>
       </span>
     </div>
+    <div class="riddle-toast" id="riddleToast" hidden></div>
     <div class="riddle-stats">
       <div class="riddle-stat"><span>Reytinq</span><strong id="riddleRating">0</strong></div>
       <div class="riddle-stat"><span>Seriya</span><strong id="riddleStreak">0</strong></div>
       <div class="riddle-stat"><span>Bugün</span><strong><span id="riddleToday">0</span>/5</strong></div>
     </div>
-    <div class="riddle-rank" id="riddleRank">Yeni başlayan</div>
+    <div class="riddle-rank" id="riddleRank">Səviyyə 1 · Yeni başlayan</div>
     <div class="riddle-goal"><span id="riddleGoalText">Bugünkü məqsəd: 5 tapmaca</span><div class="riddle-goal-bar"><i id="riddleGoalBar"></i></div></div>
+    <div class="riddle-limits" id="riddleLimits">
+      <span class="riddle-limit"><span>İpucu</span> <b id="riddleHintLeft">2</b>/2</span>
+      <span class="riddle-limit"><span>Keç</span> <b id="riddleSkipLeft">3</b>/3</span>
+      <span class="riddle-tz" id="riddleTz"></span>
+    </div>
     <div class="riddle-records" id="riddleRecords" hidden><span>Top nəticələr</span> <span id="riddleRecordsList"></span></div>
+    <div class="riddle-board" id="riddleBoard">
+      <div class="riddle-board-head"><span>Reytinq cədvəli</span><span id="riddleMyRank"></span></div>
+      <ol id="riddleBoardList"></ol>
+      <div class="riddle-board-note" id="riddleBoardNote" hidden></div>
+    </div>
     <div class="riddle-card">
       <div class="quiz-counter"><span>Tapmaca</span> <span id="riddleNum">1</span> · <span>Raund</span> <span id="riddleRound">1</span> · ∞</div>
       <h2 class="riddle-text" id="riddleText"></h2>
@@ -560,6 +606,26 @@ ob_start(static function (string $html): string { return sky_translate_document_
         <button class="riddle-btn ghost" id="riddleHintBtn" type="button">İpucu göstər</button>
         <button class="riddle-btn ghost" id="riddleSkipBtn" type="button">Keç</button>
         <button class="riddle-btn primary" id="riddleNextBtn" type="button" hidden>Növbəti tapmaca</button>
+      </div>
+    </div>
+
+    <div class="riddle-state" id="riddleBlocked" hidden>
+      <div class="riddle-state-icon" aria-hidden="true">⏳</div>
+      <h2>Bugünkü oyun bitdi</h2>
+      <p>Limitlər cihazının yerli vaxtına görə sıfırlanır.</p>
+      <div class="riddle-wait" id="riddleWait"></div>
+      <div class="riddle-state-answer" id="riddleBlockedAnswer" hidden></div>
+      <button class="riddle-btn primary" id="riddleBlockedClose" type="button">Bağla</button>
+    </div>
+
+    <div class="riddle-state" id="riddleGate" hidden>
+      <div class="riddle-state-icon" aria-hidden="true">🔒</div>
+      <h2>Qeydiyyat tələb olunur</h2>
+      <p>Bir pulsuz oyun oynadın. Davam etmək üçün qeydiyyatdan keç.</p>
+      <p class="riddle-state-small">Qeydiyyatdan sonra günlük limitlərlə oynayacaqsan.</p>
+      <div class="riddle-gate-actions">
+        <a class="riddle-btn primary" id="riddleRegisterLink" href="#">Qeydiyyatdan keç</a>
+        <a class="riddle-btn ghost" id="riddleLoginLink" href="#">Giriş et</a>
       </div>
     </div>
   </div>
@@ -848,6 +914,17 @@ ob_start(static function (string $html): string { return sky_translate_document_
   });
 })();
 
+<?php $riddleUser = currentUser(); ?>
+var riddleAuth = <?= json_encode([
+  'loggedIn' => isLoggedIn(),
+  'userId' => (int) ($_SESSION['user_id'] ?? 0),
+  'name' => (string) ($riddleUser['fullname'] ?? ''),
+  'registerUrl' => SITE_URL . '/auth/register.php',
+  'loginUrl' => SITE_URL . '/auth/login.php',
+  'boardUrl' => SITE_URL . '/api/riddles-scores.php',
+  'csrf' => csrf_token()
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+
 (function () {
   var overlay    = document.getElementById('riddleOverlay');
   var openBtn    = document.getElementById('riddleDemoBtn');
@@ -875,6 +952,34 @@ ob_start(static function (string $html): string { return sky_translate_document_
   var feedbackAnswer = document.getElementById('riddleFeedbackAnswer');
   var toastEl    = document.getElementById('riddleToast');
   var closeBtn   = document.getElementById('riddleClose');
+  var cardEl     = document.querySelector('.riddle-card');
+  var statsEl    = document.querySelector('.riddle-stats');
+  var limitsEl   = document.getElementById('riddleLimits');
+  var goalWrapEl = document.querySelector('.riddle-goal');
+  var hintLeftEl = document.getElementById('riddleHintLeft');
+  var skipLeftEl = document.getElementById('riddleSkipLeft');
+  var tzEl       = document.getElementById('riddleTz');
+  var boardEl     = document.getElementById('riddleBoard');
+  var boardListEl = document.getElementById('riddleBoardList');
+  var boardRankEl = document.getElementById('riddleMyRank');
+  var boardNoteEl = document.getElementById('riddleBoardNote');
+  var blockedEl  = document.getElementById('riddleBlocked');
+  var blockedAnswerEl = document.getElementById('riddleBlockedAnswer');
+  var waitEl     = document.getElementById('riddleWait');
+  var gateEl     = document.getElementById('riddleGate');
+  var registerLink = document.getElementById('riddleRegisterLink');
+  var loginLink  = document.getElementById('riddleLoginLink');
+  var blockedClose = document.getElementById('riddleBlockedClose');
+
+  var HINT_LIMIT = 2;
+  var SKIP_LIMIT = 3;
+  var GOAL_LIMIT = 5;
+  var GUEST_FLAG = 'skyweb_riddle_guest_played';
+  var GUEST_COOKIE = 'skyweb_riddle_guest=1';
+  var countdownTimer = null;
+  var boardTimer = null;
+  var dayTimer = null;
+  var guestSessionActive = false;
 
   // Well-known Azerbaijani folk riddles, checked against folklore collections
   // (Baku "Tapmacalar", azerbaijans.com and the Novruz riddle list).
@@ -980,6 +1085,24 @@ ob_start(static function (string $html): string { return sky_translate_document_
     return dayKey(d) === key;
   }
 
+  // Guest progress stays on this device; registered players get their own store.
+  function storeKey() {
+    return riddleAuth.loggedIn && riddleAuth.userId ? STORE + '_u' + riddleAuth.userId : STORE;
+  }
+
+  function guestPlayed() {
+    try {
+      if (localStorage.getItem(GUEST_FLAG) === '1') return true;
+    } catch (e) { /* private mode */ }
+    return document.cookie.split(';').some(function (part) { return part.trim() === GUEST_COOKIE; });
+  }
+
+  function markGuestPlayed() {
+    if (riddleAuth.loggedIn) return;
+    try { localStorage.setItem(GUEST_FLAG, '1'); } catch (e) { /* private mode */ }
+    document.cookie = GUEST_COOKIE + '; path=/; max-age=31536000; SameSite=Lax';
+  }
+
   function freshOrder() {
     var order = riddles.map(function (_, i) { return i; });
     for (var i = order.length - 1; i > 0; i--) {
@@ -990,17 +1113,20 @@ ob_start(static function (string $html): string { return sky_translate_document_
   }
 
   function defaultState() {
+    var today = dayKey();
     return {
       order: freshOrder(), cursor: 0, round: 1,
       score: 0, total: 0, best: 0, solved: 0,
-      streak: 0, lastDate: '', today: dayKey(),
-      todaySolved: 0, goalDone: '', records: []
+      streak: 0, lastDate: '', today: today,
+      todaySolved: 0, goalDone: '', records: [],
+      hintLeft: HINT_LIMIT, skipLeft: SKIP_LIMIT,
+      limitsDate: today, blockedDate: ''
     };
   }
 
   function loadState() {
     try {
-      var raw = localStorage.getItem(STORE);
+      var raw = localStorage.getItem(storeKey());
       if (!raw) return defaultState();
       var s = JSON.parse(raw);
       if (!s || !Array.isArray(s.order) || typeof s.cursor !== 'number') return defaultState();
@@ -1015,6 +1141,10 @@ ob_start(static function (string $html): string { return sky_translate_document_
       s.lastDate = s.lastDate || '';
       s.goalDone = s.goalDone || '';
       s.records = Array.isArray(s.records) ? s.records.slice(0, 5) : [];
+      s.hintLeft = s.hintLeft === undefined ? HINT_LIMIT : Math.min(HINT_LIMIT, Math.max(0, Number(s.hintLeft) || 0));
+      s.skipLeft = s.skipLeft === undefined ? SKIP_LIMIT : Math.min(SKIP_LIMIT, Math.max(0, Number(s.skipLeft) || 0));
+      s.limitsDate = s.limitsDate || dayKey();
+      s.blockedDate = s.blockedDate || '';
       return s;
     } catch (e) {
       return defaultState();
@@ -1024,7 +1154,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
   var state = loadState();
 
   function saveState() {
-    try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { /* private mode */ }
+    try { localStorage.setItem(storeKey(), JSON.stringify(state)); } catch (e) { /* private mode */ }
   }
 
   function ensureCycle() {
@@ -1045,11 +1175,17 @@ ob_start(static function (string $html): string { return sky_translate_document_
     return false;
   }
 
+  function levelInfo(total) {
+    if (total >= 2000) return { level: 5, title: 'Tapmaca əfsanəsi' };
+    if (total >= 1000) return { level: 4, title: 'Reytinq lideri' };
+    if (total >= 400) return { level: 3, title: 'Tapmaca ustası' };
+    if (total >= 150) return { level: 2, title: 'Maraqlı' };
+    return { level: 1, title: 'Yeni başlayan' };
+  }
+
   function rankTitle() {
-    if (state.total >= 1000) return qt('Reytinq lideri');
-    if (state.total >= 400) return qt('Tapmaca ustası');
-    if (state.total >= 150) return qt('Meraklı');
-    return qt('Yeni başlayan');
+    var info = levelInfo(state.total);
+    return qt('Səviyyə') + ' ' + info.level + ' · ' + qt(info.title);
   }
 
   function showToast(message) {
@@ -1059,18 +1195,162 @@ ob_start(static function (string $html): string { return sky_translate_document_
     toastTimer = setTimeout(function () { toastEl.hidden = true; }, 2600);
   }
 
+  function clearCountdown() {
+    if (countdownTimer) clearInterval(countdownTimer);
+    countdownTimer = null;
+  }
+
+  function togglePlayUI(show) {
+    [cardEl, statsEl, limitsEl, goalWrapEl, recordsEl, rankEl, boardEl].forEach(function (el) {
+      if (el) el.hidden = !show;
+    });
+    if (!show) toastEl.hidden = true;
+    blockedEl.hidden = true;
+    gateEl.hidden = true;
+    if (!show) clearCountdown();
+  }
+
+  function renderTz() {
+    var tz = 'UTC';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) { /* old browser */ }
+    tzEl.textContent = qt('Yerli vaxt') + ': ' + tz;
+  }
+
+  function updateCountdown() {
+    if (state.blockedDate && state.blockedDate !== dayKey()) {
+      clearCountdown();
+      var daily = refreshDay();
+      renderRiddle();
+      if (daily) showToast(qt('Günlük giriş +25'));
+      return;
+    }
+    var now = new Date();
+    var next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    var diff = Math.max(0, next - now);
+    var hours = Math.floor(diff / 3600000);
+    var minutes = Math.floor((diff % 3600000) / 60000);
+    waitEl.textContent = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0')
+      + ' ' + qt('sonra davam edə bilərsən');
+  }
+
+  function renderBlocked(answer) {
+    togglePlayUI(false);
+    blockedEl.hidden = false;
+    blockedAnswerEl.hidden = !answer;
+    blockedAnswerEl.textContent = answer ? qt('Doğru cavab:') + ' ' + answer : '';
+    updateCountdown();
+    countdownTimer = setInterval(updateCountdown, 30000);
+  }
+
+  function renderGate() {
+    togglePlayUI(false);
+    gateEl.hidden = false;
+    registerLink.href = riddleAuth.registerUrl;
+    loginLink.href = riddleAuth.loginUrl;
+  }
+
+  function renderBoard(data) {
+    var rows = data && Array.isArray(data.top) ? data.top : [];
+    boardListEl.innerHTML = '';
+    rows.slice(0, 5).forEach(function (row, i) {
+      var li = document.createElement('li');
+      if (row.is_me) li.className = 'me';
+      var name = document.createElement('span');
+      name.textContent = String(i + 1) + '. ' + (row.name || '—');
+      var score = document.createElement('b');
+      score.textContent = String(row.score || 0);
+      li.appendChild(name);
+      li.appendChild(score);
+      boardListEl.appendChild(li);
+    });
+    boardRankEl.textContent = data && data.me ? qt('Sənin sıran') + ' #' + data.me.rank : '';
+    boardNoteEl.hidden = riddleAuth.loggedIn;
+    if (!riddleAuth.loggedIn) boardNoteEl.textContent = qt('Cədvəldə yer almaq üçün qeydiyyatdan keç.');
+  }
+
+  function fetchBoard() {
+    if (!riddleAuth.boardUrl) return;
+    fetch(riddleAuth.boardUrl + '?action=top', { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(renderBoard)
+      .catch(function () { /* leaderboard is optional */ });
+  }
+
+  function saveBoardScore() {
+    if (!riddleAuth.loggedIn || !riddleAuth.boardUrl) return;
+    if (boardTimer) clearTimeout(boardTimer);
+    boardTimer = setTimeout(function () {
+      fetch(riddleAuth.boardUrl, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': riddleAuth.csrf },
+        body: JSON.stringify({ action: 'save', score: state.total })
+      }).then(function (r) { return r.json(); })
+        .then(function (data) { if (data && data.top) renderBoard(data); })
+        .catch(function () { /* leaderboard is optional */ });
+    }, 500);
+  }
+
+  function isBlocked() {
+    return state.blockedDate === dayKey();
+  }
+
+  function resetDaily() {
+    var today = dayKey();
+    state.today = today;
+    state.todaySolved = 0;
+    state.goalDone = '';
+    state.hintLeft = HINT_LIMIT;
+    state.skipLeft = SKIP_LIMIT;
+    state.limitsDate = today;
+    if (state.blockedDate && state.blockedDate !== today) state.blockedDate = '';
+  }
+
+  // Called on open and before every move, so a device crossing midnight is
+  // unblocked immediately even if the modal stayed open all night.
+  function refreshDay() {
+    var today = dayKey();
+    var changed = state.today !== today || state.limitsDate !== today
+      || (state.blockedDate && state.blockedDate !== today);
+    if (!changed) return false;
+    var daily = applyDaily();
+    resetDaily();
+    renderStats();
+    saveState();
+    return daily;
+  }
+
+  function blockToday(answer) {
+    state.blockedDate = dayKey();
+    recordRun();
+    saveState();
+    renderBlocked(answer);
+    saveBoardScore();
+    showToast(qt('Bugünkü oyun bitdi'));
+  }
+
   function renderStats() {
     ratingEl.textContent = String(state.total);
     streakEl.textContent = String(state.streak);
     todayEl.textContent = String(state.todaySolved);
     rankEl.textContent = rankTitle();
     goalTextEl.textContent = qt('Bugünkü məqsəd: 5 tapmaca');
-    goalBarEl.style.width = Math.min(state.todaySolved, 5) / 5 * 100 + '%';
+    goalBarEl.style.width = Math.min(state.todaySolved, GOAL_LIMIT) / GOAL_LIMIT * 100 + '%';
+    hintLeftEl.textContent = String(state.hintLeft);
+    skipLeftEl.textContent = String(state.skipLeft);
+    hintBtn.disabled = state.hintLeft <= 0 || locked || !hintEl.hidden;
+    skipBtn.disabled = state.skipLeft <= 0 || locked;
+    hintBtn.textContent = qt(state.hintLeft <= 0 ? 'İpucu limiti bitdi'
+      : (!hintEl.hidden ? 'İpucu' : 'İpucu göstər'));
+    skipBtn.textContent = qt(state.skipLeft <= 0 ? 'Keç limiti bitdi' : 'Keç');
     recordsEl.hidden = !state.records.length;
     recordsListEl.textContent = state.records.slice(0, 3).map(function (row) { return row.score; }).join(' · ');
   }
 
   function renderRiddle() {
+    if (isBlocked()) { renderBlocked(); return; }
+    if (!riddleAuth.loggedIn && guestPlayed() && !guestSessionActive) { renderGate(); return; }
+    togglePlayUI(true);
     ensureCycle();
     var item = riddles[state.order[state.cursor]];
     numEl.textContent = String(state.cursor + 1);
@@ -1091,8 +1371,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
     hintEl.textContent = qt(item.h);
     hintEl.hidden = true;
     hintBtn.hidden = false;
-    hintBtn.disabled = false;
-    hintBtn.textContent = qt('İpucu göstər');
     skipBtn.hidden = false;
     nextBtn.hidden = true;
     feedbackEl.hidden = true;
@@ -1105,7 +1383,12 @@ ob_start(static function (string $html): string { return sky_translate_document_
   }
 
   function choose(i) {
-    if (locked) return;
+    if (locked || isBlocked()) return;
+    if (refreshDay()) {
+      renderRiddle();
+      showToast(qt('Günlük giriş +25'));
+      return;
+    }
     locked = true;
     var item = riddles[state.order[state.cursor]];
     var correct = i === item.a;
@@ -1114,19 +1397,28 @@ ob_start(static function (string $html): string { return sky_translate_document_
     if (correct) {
       newRecord = addPoints(10);
       state.solved += 1;
-      if (state.today !== dayKey()) { state.today = dayKey(); state.todaySolved = 0; }
       state.todaySolved += 1;
       feedbackTxt.textContent = qt('Doğru cavab! +10');
       feedbackAnswer.hidden = true;
-      if (state.todaySolved >= 5 && state.goalDone !== dayKey()) {
+      if (state.todaySolved >= GOAL_LIMIT && state.goalDone !== dayKey()) {
         state.goalDone = dayKey();
         addPoints(50);
         showToast(qt('Günlük məqsəd tamamlandı +50'));
       }
     } else {
+      var answerText = qt(item.o[item.a]);
       feedbackTxt.textContent = qt('Yanlış! Doğru cavab:');
-      feedbackAnswer.textContent = qt(item.o[item.a]);
+      feedbackAnswer.textContent = answerText;
       feedbackAnswer.hidden = false;
+      if (state.hintLeft <= 0 && state.skipLeft <= 0) {
+        feedbackEl.hidden = true;
+        hintBtn.hidden = true;
+        skipBtn.hidden = true;
+        nextBtn.hidden = true;
+        renderStats();
+        blockToday(answerText);
+        return;
+      }
     }
 
     feedbackEl.hidden = false;
@@ -1139,6 +1431,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
     nextBtn.hidden = false;
     renderStats();
     saveState();
+    saveBoardScore();
     if (newRecord) showToast(qt('Yeni rekord!'));
   }
 
@@ -1152,9 +1445,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
     if (state.lastDate === today) return false;
     state.streak = wasYesterday(state.lastDate) ? state.streak + 1 : 1;
     state.lastDate = today;
-    state.today = today;
-    state.todaySolved = 0;
-    state.goalDone = '';
+    resetDaily();
     addPoints(25);
     return true;
   }
@@ -1170,39 +1461,89 @@ ob_start(static function (string $html): string { return sky_translate_document_
   }
 
   function openRiddle() {
-    var resumed = state.cursor > 0 || state.score > 0 || state.solved > 0 || state.round > 1;
-    var daily = applyDaily();
-    renderRiddle();
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     closeBtn.focus();
+
+    if (!riddleAuth.loggedIn && guestPlayed()) {
+      renderGate();
+      saveState();
+      fetchBoard();
+      return;
+    }
+    if (isBlocked()) {
+      renderBlocked();
+      saveState();
+      fetchBoard();
+      return;
+    }
+
+    var resumed = state.cursor > 0 || state.score > 0 || state.solved > 0 || state.round > 1;
+    var daily = applyDaily();
+    refreshDay();
+    if (!riddleAuth.loggedIn) {
+      guestSessionActive = true;
+      markGuestPlayed();
+    }
+    renderRiddle();
     saveState();
+    fetchBoard();
     if (daily) showToast(qt('Günlük giriş +25'));
     else if (resumed) showToast(qt('Qaldığın yerdən davam et'));
   }
 
   function closeRiddle() {
-    // If the current riddle was already answered, come back to the next one.
-    if (locked) state.cursor += 1;
+    // If the current riddle was already answered, come back to the next one —
+    // but never advance when the day is blocked or the registration gate is shown.
+    if (locked && !isBlocked() && gateEl.hidden) state.cursor += 1;
+    guestSessionActive = false;
+    clearCountdown();
     recordRun();
     saveState();
     overlay.classList.remove('open');
     document.body.style.overflow = '';
   }
 
+  function useHint() {
+    if (locked || isBlocked()) return;
+    if (refreshDay()) { renderRiddle(); showToast(qt('Günlük giriş +25')); return; }
+    if (state.hintLeft <= 0) { showToast(qt('İpucu limiti bitdi')); return; }
+    state.hintLeft -= 1;
+    hintEl.hidden = false;
+    saveState();
+    renderStats();
+  }
+
+  function useSkip() {
+    if (locked || isBlocked()) return;
+    if (refreshDay()) { renderRiddle(); showToast(qt('Günlük giriş +25')); return; }
+    if (state.skipLeft <= 0) { showToast(qt('Keç limiti bitdi')); return; }
+    state.skipLeft -= 1;
+    saveState();
+    nextRiddle();
+  }
+
   openBtn.addEventListener('click', openRiddle);
   closeBtn.addEventListener('click', closeRiddle);
+  blockedClose.addEventListener('click', closeRiddle);
   nextBtn.addEventListener('click', nextRiddle);
-  skipBtn.addEventListener('click', nextRiddle);
-  hintBtn.addEventListener('click', function () {
-    hintEl.hidden = false;
-    hintBtn.disabled = true;
-    hintBtn.textContent = qt('İpucu');
-  });
+  skipBtn.addEventListener('click', useSkip);
+  hintBtn.addEventListener('click', useHint);
   overlay.addEventListener('click', function (e) { if (e.target === overlay) closeRiddle(); });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && overlay.classList.contains('open')) closeRiddle();
   });
+
+  renderTz();
+  dayTimer = setInterval(function () {
+    if (!overlay.classList.contains('open')) return;
+    var today = dayKey();
+    if (state.today === today && state.limitsDate === today
+      && (!state.blockedDate || state.blockedDate === today)) return;
+    var daily = refreshDay();
+    renderRiddle();
+    if (daily) showToast(qt('Günlük giriş +25'));
+  }, 60000);
 })();
 </script></body>
 </html>
