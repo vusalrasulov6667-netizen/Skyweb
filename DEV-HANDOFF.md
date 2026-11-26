@@ -2,7 +2,27 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-27 (oyunlar: qeydiyyat modalı silindi, demo etiketi əlavə olundu ✅)**
+Son yenilənmə: **2026-11-27 (oyunlar: kateqoriya tabları silindi, logo tam ana səhifə ilə eyni ✅)**
+
+## 2026-11-27 — Oyunlar paneli: kateqoriya tabları silindi, tam logo ✅
+
+**Düzəliş:**
+- `// Oyun Kateqoriyaları` başlığı və `Hamısı / Viktorina / Tapmacalar / Digər`
+  tab bölməsi (`#game-categories`, `.categories-tabs`, `.cat-tab`, `data-cat-*`)
+  HTML, CSS və `filterGames()` JS-i ilə birlikdə tamamilə çıkarıldı.
+- «Oyunlara Bax» bağlantısı artıq `#gamesGrid`-ə yönəlir.
+- Navbar logosu ana səhifədəki **tam `sky-logo-svg`** ilə əvəz olundu
+  (`skyLogoGlow` filtri, bütün dalğa xətləri və ikonlar, o cümlədən
+  `translate(122, 75.5)`); görünüş və ölçü indi eynidir.
+- İstifadə olunmayan `games_cat_*` açarları 4 dil faylından və
+  `config/i18n-literals.php`-dən silindi.
+- Ehtiyat: `_backup_apps/games-index.before_category_tabs_remove.bak`.
+
+**Yoxlama:** bütün `php -l` təmiz; `parity.php` **0/0/0**;
+`scratch/games_bottom_check.php` → kateqoriya bloku, `filterGames`, `data-cat` `GONE`,
+`href="#gamesGrid"`, `id="skyLogoGlow"` və `translate(122, 75.5)` `KEEP`;
+`scratch/games_logo_parity_check.php` → **LOGO PARITY OK**;
+`scratch/games_demo_label_i18n_check.php` → AZ/EN/RU/TR OK.
 
 ## 2026-11-27 — Oyunlar paneli: qeydiyyat modalı silindi, `Demo / Yeni Ön Baxış` ✅
 

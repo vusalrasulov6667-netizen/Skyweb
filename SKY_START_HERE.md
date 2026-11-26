@@ -3,9 +3,18 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-27 (oyunlar: qeydiyyat modalı silindi, demo etiketi əlavə olundu ✅)**
+> Son yenilənmə: **2026-11-27 (oyunlar: kateqoriya tabları silindi, logo tam ana səhifə ilə eyni ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — kateqoriya tabları silindi, logo tamamlandı
+
+- `// Oyun Kateqoriyaları` və `Hamısı / Viktorina / Tapmacalar / Digər` tabları
+  CSS və `filterGames()` JS-i ilə birlikdə silindi; «Oyunlara Bax» indi `#gamesGrid`-ə gedir.
+- Navbar logosu ana səhifə ilə **eyni tam SVG** oldu (`skyLogoGlow`, bütün ikonlar).
+- `games_cat_*` açarları 4 dildən və `i18n-literals.php`-dən çıkarıldı.
+- Yoxlama: `parity.php` 0/0/0; `games_bottom_check.php` → tablar `GONE`, logo `KEEP`;
+  `games_logo_parity_check.php` → **LOGO PARITY OK**; demo etiketi 4 dildə OK.
 
 ### 2026-11-27 qeydi — qeydiyyat modalı silindi, demo etiketi əlavə olundu
 
