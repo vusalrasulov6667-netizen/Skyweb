@@ -2,7 +2,37 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-27 (Brend Viktorinası 25 suallıq, loqo yeniləndi ✅)**
+Son yenilənmə: **2026-11-27 (Brend Tapmacaları sonsuz oyun, reytinq, davam ✅; Brend Viktorinası 25 suallıq ✅)**
+
+## 2026-11-27 — Brend Tapmacaları: sonsuz gündəlik tapmaca oyunu ✅
+
+**Düzəliş:**
+- `Brend Tapmacaları` kartı artıq **oynanılır**: `#riddleDemoBtn` səhifə daxilində
+  `#riddleOverlay`-ı açır. 15 tanış Azərbaycan xalq tapmacası (Baku `Tapmacalar`,
+  azerbaijans.com və Novruz tapmaca siyahısı ilə yoxlanılıb) hər açılışda qarışdırılır,
+  bitdikdə `round` artır və **sonsuz** olaraq yenidən başlayır.
+- Reytinq lokal olaraq saxlanılır (`localStorage.skyweb_riddles_v1`):
+  düzgün cavab **+10**, günə bir dəfə giriş **+25**, gündə 5 düzgün cavabdan sonra
+  **+50**. Yığcam reytinq adları: `Yeni başlayan → Meraklı → Tapmaca ustası → Reytinq lideri`.
+- Gündəlik seriya (`streak`) yalnız əvvəlki gün oynandıqda artır; yanlış cavab və
+  `Keç` balı azaltmır. Bir kliklik `İpucu göstər` və `Növbəti tapmaca` var — taymer yox.
+- Oyundan çıxanda/sekme yenilənəndə **qaldığı yerdən davam edir**: cavablanmış, lakin
+  növbəti düyməsinə basılmamış tapmaca bağlanarkən avtomatik olaraq növbətiyə keçir.
+- Vizual identika qəsdən viktorinadan fərqlidir: amber/pink/bənövşəyi gradientli
+  **lampochka SVG** (`game-riddle-mark`, `riddle-brand-mark`); viktorinanın
+  mavi/bənövşəyi sual nişanı və navbar-in tam logosu dəyişməyib. Digər 3 kart statikdir.
+- `config/i18n-literals.php` → 109 unikal mətn (kart, modal, 15 tapmaca, 60 variant,
+  15 ipucu və UI) AZ/EN/RU/TR-də; dinamik mətnlər `SkyI18n.tr()` ilə çevrilir.
+
+**Yoxlama:** `php -l` təmiz; `parity.php` **0/0/0**;
+`scratch/games_riddles_i18n_check.php` → **DUPLICATE KEYS OK, RIDDLES 15,
+LITERALS 109, AZ/EN/RU/TR OK**;
+`scratch/cdp_games_riddles_check.js` → **70 OK / 0 FAIL** (giriş balı, 5 cavabla
+günlük məqsəd, yanlış cavab, ipucu/keç, 15 və 30 keçiddə raund artımı, yeniləmədən
+sonra davam, 4 dil dinamik mətn, yeni ikon);
+`scratch/games_quiz_i18n_check.php` → 25 sual / 101 literal / 4 dil OK;
+`scratch/cdp_games_quiz_check.js` → **36 OK / 0 FAIL**;
+`scratch/games_bottom_check.php` və `games_logo_parity_check.php` → əvvəlki təmizlik qorunur.
 
 ## 2026-11-27 — Brend Viktorinası: 25 sual, 5 mövzu, yeni loqo ✅
 

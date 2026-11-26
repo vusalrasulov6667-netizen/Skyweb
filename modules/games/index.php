@@ -182,6 +182,120 @@ ob_start(static function (string $html): string { return sky_translate_document_
     .quiz-result-msg { color:var(--text-muted);font-size:0.9rem; }
     .quiz-next[hidden],.quiz-feedback[hidden],.quiz-result[hidden],.quiz-feedback-answer[hidden] { display:none !important; }
     @media(max-width:600px){ .quiz-box { padding:1.5rem 1.25rem; } .quiz-question { font-size:1.02rem; } }
+
+    /* Playable riddles — warm/lightbulb identity, deliberately unlike the quiz */
+    .riddle-overlay {
+      position:fixed;inset:0;z-index:10001;padding:1rem;
+      background:rgba(8,5,20,0.88);backdrop-filter:blur(8px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;visibility:hidden;transition:opacity 0.25s ease,visibility 0.25s ease;
+    }
+    .riddle-overlay.open { opacity:1;visibility:visible; }
+    .riddle-box {
+      width:100%;max-width:540px;max-height:92vh;overflow-y:auto;
+      background:#111027;border:1px solid rgba(244,114,182,0.28);
+      border-radius:var(--radius-xl);padding:1.75rem;position:relative;
+      box-shadow:0 30px 80px -30px rgba(244,114,182,0.35);
+      transform:translateY(16px);transition:transform 0.25s ease;
+    }
+    .riddle-overlay.open .riddle-box { transform:translateY(0); }
+    .riddle-close {
+      position:absolute;top:0.85rem;right:0.85rem;width:34px;height:34px;
+      display:flex;align-items:center;justify-content:center;cursor:pointer;
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+      border-radius:9px;color:var(--text-muted);font-size:1rem;transition:var(--transition);
+    }
+    .riddle-close:hover { background:rgba(251,113,133,0.16);color:#fda4af; }
+    .game-riddle-mark {
+      position:relative;z-index:2;width:66px;height:66px;border-radius:21px;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#fbbf24 0%,#f472b6 55%,#a855f7 100%);
+      box-shadow:0 16px 34px -12px rgba(244,114,182,0.8),inset 0 1px 0 rgba(255,255,255,0.5);
+      transform:rotate(8deg);transition:transform 0.3s ease;
+    }
+    .game-card:hover .game-riddle-mark { transform:rotate(0deg) scale(1.05); }
+    .game-riddle-mark svg { width:38px;height:38px; }
+    .riddle-brand { display:flex;align-items:center;gap:0.85rem;padding-right:2.5rem;margin-bottom:1rem; }
+    .riddle-brand-mark {
+      flex:0 0 46px;width:46px;height:46px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#fbbf24 0%,#f472b6 55%,#a855f7 100%);
+      box-shadow:0 10px 26px -10px rgba(244,114,182,0.85),inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .riddle-brand-mark svg { width:27px;height:27px; }
+    .riddle-brand-copy { display:flex;flex-direction:column;gap:0.15rem;min-width:0; }
+    .riddle-brand-name {
+      font-family:'Outfit',var(--font-main);font-size:1.05rem;font-weight:800;
+      background:linear-gradient(90deg,#fbbf24,#f472b6);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .riddle-brand-sub { font-size:0.72rem;font-weight:700;letter-spacing:0.9px;text-transform:uppercase;color:#f9a8d4; }
+    .riddle-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:0.7rem; }
+    .riddle-stat {
+      padding:0.6rem 0.35rem;text-align:center;border-radius:12px;
+      background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+    }
+    .riddle-stat span { display:block;font-size:0.68rem;color:var(--text-muted);margin-bottom:0.2rem; }
+    .riddle-stat strong { font-family:'Outfit',var(--font-main);font-size:1.05rem;color:#fbcfe8; }
+    .riddle-rank {
+      display:inline-flex;align-items:center;gap:0.35rem;margin-bottom:0.6rem;
+      padding:0.25rem 0.65rem;border-radius:999px;font-size:0.72rem;font-weight:700;
+      background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);color:#fcd34d;
+    }
+    .riddle-goal { font-size:0.74rem;color:var(--text-muted);margin-bottom:0.9rem; }
+    .riddle-goal-bar { height:4px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;margin-top:0.35rem; }
+    .riddle-goal-bar i { display:block;height:100%;background:linear-gradient(90deg,#fbbf24,#f472b6);transition:width 0.3s ease; }
+    .riddle-text { font-size:1.12rem;font-weight:700;line-height:1.6;margin-bottom:1rem; }
+    .riddle-options { display:grid;grid-template-columns:1fr 1fr;gap:0.55rem; }
+    .riddle-option {
+      padding:0.8rem 0.7rem;cursor:pointer;text-align:center;
+      background:rgba(255,255,255,0.045);border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px;color:var(--text-primary);font-family:var(--font-main);
+      font-size:0.87rem;font-weight:600;transition:var(--transition);
+    }
+    .riddle-option:hover:not(:disabled) { border-color:rgba(251,191,36,0.55);background:rgba(251,191,36,0.09);transform:translateY(-2px); }
+    .riddle-option.is-correct { border-color:var(--neon-green);background:rgba(16,185,129,0.16);color:#6ee7b7; }
+    .riddle-option.is-wrong { border-color:var(--neon-rose);background:rgba(244,63,94,0.12);color:#fda4af; }
+    .riddle-option.is-muted { opacity:0.45; }
+    .riddle-actions { display:flex;gap:0.55rem;margin-top:1rem; }
+    .riddle-btn {
+      flex:1;padding:0.75rem 0.9rem;cursor:pointer;border-radius:11px;
+      font-family:var(--font-main);font-size:0.85rem;font-weight:700;transition:var(--transition);
+    }
+    .riddle-btn.ghost { background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);color:var(--text-muted); }
+    .riddle-btn.ghost:hover { color:#fbcfe8;border-color:rgba(244,114,182,0.5); }
+    .riddle-btn.primary { background:linear-gradient(135deg,#fbbf24,#f472b6);border:none;color:#2b1024; }
+    .riddle-btn.primary:hover { box-shadow:0 0 24px rgba(244,114,182,0.4);transform:translateY(-2px); }
+    .riddle-hint {
+      margin-top:0.9rem;padding:0.7rem 0.85rem;border-radius:11px;
+      background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.28);
+      color:#fcd34d;font-size:0.84rem;line-height:1.5;
+    }
+    .riddle-feedback { margin-top:0.9rem;font-size:0.88rem;font-weight:700;line-height:1.6; }
+    .riddle-feedback small { display:block;font-weight:500;color:var(--text-muted);margin-top:0.2rem; }
+    .riddle-toast {
+      position:absolute;top:3.4rem;left:50%;transform:translateX(-50%);
+      padding:0.45rem 0.9rem;border-radius:999px;white-space:nowrap;
+      background:rgba(251,191,36,0.16);border:1px solid rgba(251,191,36,0.4);
+      color:#fde68a;font-size:0.76rem;font-weight:700;
+    }
+    .riddle-records {
+      margin-top:0.9rem;font-size:0.75rem;color:var(--text-muted);
+      display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;
+    }
+    .riddle-records b {
+      padding:0.15rem 0.5rem;border-radius:999px;font-weight:700;color:#fbcfe8;
+      background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.28);
+    }
+    .riddle-hint[hidden],.riddle-feedback[hidden],.riddle-toast[hidden],
+    .riddle-records[hidden],.riddle-feedback small[hidden],
+    .riddle-actions [hidden] { display:none !important; }
+    @media(max-width:600px){
+      .riddle-box { padding:1.5rem 1.2rem; }
+      .riddle-options { grid-template-columns:1fr; }
+      .riddle-text { font-size:1rem; }
+      .riddle-brand { gap:0.65rem; }
+    }
   </style>
   <!-- Favicon (inline SVG) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 10 62 76'%3E%3Cdefs%3E%3ClinearGradient id='skySGradFav' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12,74 L42,74 C50,74 54,70 54,64 C54,58 48,54 40,52 L26,48 C16,45 10,39 10,30 C10,20 18,14 30,14 L56,14 L52,22 L30,22 C26,22 22,25 22,30 C22,35 26,37 30,39 L44,43 C54,46 64,51 64,64 C64,75 56,82 43,82 L12,82 Z' fill='url(%23skySGradFav)'/%3E%3C/svg%3E">
@@ -322,18 +436,26 @@ ob_start(static function (string $html): string { return sky_translate_document_
       </div>
 
       <div class="game-card">
-        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(56,189,248,0.12),rgba(99,102,241,0.08));">
-          <span style="position:relative;z-index:2;">🧩</span>
+        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(168,85,247,0.12));">
+          <span class="game-riddle-mark" aria-hidden="true">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32 8c-9.4 0-17 7.4-17 16.6 0 6.2 3.3 9.8 6.2 13.2 1.7 2 2.8 3.6 3.2 6.2h15.2c.4-2.6 1.5-4.2 3.2-6.2 2.9-3.4 6.2-7 6.2-13.2C49 15.4 41.4 8 32 8Z" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M26 48h12M28 54h8" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+              <path d="M32 21v10M27 26h10" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+            </svg>
+          </span>
+          <div class="game-badge badge-new">Yeni</div>
         </div>
         <div class="game-card-body">
           <div class="game-name">Brend Tapmacaları</div>
-          <div class="game-desc">Müştərinin həll etməsi üçün brend mövzusunda interaktiv tapmacalar. Oyunu bitirənə xüsusi endirim kodu göstərilir.</div>
+          <div class="game-desc">Tanış xalq tapmacaları, ipuçları və günlük seriya. Cavabladıqca reytinqin artır, istədiyin vaxt qaldığın yerdən davam edir.</div>
           <div class="game-features">
-            <span class="game-feat-tag">Avtomatik çatdırılma</span>
-            <span class="game-feat-tag">Çətinlik səviyyəsi</span>
-            <span class="game-feat-tag">Analitika</span>
+            <span class="game-feat-tag">Sonsuz rejim</span>
+            <span class="game-feat-tag">Gündəlik seriya</span>
+            <span class="game-feat-tag">Şəxsi reytinq</span>
+            <span class="game-feat-tag">İpucu ilə</span>
           </div>
-          <button class="game-demo-btn" type="button">Demo / Yeni Ön Baxış</button>
+          <button class="game-demo-btn" id="riddleDemoBtn" type="button">Demo / Yeni Ön Baxış</button>
         </div>
       </div>
 
@@ -395,6 +517,50 @@ ob_start(static function (string $html): string { return sky_translate_document_
       <p class="quiz-result-score"><span>Bal:</span> <span id="quizScore">0</span></p>
       <p class="quiz-result-msg" id="quizResultMsg"></p>
       <button class="quiz-next" id="quizRestart" type="button">Yenidən oyna</button>
+    </div>
+  </div>
+</div>
+
+<!-- Brend Tapmacaları — endless daily riddles -->
+<div class="riddle-overlay" id="riddleOverlay" role="dialog" aria-modal="true" aria-label="Brend Tapmacaları">
+  <div class="riddle-box">
+    <button class="riddle-close" id="riddleClose" type="button" aria-label="Tapmaca oyununu bağla">✕</button>
+    <div class="riddle-toast" id="riddleToast" hidden></div>
+    <div class="riddle-brand">
+      <span class="riddle-brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 8c-9.4 0-17 7.4-17 16.6 0 6.2 3.3 9.8 6.2 13.2 1.7 2 2.8 3.6 3.2 6.2h15.2c.4-2.6 1.5-4.2 3.2-6.2 2.9-3.4 6.2-7 6.2-13.2C49 15.4 41.4 8 32 8Z" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M26 48h12M28 54h8" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+          <path d="M32 21v10M27 26h10" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+        </svg>
+      </span>
+      <span class="riddle-brand-copy">
+        <span class="riddle-brand-name">Brend Tapmacaları</span>
+        <span class="riddle-brand-sub">Sonsuz tapmaca seriyası</span>
+      </span>
+    </div>
+    <div class="riddle-stats">
+      <div class="riddle-stat"><span>Reytinq</span><strong id="riddleRating">0</strong></div>
+      <div class="riddle-stat"><span>Seriya</span><strong id="riddleStreak">0</strong></div>
+      <div class="riddle-stat"><span>Bugün</span><strong><span id="riddleToday">0</span>/5</strong></div>
+    </div>
+    <div class="riddle-rank" id="riddleRank">Yeni başlayan</div>
+    <div class="riddle-goal"><span id="riddleGoalText">Bugünkü məqsəd: 5 tapmaca</span><div class="riddle-goal-bar"><i id="riddleGoalBar"></i></div></div>
+    <div class="riddle-records" id="riddleRecords" hidden><span>Top nəticələr</span> <span id="riddleRecordsList"></span></div>
+    <div class="riddle-card">
+      <div class="quiz-counter"><span>Tapmaca</span> <span id="riddleNum">1</span> · <span>Raund</span> <span id="riddleRound">1</span> · ∞</div>
+      <h2 class="riddle-text" id="riddleText"></h2>
+      <div class="riddle-options" id="riddleOptions"></div>
+      <div class="riddle-hint" id="riddleHint" hidden></div>
+      <div class="riddle-feedback" id="riddleFeedback" aria-live="polite" hidden>
+        <span id="riddleFeedbackText"></span>
+        <small id="riddleFeedbackAnswer" hidden></small>
+      </div>
+      <div class="riddle-actions">
+        <button class="riddle-btn ghost" id="riddleHintBtn" type="button">İpucu göstər</button>
+        <button class="riddle-btn ghost" id="riddleSkipBtn" type="button">Keç</button>
+        <button class="riddle-btn primary" id="riddleNextBtn" type="button" hidden>Növbəti tapmaca</button>
+      </div>
     </div>
   </div>
 </div>
@@ -679,6 +845,363 @@ ob_start(static function (string $html): string { return sky_translate_document_
   overlay.addEventListener('click', function (e) { if (e.target === overlay) closeQuiz(); });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && overlay.classList.contains('open')) closeQuiz();
+  });
+})();
+
+(function () {
+  var overlay    = document.getElementById('riddleOverlay');
+  var openBtn    = document.getElementById('riddleDemoBtn');
+  if (!overlay || !openBtn) return;
+
+  var STORE = 'skyweb_riddles_v1';
+  var ratingEl   = document.getElementById('riddleRating');
+  var streakEl   = document.getElementById('riddleStreak');
+  var todayEl    = document.getElementById('riddleToday');
+  var rankEl     = document.getElementById('riddleRank');
+  var goalTextEl = document.getElementById('riddleGoalText');
+  var goalBarEl  = document.getElementById('riddleGoalBar');
+  var recordsEl  = document.getElementById('riddleRecords');
+  var recordsListEl = document.getElementById('riddleRecordsList');
+  var numEl      = document.getElementById('riddleNum');
+  var roundEl    = document.getElementById('riddleRound');
+  var textEl     = document.getElementById('riddleText');
+  var optionsEl  = document.getElementById('riddleOptions');
+  var hintEl     = document.getElementById('riddleHint');
+  var hintBtn    = document.getElementById('riddleHintBtn');
+  var skipBtn    = document.getElementById('riddleSkipBtn');
+  var nextBtn    = document.getElementById('riddleNextBtn');
+  var feedbackEl = document.getElementById('riddleFeedback');
+  var feedbackTxt = document.getElementById('riddleFeedbackText');
+  var feedbackAnswer = document.getElementById('riddleFeedbackAnswer');
+  var toastEl    = document.getElementById('riddleToast');
+  var closeBtn   = document.getElementById('riddleClose');
+
+  // Well-known Azerbaijani folk riddles, checked against folklore collections
+  // (Baku "Tapmacalar", azerbaijans.com and the Novruz riddle list).
+  var riddles = [
+    {
+      r: 'Bir sinidə iki toyuq, biri isti, biri soyuq.',
+      o: ['Gün və ulduz', 'Ay və Gün', 'Qaranquş və sərçə', 'Şam və tonqal'], a: 1,
+      h: 'Biri gündüz isidir, biri gecə parlayır.'
+    },
+    {
+      r: 'Aşmaz-uşmaz, yerə düşsə, beli sınmaz.',
+      o: ['Yarpaq', 'Qələm', 'Stəkan', 'Daş'], a: 0,
+      h: 'Payızda ağacdan tökülür.'
+    },
+    {
+      r: 'Çəpər üstə çal xoruz.',
+      o: ['Xoruz', 'Balqabaq', 'Pomidor', 'Qarpız'], a: 1,
+      h: 'Bağçada yetişir, rəngi narıncıdır.'
+    },
+    {
+      r: 'O hansı heyvandı anadan saqqallı doğular?',
+      o: ['Qoyun', 'Pişik', 'Keçi', 'İt'], a: 2,
+      h: 'Bu heyvanın saqqalı var, südü də var.'
+    },
+    {
+      r: 'Bir quşum var, düz uçar.',
+      o: ['Güllə', 'Göyərçin', 'Qartal', 'Ox'], a: 0,
+      h: 'Atılır, havada düz gedir.'
+    },
+    {
+      r: 'Ağ sinidə ağ təpə.',
+      o: ['Çörək', 'Plov', 'Qar', 'Süd'], a: 1,
+      h: 'Boşqabda düyü yığını.'
+    },
+    {
+      r: 'Kəmərim qırmızı, yaşıl köynəyəm. Novruz bayramında hər bir evdəyəm.',
+      o: ['Şam', 'Səməni', 'Yumurta', 'Qoğal'], a: 1,
+      h: 'Novruzda cücərdilən taxıllar.'
+    },
+    {
+      r: 'Harayçıyam, hayçıyam, bahar sözlü payçıyam; sinəm ağ, belim qara, quyruqdan da qayçıyam.',
+      o: ['Leylək', 'Sərçə', 'Qaranquş', 'Kəklik'], a: 2,
+      h: 'Baharda gəlir, quyruğu iki uca ayrılır.'
+    },
+    {
+      r: 'Alov deyil, fanaram; ayı, günü sanaram. Novruzun xonçasında hər bir ada yanaram.',
+      o: ['Şam', 'Fənər', 'Tonqal', 'Od'], a: 0,
+      h: 'Xonçada yanan kiçik işıq.'
+    },
+    {
+      r: 'Özüm isti, rəngim al, ağrı-dərdi məndə sal.',
+      o: ['Soba', 'Tonqal', 'Şam', 'Kürə'], a: 1,
+      h: 'Novruzda od üstündə qurulan şey.'
+    },
+    {
+      r: 'Qapısız günbəzəm, üzüm ağ, içim sarı. Novruzda bəzənərəm, qırmızı, yaşıl, sarı.',
+      o: ['Yumurta', 'Qoz', 'Fındıq', 'Şəkərbura'], a: 0,
+      h: 'Qabığı ağ, sarısı var, bayramda rənglənir.'
+    },
+    {
+      r: 'Ağızı bağlı, bizə tanış, ayparadı, üstü naxış.',
+      o: ['Qoğal', 'Şəkərbura', 'Paxlava', 'Çörək'], a: 1,
+      h: 'Şəkərli, ay formasında Novruz şirniyyatı.'
+    },
+    {
+      r: 'Deyirmi, tağalağam, qat-qat paltar geyərəm.',
+      o: ['Paxlava', 'Qoğal', 'Şəkərbura', 'Fəsəli'], a: 1,
+      h: 'Qat-qat xəmirdən hazırlanır.'
+    },
+    {
+      r: 'Ağ qəsirin içində köynəyi yaşıl yatıb.',
+      o: ['Püstə', 'Fındıq', 'Qoz', 'Badam'], a: 0,
+      h: 'Ağ qabıq, yaşıl ləpə.'
+    },
+    {
+      r: 'O nədir ki, səhər dörd, günorta iki, axşam üç ayaqlı olur?',
+      o: ['İnsan', 'At', 'Kürsü', 'Qaranquş'], a: 0,
+      h: 'Beşikdə, ayaq üstə və əsa ilə.'
+    }
+  ];
+
+  var index = 0;
+  var score = 0;
+  var locked = false;
+  var toastTimer = null;
+
+  function qt(text) {
+    if (window.SkyI18n && typeof window.SkyI18n.tr === 'function') {
+      return window.SkyI18n.tr(text, undefined, 'az');
+    }
+    return text;
+  }
+
+  function dayKey(date) {
+    var d = date || new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function wasYesterday(key) {
+    if (!key) return false;
+    var d = new Date();
+    d.setDate(d.getDate() - 1);
+    return dayKey(d) === key;
+  }
+
+  function freshOrder() {
+    var order = riddles.map(function (_, i) { return i; });
+    for (var i = order.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+    }
+    return order;
+  }
+
+  function defaultState() {
+    return {
+      order: freshOrder(), cursor: 0, round: 1,
+      score: 0, total: 0, best: 0, solved: 0,
+      streak: 0, lastDate: '', today: dayKey(),
+      todaySolved: 0, goalDone: '', records: []
+    };
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORE);
+      if (!raw) return defaultState();
+      var s = JSON.parse(raw);
+      if (!s || !Array.isArray(s.order) || typeof s.cursor !== 'number') return defaultState();
+      s.order = s.order.filter(function (i) { return typeof i === 'number' && i >= 0 && i < riddles.length; });
+      if (!s.order.length) s.order = freshOrder();
+      if (s.cursor < 0 || s.cursor > s.order.length) s.cursor = 0;
+      ['score', 'total', 'best', 'solved', 'streak', 'todaySolved'].forEach(function (key) {
+        s[key] = Math.max(0, Number(s[key]) || 0);
+      });
+      s.round = Math.max(1, Number(s.round) || 1);
+      s.today = s.today || dayKey();
+      s.lastDate = s.lastDate || '';
+      s.goalDone = s.goalDone || '';
+      s.records = Array.isArray(s.records) ? s.records.slice(0, 5) : [];
+      return s;
+    } catch (e) {
+      return defaultState();
+    }
+  }
+
+  var state = loadState();
+
+  function saveState() {
+    try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { /* private mode */ }
+  }
+
+  function ensureCycle() {
+    if (state.cursor < state.order.length) return;
+    state.order = freshOrder();
+    state.cursor = 0;
+    state.round += 1;
+  }
+
+  function addPoints(n) {
+    var wasRecord = state.score > 0 && state.score >= state.best;
+    state.score += n;
+    state.total += n;
+    if (state.score > state.best) {
+      state.best = state.score;
+      return !wasRecord;
+    }
+    return false;
+  }
+
+  function rankTitle() {
+    if (state.total >= 1000) return qt('Reytinq lideri');
+    if (state.total >= 400) return qt('Tapmaca ustası');
+    if (state.total >= 150) return qt('Meraklı');
+    return qt('Yeni başlayan');
+  }
+
+  function showToast(message) {
+    toastEl.textContent = message;
+    toastEl.hidden = false;
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.hidden = true; }, 2600);
+  }
+
+  function renderStats() {
+    ratingEl.textContent = String(state.total);
+    streakEl.textContent = String(state.streak);
+    todayEl.textContent = String(state.todaySolved);
+    rankEl.textContent = rankTitle();
+    goalTextEl.textContent = qt('Bugünkü məqsəd: 5 tapmaca');
+    goalBarEl.style.width = Math.min(state.todaySolved, 5) / 5 * 100 + '%';
+    recordsEl.hidden = !state.records.length;
+    recordsListEl.textContent = state.records.slice(0, 3).map(function (row) { return row.score; }).join(' · ');
+  }
+
+  function renderRiddle() {
+    ensureCycle();
+    var item = riddles[state.order[state.cursor]];
+    numEl.textContent = String(state.cursor + 1);
+    roundEl.textContent = String(state.round);
+    textEl.textContent = qt(item.r);
+    optionsEl.innerHTML = '';
+    item.o.forEach(function (option, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'riddle-option';
+      btn.dataset.correct = String(i === item.a);
+      btn.textContent = qt(option);
+      btn.addEventListener('click', (function (displayIndex) {
+        return function () { choose(displayIndex); };
+      })(i));
+      optionsEl.appendChild(btn);
+    });
+    hintEl.textContent = qt(item.h);
+    hintEl.hidden = true;
+    hintBtn.hidden = false;
+    hintBtn.disabled = false;
+    hintBtn.textContent = qt('İpucu göstər');
+    skipBtn.hidden = false;
+    nextBtn.hidden = true;
+    feedbackEl.hidden = true;
+    feedbackTxt.textContent = '';
+    feedbackAnswer.textContent = '';
+    feedbackAnswer.hidden = true;
+    locked = false;
+    renderStats();
+    saveState();
+  }
+
+  function choose(i) {
+    if (locked) return;
+    locked = true;
+    var item = riddles[state.order[state.cursor]];
+    var correct = i === item.a;
+    var newRecord = false;
+
+    if (correct) {
+      newRecord = addPoints(10);
+      state.solved += 1;
+      if (state.today !== dayKey()) { state.today = dayKey(); state.todaySolved = 0; }
+      state.todaySolved += 1;
+      feedbackTxt.textContent = qt('Doğru cavab! +10');
+      feedbackAnswer.hidden = true;
+      if (state.todaySolved >= 5 && state.goalDone !== dayKey()) {
+        state.goalDone = dayKey();
+        addPoints(50);
+        showToast(qt('Günlük məqsəd tamamlandı +50'));
+      }
+    } else {
+      feedbackTxt.textContent = qt('Yanlış! Doğru cavab:');
+      feedbackAnswer.textContent = qt(item.o[item.a]);
+      feedbackAnswer.hidden = false;
+    }
+
+    feedbackEl.hidden = false;
+    Array.prototype.forEach.call(optionsEl.children, function (btn, j) {
+      btn.disabled = true;
+      btn.classList.add(j === item.a ? 'is-correct' : (j === i ? 'is-wrong' : 'is-muted'));
+    });
+    hintBtn.hidden = true;
+    skipBtn.hidden = true;
+    nextBtn.hidden = false;
+    renderStats();
+    saveState();
+    if (newRecord) showToast(qt('Yeni rekord!'));
+  }
+
+  function nextRiddle() {
+    state.cursor += 1;
+    renderRiddle();
+  }
+
+  function applyDaily() {
+    var today = dayKey();
+    if (state.lastDate === today) return false;
+    state.streak = wasYesterday(state.lastDate) ? state.streak + 1 : 1;
+    state.lastDate = today;
+    state.today = today;
+    state.todaySolved = 0;
+    state.goalDone = '';
+    addPoints(25);
+    return true;
+  }
+
+  function recordRun() {
+    if (state.score <= 0) return;
+    var today = dayKey();
+    var last = state.records[0];
+    if (last && last.score === state.score && last.date === today) return;
+    state.records.push({ score: state.score, date: today });
+    state.records.sort(function (a, b) { return b.score - a.score; });
+    state.records = state.records.slice(0, 5);
+  }
+
+  function openRiddle() {
+    var resumed = state.cursor > 0 || state.score > 0 || state.solved > 0 || state.round > 1;
+    var daily = applyDaily();
+    renderRiddle();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+    saveState();
+    if (daily) showToast(qt('Günlük giriş +25'));
+    else if (resumed) showToast(qt('Qaldığın yerdən davam et'));
+  }
+
+  function closeRiddle() {
+    // If the current riddle was already answered, come back to the next one.
+    if (locked) state.cursor += 1;
+    recordRun();
+    saveState();
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', openRiddle);
+  closeBtn.addEventListener('click', closeRiddle);
+  nextBtn.addEventListener('click', nextRiddle);
+  skipBtn.addEventListener('click', nextRiddle);
+  hintBtn.addEventListener('click', function () {
+    hintEl.hidden = false;
+    hintBtn.disabled = true;
+    hintBtn.textContent = qt('İpucu');
+  });
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeRiddle(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeRiddle();
   });
 })();
 </script></body>

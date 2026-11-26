@@ -3,9 +3,23 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-27 (Brend Viktorinası 25 suallıq, loqo yeniləndi ✅)**
+> Son yenilənmə: **2026-11-27 (Brend Tapmacaları sonsuz oyun, reytinq, davam ✅; Brend Viktorinası 25 suallıq ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — Brend Tapmacaları: sonsuz gündəlik oyun
+
+- İkinci kartın `Demo / Yeni Ön Baxış` düyməsi indi **oynanılır tapmaca modalı** açır:
+  15 tanış xalq tapmacası qarışdırılır, bitdikdə `round` artır və sonsuz davam edir.
+- Reytinq `localStorage.skyweb_riddles_v1`-də saxlanılır: düzgün cavab **+10**,
+  günə bir dəfə giriş **+25**, gündə 5 düzgün cavab **+50**; yanlış/keç cəzasız.
+  Rütbələr: `Yeni başlayan → Meraklı → Tapmaca ustası → Reytinq lideri`.
+- Gündəlik `streak`, bir kliklik ipucu və çıxıb qayıdanda qaldığı yerdən davam var;
+  taymer yox. İkon viktorinadan fərqli, gradientli lampochka SVG-dir.
+- 109 unikal mətn AZ/EN/RU/TR-də. Yoxlama: `games_riddles_i18n_check.php` 15 tapmaca /
+  109 literal / 4 dil OK; `cdp_games_riddles_check.js` **70 OK / 0 FAIL**.
+- Viktorina (25 sual), digər 3 statik kart, navbar logosu və əvvəlki təmizlik qorunur;
+  `parity.php` 0/0/0, viktorina CDP check **36 OK / 0 FAIL**.
 
 ### 2026-11-27 qeydi — Brend Viktorinası 25 suallıq + yeni loqo
 
