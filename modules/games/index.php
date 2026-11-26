@@ -106,68 +106,13 @@ ob_start(static function (string $html): string { return sky_translate_document_
       padding:0.2rem 0.6rem;border-radius:6px;font-size:0.72rem;font-weight:600;
       background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);
     }
-    .game-order-btn {
+    .game-demo-btn {
       width:100%;margin-top:auto;padding:0.7rem 1.4rem;border-radius:var(--radius-sm);
       background:linear-gradient(135deg,var(--neon-green),#0d9488);
       color:#fff;font-size:0.85rem;font-weight:700;
       border:none;cursor:pointer;transition:var(--transition);
     }
-    .game-order-btn:hover { box-shadow:0 0 20px rgba(16,185,129,0.4);transform:translateY(-2px); }
-
-    /* Pay Modal */
-    .pay-modal-overlay {
-      position:fixed;inset:0;background:rgba(0,0,0,0.82);
-      backdrop-filter:blur(8px);z-index:10000;
-      display:flex;align-items:center;justify-content:center;padding:1rem;
-      opacity:0;visibility:hidden;transition:var(--transition);
-    }
-    .pay-modal-overlay.open { opacity:1;visibility:visible; }
-    .pay-modal {
-      background:#0d1127;border:1px solid var(--sky-border);
-      border-radius:var(--radius-xl);padding:2.5rem;
-      max-width:500px;width:100%;position:relative;
-      transform:translateY(20px);transition:transform 0.3s ease;max-height:90vh;overflow-y:auto;
-    }
-    .pay-modal-overlay.open .pay-modal { transform:translateY(0); }
-    .pay-modal-close {
-      position:absolute;top:1rem;right:1rem;
-      background:rgba(255,255,255,0.06);border:1px solid var(--sky-border);
-      border-radius:8px;width:32px;height:32px;
-      display:flex;align-items:center;justify-content:center;
-      cursor:pointer;color:var(--text-muted);font-size:1.1rem;transition:var(--transition);
-    }
-    .pay-modal-close:hover { background:rgba(244,63,94,0.15);color:var(--neon-rose); }
-    .pay-modal-title { font-size:1.3rem;font-weight:800;margin-bottom:0.4rem; }
-    .pay-modal-sub { font-size:0.85rem;color:var(--text-muted);margin-bottom:1.5rem; }
-    .pay-form-group { margin-bottom:1rem; }
-    .pay-form-label { display:block;font-size:0.82rem;font-weight:600;color:var(--text-secondary);margin-bottom:0.4rem; }
-    .pay-form-input {
-      width:100%;padding:0.75rem 1rem;background:rgba(255,255,255,0.04);
-      border:1px solid var(--sky-border);border-radius:var(--radius-sm);
-      color:var(--text-primary);font-size:0.9rem;outline:none;
-      font-family:var(--font-main);transition:var(--transition);
-    }
-    .pay-form-input:focus { border-color:var(--neon-green);background:rgba(16,185,129,0.04); }
-    .pay-form-row { display:grid;grid-template-columns:1fr 1fr;gap:1rem; }
-    .pay-summary {
-      background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);
-      border-radius:var(--radius-sm);padding:1rem;margin:1.25rem 0;
-    }
-    .pay-summary-row { display:flex;justify-content:space-between;font-size:0.85rem;padding:0.2rem 0; }
-    .pay-submit {
-      width:100%;padding:1rem;border:none;cursor:pointer;
-      background:linear-gradient(135deg,var(--neon-green),#0d9488);
-      color:#fff;font-size:0.95rem;font-weight:700;
-      border-radius:var(--radius-sm);transition:var(--transition);
-    }
-    .pay-submit:hover { box-shadow:0 0 30px rgba(16,185,129,0.4);transform:translateY(-2px); }
-    .pay-secure { text-align:center;font-size:0.75rem;color:var(--text-muted);margin-top:0.75rem; }
-    .pay-success { text-align:center;display:none; }
-    .pay-success-icon { font-size:3.5rem;margin-bottom:1rem; }
-    .pay-success-title { font-size:1.4rem;font-weight:800;margin-bottom:0.5rem; }
-    .pay-success-msg { color:var(--text-muted);font-size:0.9rem;margin-bottom:1.5rem; }
-
-    @media(max-width:480px){ .pay-form-row { grid-template-columns:1fr; } }
+    .game-demo-btn:hover { box-shadow:0 0 20px rgba(16,185,129,0.4);transform:translateY(-2px); }
   </style>
   <!-- Favicon (inline SVG) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 10 62 76'%3E%3Cdefs%3E%3ClinearGradient id='skySGradFav' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12,74 L42,74 C50,74 54,70 54,64 C54,58 48,54 40,52 L26,48 C16,45 10,39 10,30 C10,20 18,14 30,14 L56,14 L52,22 L30,22 C26,22 22,25 22,30 C22,35 26,37 30,39 L44,43 C54,46 64,51 64,64 C64,75 56,82 43,82 L12,82 Z' fill='url(%23skySGradFav)'/%3E%3C/svg%3E">
@@ -244,7 +189,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Mükafat sistemi</span>
             <span class="game-feat-tag">Avtomatik hesab</span>
           </div>
-          <button class="game-order-btn" onclick="openPayModal('Brend Viktorinası')">Sifariş Et</button>
+          <button class="game-demo-btn" type="button">Demo / Yeni Ön Baxış</button>
         </div>
       </div>
 
@@ -261,7 +206,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">İnstagram uyumlu</span>
             <span class="game-feat-tag">Moderasiya paneli</span>
           </div>
-          <button class="game-order-btn" onclick="openPayModal('Canlı Viktorina Müsabiqəsi')">Sifariş Et</button>
+          <button class="game-demo-btn" type="button">Demo / Yeni Ön Baxış</button>
         </div>
       </div>
 
@@ -277,7 +222,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Çətinlik səviyyəsi</span>
             <span class="game-feat-tag">Analitika</span>
           </div>
-          <button class="game-order-btn" onclick="openPayModal('Brend Tapmacaları')">Sifariş Et</button>
+          <button class="game-demo-btn" type="button">Demo / Yeni Ön Baxış</button>
         </div>
       </div>
 
@@ -293,7 +238,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Turnir rejimi</span>
             <span class="game-feat-tag">Liderlik cədvəli</span>
           </div>
-          <button class="game-order-btn" onclick="openPayModal('Brend İdman Oyunu')">Sifariş Et</button>
+          <button class="game-demo-btn" type="button">Demo / Yeni Ön Baxış</button>
         </div>
       </div>
 
@@ -301,46 +246,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
 
   </div>
 </main>
-
-<!-- Payment Modal -->
-<div class="pay-modal-overlay" id="payModal" onclick="handleModalClick(event)">
-  <div class="pay-modal" role="dialog" aria-modal="true">
-    <button class="pay-modal-close" onclick="closePayModal()">✕</button>
-    <div id="payFormSection">
-      <div class="pay-modal-title">🎮 Oyun Sifarişi &amp; Ödəniş</div>
-      <div class="pay-modal-sub" id="payModalSub">Seçdiyiniz oyun: —</div>
-      <div class="pay-form-group">
-        <label class="pay-form-label" for="pf-name">Ad Soyad *</label>
-        <input class="pay-form-input" id="pf-name" type="text" placeholder="Əli Həsənov" required>
-      </div>
-      <div class="pay-form-row">
-        <div class="pay-form-group">
-          <label class="pay-form-label" for="pf-phone">Telefon *</label>
-          <input class="pay-form-input" id="pf-phone" type="tel" placeholder="+994 55 xxx xx xx">
-        </div>
-        <div class="pay-form-group">
-          <label class="pay-form-label" for="pf-email">E-poçt *</label>
-          <input class="pay-form-input" id="pf-email" type="email" placeholder="info@biznes.az">
-        </div>
-      </div>
-      <div class="pay-form-group">
-        <label class="pay-form-label" for="pf-note">Qeyd</label>
-        <input class="pay-form-input" id="pf-note" type="text" placeholder="Xüsusi istəkləriniz...">
-      </div>
-      <div class="pay-summary">
-        <div class="pay-summary-row"><span>Oyun:</span><span id="psum-game">—</span></div>
-      </div>
-      <button class="pay-submit" onclick="submitGamePay(event)">🔐 Sifarişi Təsdiqlə</button>
-      <div class="pay-secure">🔒 Məlumatlarınız şifrələnmiş kanalda təhlükəsiz ötürülür</div>
-    </div>
-    <div class="pay-success" id="paySuccess">
-      <div class="pay-success-icon">🎉</div>
-      <div class="pay-success-title">Sifarişiniz qəbul edildi!</div>
-      <div class="pay-success-msg" id="paySuccessMsg">Tezliklə sizinlə əlaqə saxlayacağıq.</div>
-      <button onclick="closePayModal()" style="padding:0.75rem 2rem;background:linear-gradient(135deg,var(--neon-green),#0d9488);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;cursor:pointer;">Bağla</button>
-    </div>
-  </div>
-</div>
 
 <script src="<?= SITE_URL ?>/assets/js/main.js"></script>
 <script>
@@ -351,33 +256,6 @@ function filterGames(btn, cat) {
   document.querySelectorAll('#gamesGrid .game-card').forEach(card => {
     card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
   });
-}
-
-// Pay modal
-let _payGame='';
-function openPayModal(game) {
-  _payGame=game;
-  document.getElementById('payModalSub').textContent = 'Seçdiyiniz oyun: '+game;
-  document.getElementById('psum-game').textContent = game;
-  document.getElementById('payFormSection').style.display='';
-  document.getElementById('paySuccess').style.display='none';
-  document.getElementById('payModal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closePayModal() {
-  document.getElementById('payModal').classList.remove('open');
-  document.body.style.overflow='';
-}
-function handleModalClick(e) { if(e.target===document.getElementById('payModal')) closePayModal(); }
-async function submitGamePay(e) {
-  e.preventDefault();
-  const btn=e.target; btn.textContent='Göndərilir...'; btn.disabled=true;
-  await new Promise(r=>setTimeout(r,1300));
-  const name=document.getElementById('pf-name').value||'Hörmətli müştəri';
-  document.getElementById('payFormSection').style.display='none';
-  document.getElementById('paySuccess').style.display='';
-  document.getElementById('paySuccessMsg').textContent=name+', '+_payGame+' sifarişiniz qəbul edildi! Tezliklə WhatsApp (+994 55 000 00 00) vasitəsilə sizinlə əlaqə saxlayacağıq.';
-  btn.textContent='🔐 Sifarişi Təsdiqlə'; btn.disabled=false;
 }
 
 </script>

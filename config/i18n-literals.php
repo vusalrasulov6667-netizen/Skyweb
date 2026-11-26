@@ -216,6 +216,7 @@ $SKY_LITERAL_I18N = [
     'Tezliklə WhatsApp və ya e-poçt vasitəsilə sizinlə əlaqə saxlayacağıq.' => ['az'=>'Tezliklə WhatsApp və ya e-poçt vasitəsilə sizinlə əlaqə saxlayacağıq.', 'en'=>'We will contact you soon via WhatsApp or email.', 'ru'=>'Мы скоро свяжемся с вами через WhatsApp или email.', 'tr'=>'Sizinle kısa sürede WhatsApp veya e-posta aracılığıyla iletişime geçeceğiz.'],
     'Sifariş Ver' => ['az'=>'Sifariş Ver', 'en'=>'Order Now', 'ru'=>'Заказать', 'tr'=>'Sipariş Ver'],
     'Sifariş Et' => ['az'=>'Sifariş Et', 'en'=>'Order', 'ru'=>'Заказать', 'tr'=>'Sipariş Et'],
+    'Demo / Yeni Ön Baxış' => ['az'=>'Demo / Yeni Ön Baxış', 'en'=>'Demo / New Preview', 'ru'=>'Демо / Новый предпросмотр', 'tr'=>'Demo / Yeni Ön İzleme'],
     '🔐 Sifarişi Təsdiqlə' => ['az'=>'🔐 Sifarişi Təsdiqlə', 'en'=>'🔐 Confirm Order', 'ru'=>'🔐 Подтвердить заказ', 'tr'=>'🔐 Siparişi Onayla'],
     'Seçdiyiniz oyun: ' => ['az'=>'Seçdiyiniz oyun: ', 'en'=>'Selected game: ', 'ru'=>'Выбранная игра: ', 'tr'=>'Seçtiğiniz oyun: '],
     'Seçdiyiniz oyun: —' => ['az'=>'Seçdiyiniz oyun: —', 'en'=>'Selected game: —', 'ru'=>'Выбранная игра: —', 'tr'=>'Seçtiğiniz oyun: —'],

@@ -2,7 +2,28 @@
 
 > Bu fayl sessiya davamlılığı üçündür. «sky» yazanda buradan başla.
 
-Son yenilənmə: **2026-11-27 (oyunlar: kart qiymətləri və AzurMart bölməsi silindi ✅)**
+Son yenilənmə: **2026-11-27 (oyunlar: qeydiyyat modalı silindi, demo etiketi əlavə olundu ✅)**
+
+## 2026-11-27 — Oyunlar paneli: qeydiyyat modalı silindi, `Demo / Yeni Ön Baxış` ✅
+
+**Düzəliş:**
+- `Sifariş Et` düyməsinə basanda açılan **qeydiyyat/ödəniş modalı** tamamilə
+  çıkarıldı: HTML (`#payModal`, `#payFormSection`, `Ad Soyad`, `Telefon`, `E-poçt`,
+  `Qeyd`, təsdiq mesajı), onun CSS-i və JS funksiyaları
+  (`openPayModal`, `closePayModal`, `handleModalClick`, `submitGamePay`, `_payGame`).
+- 4 oyun kartındakı düymə mətni **`Demo / Yeni Ön Baxış`** ilə əvəz olundu;
+  `onclick` qaldırıldı, `type="button"` əlavə edildi, sinif `game-demo-btn` olaraq
+  yeniləndi (görünüş dəyişmədi, tam enli vahid düymə qaldı).
+- `config/i18n-literals.php` → yeni tam ifadə açarı əlavə olundu:
+  `Demo / New Preview` (en), `Демо / Новый предпросмотр` (ru),
+  `Demo / Yeni Ön İzleme` (tr). Qısa `Demo` / `Yeni` açarlarını əvəz etmək üçün
+  tam ifadə istifadə olunur.
+- Ehtiyat: `_backup_apps/games-index.before_registration_modal_remove.bak`.
+
+**Yoxlama:** `php -l` təmiz; `parity.php` **0/0/0**;
+`scratch/games_bottom_check.php` → modal, `Sifariş Et`, forma sahələri `GONE`,
+`Demo / Yeni Ön Baxış` və oyun kartları `KEEP`;
+`scratch/games_demo_label_i18n_check.php` → **AZ/EN/RU/TR: OK**, AZ sızıntısı yox.
 
 ## 2026-11-27 — Oyunlar paneli: qiymətlər silindi, kartlar və modal səliqəyə salındı ✅
 

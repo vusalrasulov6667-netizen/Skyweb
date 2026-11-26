@@ -3,9 +3,19 @@
 > **İstifadəçi «sky» yazanda ilk olaraq bu faylı oxu.**
 > Sonra dəyişiklik tarixçəsi üçün `DEV-HANDOFF.md`-yə bax və işə buradan davam et.
 >
-> Son yenilənmə: **2026-11-27 (oyunlar: kart qiymətləri və AzurMart bölməsi silindi ✅)**
+> Son yenilənmə: **2026-11-27 (oyunlar: qeydiyyat modalı silindi, demo etiketi əlavə olundu ✅)**
 >
 > Aşağıdakı studiya və təqdimat bölmələri **tarixi qeyd** olaraq qalır; aktual vəziyyət bu bölmədədir.
+
+### 2026-11-27 qeydi — qeydiyyat modalı silindi, demo etiketi əlavə olundu
+
+- `Sifariş Et` düyməsinin açdığı qeydiyyat/ödəniş modalı (`#payModal`, formalar,
+  CSS və bütün JS funksiyaları) tamamilə çıkarıldı.
+- Kart düymələrinin mətni **`Demo / Yeni Ön Baxış`** oldu; `onclick` yoxdur,
+  sinif `game-demo-btn`, görünüş eyni tam enli vahid düymədir.
+- `config/i18n-literals.php` → yeni tam ifadə üçün 4 dillik tərcümə əlavə olundu.
+- Yoxlama: `parity.php` 0/0/0; `games_bottom_check.php` → modal və `Sifariş Et`
+  `GONE`, demo etiketi `KEEP`; `games_demo_label_i18n_check.php` → AZ/EN/RU/TR OK.
 
 ### 2026-11-27 qeydi — qiymətlər və AzurMart tarixçəsi silindi
 
