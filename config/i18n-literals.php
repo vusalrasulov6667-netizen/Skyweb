@@ -320,6 +320,7 @@ $SKY_LITERAL_I18N = [
     'Retro arcade' => ['az'=>'Retro arcade', 'en'=>'Retro arcade', 'ru'=>'Ретро-аркада', 'tr'=>'Retro arcade'],
     'Refleks' => ['az'=>'Refleks', 'en'=>'Reflex', 'ru'=>'Рефлекс', 'tr'=>'Refleks'],
     'Hədəf' => ['az'=>'Hədəf', 'en'=>'Target', 'ru'=>'Цель', 'tr'=>'Hedef'],
+    'SkyWeb salamlayır: bu sadəcə oyundur! Real həyatda da hədəfini tut, geri çəkilmə!' => ['az'=>'SkyWeb salamlayır: bu sadəcə oyundur! Real həyatda da hədəfini tut, geri çəkilmə!', 'en'=>'SkyWeb says: it\'s just a game! In real life, keep your aim true and never back down!', 'ru'=>'SkyWeb говорит: это всего лишь игра! В реальной жизни держи цель и не отступай!', 'tr'=>'SkyWeb selamlıyor: bu sadece bir oyun! Gerçek hayatta da hedefini tut, geri çekilme!'],
     'SkyWeb sizi salamlayır: bu sadəcə bir oyundur. Həyatda uduzmayın, davam edin!' => ['az'=>'SkyWeb sizi salamlayır: bu sadəcə bir oyundur. Həyatda uduzmayın, davam edin!', 'en'=>'SkyWeb greets you: this is just a game. Don’t lose in life — keep going!', 'ru'=>'SkyWeb приветствует вас: это всего лишь игра. В жизни не сдавайтесь — продолжайте идти!', 'tr'=>'SkyWeb sizi selamlıyor: bu sadece bir oyun. Hayatta kaybetmeyin, devam edin!'],
     'Bonus can' => ['az'=>'Bonus can', 'en'=>'Bonus life', 'ru'=>'Бонусная жизнь', 'tr'=>'Bonus can'],
     'Tədbirlər üçün' => ['az'=>'Tədbirlər üçün', 'en'=>'For events', 'ru'=>'Для мероприятий', 'tr'=>'Etkinlikler için'],

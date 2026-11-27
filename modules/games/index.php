@@ -356,15 +356,14 @@ ob_start(static function (string $html): string { return sky_translate_document_
       .riddle-gate-actions { flex-direction:column; }
     }
 
-    /* Brend Yaddaşı — compact memory match */
+    /* Cüt Ovla - memory panel inside Brend Ovçusu */
     .game-memory-mark svg { width:72px;height:72px;filter:drop-shadow(0 8px 24px rgba(56,189,248,.35)); }
-    .memory-overlay { position:fixed;inset:0;z-index:10001;padding:.75rem;background:rgba(6,10,24,.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility .22s ease; }
-    .memory-overlay.open { opacity:1;visibility:visible; }
-    .memory-box { width:100%;max-width:420px;max-height:94vh;overflow:auto;background:linear-gradient(180deg,#0f1a2e 0%,#0b1424 100%);border:1px solid rgba(56,189,248,.22);border-radius:18px;padding:1rem;position:relative;box-shadow:0 24px 60px -28px rgba(56,189,248,.35); }
-    .memory-close { position:absolute;top:.65rem;right:.65rem;width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--text-muted);font-size:1.1rem;line-height:1;cursor:pointer; }
-    .memory-close:hover { color:#fff;border-color:rgba(56,189,248,.35); }
-    .memory-head { display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.75rem;padding-right:2.2rem; }
-    .memory-title { font-weight:800;font-size:1rem;color:#eafcff;letter-spacing:-.01em; }
+    .memory-panel { display:none; }
+    .memory-panel.active { display:block; }
+    .memory-box { width:100%;background:transparent;border:none;border-radius:0;padding:0;position:relative;box-shadow:none;max-height:none;overflow:visible; }
+    .memory-close { display:none !important; }
+    .memory-head { display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.55rem; }
+    .memory-title { font-weight:800;font-size:.95rem;color:#eafcff;letter-spacing:-.01em; }
     .memory-title span { color:#5eead4; }
     .memory-level { font-size:.72rem;color:#7dd3fc;font-weight:600;margin-top:.15rem; }
     .memory-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.75rem; }
@@ -384,7 +383,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
     .memory-card:disabled { cursor:default; }
     .memory-card:focus-visible { outline:2px solid rgba(56,189,248,.7);outline-offset:2px; }
     .memory-win { text-align:center;padding:.8rem .25rem .1rem; }
-    .memory-win[hidden], .memory-overlay [hidden] { display:none !important; }
+    .memory-win[hidden], .memory-panel [hidden] { display:none !important; }
     .memory-win-title { font-size:1rem;font-weight:800;color:#5eead4;margin-bottom:.2rem; }
     .memory-win p { color:var(--text-muted);font-size:.8rem;margin-bottom:.65rem; }
     .memory-actions { display:flex;gap:.5rem;justify-content:center; }
@@ -399,10 +398,16 @@ ob_start(static function (string $html): string { return sky_translate_document_
     .hunt-box { width:100%;max-width:460px;background:linear-gradient(180deg,#0f1a2e 0%,#0b1424 100%);border:1px solid rgba(251,191,36,.22);border-radius:18px;padding:1rem;position:relative;box-shadow:0 24px 60px -28px rgba(251,191,36,.25); }
     .hunt-close { position:absolute;top:.65rem;right:.65rem;width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--text-muted);font-size:1.1rem;line-height:1;cursor:pointer;z-index:5; }
     .hunt-close:hover { color:#fff;border-color:rgba(251,191,36,.35); }
-    .hunt-head { display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.65rem;padding-right:2.2rem; }
+    .hunt-head { display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.55rem;padding-right:2.2rem; }
     .hunt-title { font-weight:800;font-size:1rem;color:#fff7ed;letter-spacing:-.01em; }
     .hunt-title span { color:#fbbf24; }
     .hunt-sub { font-size:.72rem;color:#fcd34d;font-weight:600;margin-top:.12rem; }
+    .hunt-tabs { display:flex;gap:.4rem;margin-bottom:.65rem; }
+    .hunt-tab { flex:1;padding:.45rem .5rem;border-radius:10px;border:1px solid rgba(251,191,36,.18);background:rgba(255,255,255,.03);color:var(--text-muted);font-weight:700;font-size:.74rem;cursor:pointer;transition:all .2s; }
+    .hunt-tab:hover { color:#fde68a;border-color:rgba(251,191,36,.35); }
+    .hunt-tab.active { background:linear-gradient(135deg,rgba(251,191,36,.18),rgba(249,115,22,.12));color:#fde68a;border-color:rgba(251,191,36,.45);box-shadow:inset 0 0 0 1px rgba(251,191,36,.08); }
+    .hunt-panel { display:none; }
+    .hunt-panel.active { display:block; }
     .hunt-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.65rem; }
     .hunt-stat { background:rgba(255,255,255,.03);border:1px solid rgba(251,191,36,.12);border-radius:10px;padding:.35rem .25rem;text-align:center; }
     .hunt-stat span { display:block;font-size:.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;line-height:1; }
@@ -421,11 +426,11 @@ ob_start(static function (string $html): string { return sky_translate_document_
     .hunt-target { position:absolute;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);z-index:3;cursor:none;transition:transform .08s; }
     .hunt-target .hunt-target-body { width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center; }
     .hunt-target svg { width:58%;height:58%;display:block; }
-    .hunt-target.bonus .hunt-target-body { background:radial-gradient(circle at 35% 30%,rgba(74,222,128,.35),rgba(16,185,129,.12) 60%,rgba(16,185,129,.04));border:1px solid rgba(74,222,128,.55);box-shadow:0 0 18px rgba(74,222,128,.35), inset 0 0 10px rgba(74,222,128,.12); }
-    .hunt-target.bonus svg { filter:drop-shadow(0 0 8px rgba(74,222,128,.7)); }
+    .hunt-target.bonus .hunt-target-body { background:radial-gradient(circle at 35% 30%,rgba(248,113,113,.35),rgba(239,68,68,.14) 60%,rgba(239,68,68,.05));border:1px solid rgba(248,113,113,.6);box-shadow:0 0 20px rgba(239,68,68,.35), inset 0 0 10px rgba(248,113,113,.14); }
+    .hunt-target.bonus svg { filter:drop-shadow(0 0 8px rgba(239,68,68,.75)); }
     .hunt-target.hit { pointer-events:none;animation:huntPop .28s ease forwards; }
     @keyframes huntPop { 0%{transform:translate(-50%,-50%) scale(1);opacity:1} 60%{transform:translate(-50%,-50%) scale(1.35);opacity:.9} 100%{transform:translate(-50%,-50%) scale(.2);opacity:0} }
-    .hunt-float { position:absolute;z-index:5;font-weight:800;font-size:.82rem;color:#4ade80;text-shadow:0 0 10px rgba(74,222,128,.6);pointer-events:none;animation:huntFloat .9s ease forwards;transform:translate(-50%,-50%); }
+    .hunt-float { position:absolute;z-index:5;font-weight:800;font-size:.82rem;color:#f87171;text-shadow:0 0 10px rgba(239,68,68,.65);pointer-events:none;animation:huntFloat .9s ease forwards;transform:translate(-50%,-50%); }
     @keyframes huntFloat { from{opacity:1;transform:translate(-50%,-50%) translateY(0)} to{opacity:0;transform:translate(-50%,-50%) translateY(-28px)} }
     .hunt-miss-fx { position:absolute;width:28px;height:28px;border:2px solid rgba(248,113,113,.7);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:4;animation:huntMiss .35s ease forwards; }
     @keyframes huntMiss { from{opacity:1;transform:translate(-50%,-50%) scale(.5)} to{opacity:0;transform:translate(-50%,-50%) scale(1.4)} }
@@ -433,7 +438,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
     .hunt-msg[hidden] { display:none !important; }
     .hunt-msg h3 { font-size:1.1rem;color:#fde68a;margin:0; }
     .hunt-msg p { font-size:.82rem;color:var(--text-muted);margin:0;line-height:1.5; }
-    .hunt-msg .hunt-motto { font-size:.78rem;color:#86efac;background:rgba(16,185,129,.1);border:1px solid rgba(74,222,128,.18);padding:.45rem .65rem;border-radius:10px;margin-top:.15rem;max-width:320px; }
+    .hunt-msg .hunt-motto { font-size:.78rem;color:#fde68a;background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(239,68,68,.08));border:1px solid rgba(251,191,36,.22);padding:.5rem .7rem;border-radius:10px;margin-top:.2rem;max-width:330px;line-height:1.45;box-shadow:0 0 18px rgba(251,191,36,.08); }
     .hunt-actions { display:flex;gap:.5rem;justify-content:center;margin-top:.65rem; }
     .hunt-btn { padding:.55rem 1rem;border-radius:10px;border:none;font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s; }
     .hunt-btn.primary { background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#422006; }
@@ -603,32 +608,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
       </div>
 
       <div class="game-card">
-        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(56,189,248,0.14),rgba(16,185,129,0.10));">
-          <span class="game-memory-mark" aria-hidden="true">
-            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="10" y="10" width="18" height="18" rx="4" stroke="#fff" stroke-width="3.5"/>
-              <rect x="36" y="10" width="18" height="18" rx="4" stroke="#fff" stroke-width="3.5"/>
-              <rect x="10" y="36" width="18" height="18" rx="4" stroke="#fff" stroke-width="3.5"/>
-              <rect x="36" y="36" width="18" height="18" rx="4" fill="rgba(255,255,255,0.18)" stroke="#fff" stroke-width="3.5"/>
-              <path d="M41 45l3 3 5-6" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-          <div class="game-badge badge-new">Yeni</div>
-        </div>
-        <div class="game-card-body">
-          <div class="game-name">Brend Yaddaşı</div>
-          <div class="game-desc">Kartları çevir, eyni cütləri tap. Yaddaşını sınayan bu retro mini oyun müştərini saytda daha uzun saxlayır.</div>
-          <div class="game-features">
-            <span class="game-feat-tag">Yaddaş oyunu</span>
-            <span class="game-feat-tag">Səviyyə</span>
-            <span class="game-feat-tag">Ən yaxşı nəticə</span>
-            <span class="game-feat-tag">Səs effekti</span>
-          </div>
-          <button class="game-demo-btn" id="memoryDemoBtn" type="button">Oyuna daxil ol</button>
-        </div>
-      </div>
-
-      <div class="game-card">
         <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(249,115,22,0.10));">
           <span aria-hidden="true" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:18px;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.22);">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:38px;height:38px;"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.2" fill="#fbbf24" stroke="none"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
@@ -637,11 +616,11 @@ ob_start(static function (string $html): string { return sky_translate_document_
         </div>
         <div class="game-card-body">
           <div class="game-name">Brend Ovçusu</div>
-          <div class="game-desc">Retro hədəf ovçusu: uçan brend nişanlarını vur, xal topla, səviyyə keç. Sürətli, yığcam və mobil uyumlu mini oyun.</div>
+          <div class="game-desc">İki oyun, bir arena: nişanlarını vur, sonra Cüt Ovla rejimində yaddaşını sına. Sürətli, yığcam və mobil uyumlu.</div>
           <div class="game-features">
+            <span class="game-feat-tag">Hədəf Ovçusu</span>
+            <span class="game-feat-tag">Cüt Ovla</span>
             <span class="game-feat-tag">Retro arcade</span>
-            <span class="game-feat-tag">Refleks</span>
-            <span class="game-feat-tag">Səviyyə</span>
             <span class="game-feat-tag">Səs effekti</span>
           </div>
           <button class="game-demo-btn" id="huntDemoBtn" type="button">Oyuna daxil ol</button>
@@ -663,7 +642,13 @@ ob_start(static function (string $html): string { return sky_translate_document_
         <div class="hunt-sub" id="huntLevel">Səviyyə 1 · Retro rejim</div>
       </div>
     </div>
-    <div class="hunt-stats">
+    
+    <div class="hunt-tabs" role="tablist" aria-label="Oyun rejimi">
+      <button class="hunt-tab active" id="huntTabTarget" type="button" role="tab" aria-selected="true">Hədəf Ovçusu</button>
+      <button class="hunt-tab" id="huntTabMemory" type="button" role="tab" aria-selected="false">Cüt Ovla</button>
+    </div>
+    <div class="hunt-panel active" id="huntPanelTarget">
+<div class="hunt-stats">
       <div class="hunt-stat"><span>Xal</span><strong id="huntScore">0</strong></div>
       <div class="hunt-stat"><span>Həyat</span><strong id="huntLives">3</strong></div>
       <div class="hunt-stat"><span>Dalğa</span><strong id="huntWave">1</strong></div>
@@ -677,7 +662,34 @@ ob_start(static function (string $html): string { return sky_translate_document_
         <button class="hunt-btn primary" id="huntStart" type="button">Başla</button>
       </div>
     </div>
+  
+    </div>
+<div class="memory-panel hunt-panel" id="memoryPanel" role="region" aria-label="Cüt Ovla">
+  <div class="memory-box">
+    <button class="memory-close" id="memoryClose" type="button" aria-label="Oyunu bağla">×</button>
+    <div class="memory-head">
+      <div>
+        <div class="memory-title"><span>Cüt Ovla</span></div>
+        <div class="memory-level" id="memoryLevel">Səviyyə 1 · Yeni başlayan</div>
+      </div>
+    </div>
+    <div class="memory-stats">
+      <div class="memory-stat"><span>Gediş</span><strong id="memoryMoves">0</strong></div>
+      <div class="memory-stat"><span>Vaxt</span><strong id="memoryTime">0:00</strong></div>
+      <div class="memory-stat"><span>Cüt</span><strong id="memoryPairs">0/8</strong></div>
+      <div class="memory-stat"><span>Rekord</span><strong id="memoryBest">—</strong></div>
+    </div>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-win" id="memoryWin" hidden>
+      <div class="memory-win-title" id="memoryWinTitle">Əla! Bütün cütlər tapıldı</div>
+      <p id="memoryWinMsg"></p>
+      <div class="memory-actions">
+        <button class="memory-btn primary" id="memoryRestart" type="button">Yenidən oyna</button>
+      </div>
+    </div>
   </div>
+</div>
+</div>
 </div>
 
 <!-- Brend Viktorinası — oynanabilir demo -->
@@ -812,32 +824,6 @@ ob_start(static function (string $html): string { return sky_translate_document_
 
 
 <!-- Brend Yaddaşı — memory match demo -->
-<div class="memory-overlay" id="memoryOverlay" role="dialog" aria-modal="true" aria-label="Brend Yaddaşı">
-  <div class="memory-box">
-    <button class="memory-close" id="memoryClose" type="button" aria-label="Oyunu bağla">×</button>
-    <div class="memory-head">
-      <div>
-        <div class="memory-title">Brend <span>Yaddaşı</span></div>
-        <div class="memory-level" id="memoryLevel">Səviyyə 1 · Yeni başlayan</div>
-      </div>
-    </div>
-    <div class="memory-stats">
-      <div class="memory-stat"><span>Gediş</span><strong id="memoryMoves">0</strong></div>
-      <div class="memory-stat"><span>Vaxt</span><strong id="memoryTime">0:00</strong></div>
-      <div class="memory-stat"><span>Cüt</span><strong id="memoryPairs">0/8</strong></div>
-      <div class="memory-stat"><span>Rekord</span><strong id="memoryBest">—</strong></div>
-    </div>
-    <div class="memory-grid" id="memoryGrid"></div>
-    <div class="memory-win" id="memoryWin" hidden>
-      <div class="memory-win-title" id="memoryWinTitle">Əla! Bütün cütlər tapıldı</div>
-      <p id="memoryWinMsg"></p>
-      <div class="memory-actions">
-        <button class="memory-btn primary" id="memoryRestart" type="button">Yenidən oyna</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script src="<?= SITE_URL ?>/assets/js/main.js"></script>
 <script>
 <?php $quizUser = currentUser(); ?>
@@ -1940,11 +1926,10 @@ var riddleAuth = <?= json_encode([
 
 
 (function () {
-  var overlay = document.getElementById('memoryOverlay');
-  var openBtn = document.getElementById('memoryDemoBtn');
-  if (!overlay || !openBtn) return;
-
+  var panel = document.getElementById('memoryPanel');
   var gridEl = document.getElementById('memoryGrid');
+  if (!panel || !gridEl) return;
+
   var movesEl = document.getElementById('memoryMoves');
   var timeEl = document.getElementById('memoryTime');
   var pairsEl = document.getElementById('memoryPairs');
@@ -1954,7 +1939,6 @@ var riddleAuth = <?= json_encode([
   var winTitleEl = document.getElementById('memoryWinTitle');
   var winMsgEl = document.getElementById('memoryWinMsg');
   var restartBtn = document.getElementById('memoryRestart');
-  var closeBtn = document.getElementById('memoryClose');
 
   var STORE = 'skyweb_memory_v1';
   var ICONS = [
@@ -2143,24 +2127,16 @@ var riddleAuth = <?= json_encode([
     updateStats();
   }
 
-  function open() {
+  function activate() {
     state = load();
     reset();
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    closeBtn.focus();
   }
-  function close() {
+  function deactivate() {
     stopTimer();
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
   }
 
-  openBtn.addEventListener('click', open);
-  closeBtn.addEventListener('click', close);
   restartBtn.addEventListener('click', reset);
-  overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && overlay.classList.contains('open')) close(); });
+  window.skyMemoryPanel = { activate: activate, deactivate: deactivate, reset: reset };
 })();
 
 </script>
@@ -2181,6 +2157,10 @@ var riddleAuth = <?= json_encode([
   var startBtn = document.getElementById('huntStart');
   var closeBtn = document.getElementById('huntClose');
   var crosshair = document.getElementById('huntCrosshair');
+  var tabTarget = document.getElementById('huntTabTarget');
+  var tabMemory = document.getElementById('huntTabMemory');
+  var panelTarget = document.getElementById('huntPanelTarget');
+  var panelMemory = document.getElementById('memoryPanel');
   var STORE = 'skyweb_hunt_v1';
   function qt(t){ if(window.SkyI18n&&typeof window.SkyI18n.tr==='function') return window.SkyI18n.tr(t,undefined,'az'); return t; }
   var SHAPES = [
@@ -2189,7 +2169,7 @@ var riddleAuth = <?= json_encode([
     { svg:'<svg viewBox="0 0 24 24" fill="rgba(244,114,182,.16)" stroke="#f9a8d4" stroke-width="1.8"><path d="M13 2L4.5 13H11l-1 9 9.5-11H13z"/></svg>', bg:'radial-gradient(circle at 35% 30%,rgba(244,114,182,.28),rgba(236,72,153,.08) 65%)', bd:'rgba(244,114,182,.45)', gl:'0 0 14px rgba(244,114,182,.3)' },
     { svg:'<svg viewBox="0 0 24 24" fill="rgba(167,139,250,.16)" stroke="#c4b5fd" stroke-width="1.8"><path d="M12 3l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.9-5.4 2.9 1-6L3.3 9.4l6-.9z"/></svg>', bg:'radial-gradient(circle at 35% 30%,rgba(167,139,250,.28),rgba(139,92,246,.08) 65%)', bd:'rgba(167,139,250,.45)', gl:'0 0 14px rgba(167,139,250,.3)' }
   ];
-  var BONUS_SVG = '<svg viewBox="0 0 24 24" fill="rgba(74,222,128,.22)" stroke="#4ade80" stroke-width="1.8"><path d="M20.8 8.6c0 1.5-.6 2.9-1.6 3.9L12 19.7l-7.2-7.2a5.5 5.5 0 117.8-7.8l.4.4.4-.4a5.5 5.5 0 017.4 3.9z"/></svg>';
+  var BONUS_SVG = '<svg viewBox="0 0 24 24" fill="rgba(239,68,68,.28)" stroke="#f87171" stroke-width="1.8"><path d="M20.8 8.6c0 1.5-.6 2.9-1.6 3.9L12 19.7l-7.2-7.2a5.5 5.5 0 117.8-7.8l.4.4.4-.4a5.5 5.5 0 017.4 3.9z"/></svg>';
   var audioCtx = null, raf = null, spawnTimer = null, targets = [], score = 0, lives = 3, wave = 1, hits = 0, running = false;
   function bestGet(){ try { return Math.max(0, Number(localStorage.getItem(STORE))||0); } catch(e){ return 0; } }
   function bestSet(v){ try { localStorage.setItem(STORE, String(v)); } catch(e){} }
@@ -2217,7 +2197,8 @@ var riddleAuth = <?= json_encode([
     var size = r.width < 400 ? (bonus ? 36 : 38) : (bonus ? 42 : 44);
     var y = 18 + Math.random() * (r.height * 0.52);
     var fromLeft = Math.random() > 0.5;
-    var baseSpeed = bonus ? (95 + wave * 14 + Math.random() * 45) : (55 + wave * 12 + Math.random() * 35);
+    var scoreBoost = 1 + Math.min(score / 500, 1.4);
+    var baseSpeed = (bonus ? (95 + wave * 14 + Math.random() * 45) : (55 + wave * 12 + Math.random() * 35)) * scoreBoost;
     var speed = baseSpeed * (fromLeft ? 1 : -1);
     var el = document.createElement('button');
     el.type = 'button'; el.className = 'hunt-target' + (bonus ? ' bonus' : '');
@@ -2255,6 +2236,7 @@ var riddleAuth = <?= json_encode([
     t.el.classList.add('hit');
     setTimeout(function(){ if(t.el.parentNode) t.el.parentNode.removeChild(t.el); targets = targets.filter(function(x){return x!==t;}); }, 280);
     if(score > best){ best = score; bestSet(best); }
+    if(!t.bonus && score % 50 === 0) restartSpawn();
     updateHud();
   }
   function missFx(x,y){
@@ -2291,7 +2273,7 @@ var riddleAuth = <?= json_encode([
     raf = requestAnimationFrame(loop);
   }
   var bonusTimer = null;
-  function restartSpawn(){ if(spawnTimer) clearInterval(spawnTimer); var ms = Math.max(520, 1100 - wave * 80); spawnTimer = setInterval(function(){ spawn(false); }, ms); if(bonusTimer) clearInterval(bonusTimer); bonusTimer = setInterval(function(){ if(running && Math.random()<0.55) spawn(true); }, 6500); }
+  function restartSpawn(){ if(spawnTimer) clearInterval(spawnTimer); var ms = Math.max(320, 1100 - wave * 80 - Math.min(score, 500) * 0.7); spawnTimer = setInterval(function(){ spawn(false); }, ms); if(bonusTimer) clearInterval(bonusTimer); bonusTimer = setInterval(function(){ if(running && Math.random()<0.55) spawn(true); }, 6500); }
   function startGame(){
     running = true; score = 0; lives = 3; wave = 1; hits = 0; clearTargets(); updateHud(); msg.hidden = true;
     restartSpawn(); spawn(); if(raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
@@ -2302,9 +2284,30 @@ var riddleAuth = <?= json_encode([
     if(score > best){ best = score; bestSet(best); updateHud(); }
     msgTitle.textContent = qt('Oyun bitdi');
     msgText.innerHTML = '<div>' + qt('Xal')+': '+score+' · '+qt('Dalğa')+': '+wave+' · '+qt('Rekord')+': '+best + '</div>'
-      + '<div class="hunt-motto">' + qt('SkyWeb sizi salamlayır: bu sadəcə bir oyundur. Həyatda uduzmayın, davam edin!') + '</div>';
+      + '<div class="hunt-motto">🎯 ' + qt('SkyWeb salamlayır: bu sadəcə oyundur! Real həyatda da hədəfini tut, geri çəkilmə!') + '</div>';
     startBtn.textContent = qt('Yenidən başla');
     msg.hidden = false;
+  }
+  var mode = 'target';
+  function setMode(next){
+    mode = next;
+    var isTarget = next === 'target';
+    if (tabTarget) { tabTarget.classList.toggle('active', isTarget); tabTarget.setAttribute('aria-selected', isTarget ? 'true' : 'false'); }
+    if (tabMemory) { tabMemory.classList.toggle('active', !isTarget); tabMemory.setAttribute('aria-selected', !isTarget ? 'true' : 'false'); }
+    if (panelTarget) panelTarget.classList.toggle('active', isTarget);
+    if (panelMemory) panelMemory.classList.toggle('active', !isTarget);
+    if (isTarget) {
+      if (window.skyMemoryPanel && window.skyMemoryPanel.deactivate) window.skyMemoryPanel.deactivate();
+    } else {
+      // stop hunt when switching away
+      running = false; if(raf) cancelAnimationFrame(raf); raf=null; if(spawnTimer) clearInterval(spawnTimer); spawnTimer=null; if(bonusTimer) clearInterval(bonusTimer); bonusTimer=null;
+      clearTargets(); crosshair.classList.remove('on');
+      msgTitle.textContent = qt('Brend Ovçusu');
+      msgText.innerHTML = qt('Uçan nişanlara vur, canını qoru.');
+      startBtn.textContent = qt('Başla');
+      msg.hidden = false;
+      if (window.skyMemoryPanel && window.skyMemoryPanel.activate) window.skyMemoryPanel.activate();
+    }
   }
   function open(){
     best = bestGet(); updateHud(); clearTargets(); running = false;
@@ -2312,14 +2315,19 @@ var riddleAuth = <?= json_encode([
     msgText.innerHTML = qt('Uçan nişanlara vur, canını qoru.');
     startBtn.textContent = qt('Başla');
     msg.hidden = false;
+    setMode('target');
     overlay.classList.add('open'); document.body.style.overflow='hidden';
   }
   function close(){
     running = false; if(raf) cancelAnimationFrame(raf); raf=null; if(spawnTimer) clearInterval(spawnTimer); spawnTimer=null; if(bonusTimer) clearInterval(bonusTimer); bonusTimer=null;
-    crosshair.classList.remove('on'); clearTargets(); overlay.classList.remove('open'); document.body.style.overflow='';
+    crosshair.classList.remove('on'); clearTargets();
+    if (window.skyMemoryPanel && window.skyMemoryPanel.deactivate) window.skyMemoryPanel.deactivate();
+    overlay.classList.remove('open'); document.body.style.overflow='';
   }
   arena.addEventListener('pointermove', function(e){ var r=arena.getBoundingClientRect(); crosshair.style.left=(e.clientX-r.left)+'px'; crosshair.style.top=(e.clientY-r.top)+'px'; crosshair.classList.add('on'); });
   arena.addEventListener('pointerleave', function(){ crosshair.classList.remove('on'); });
+  if (tabTarget) tabTarget.addEventListener('click', function(){ setMode('target'); });
+  if (tabMemory) tabMemory.addEventListener('click', function(){ setMode('memory'); });
   openBtn.addEventListener('click', open);
   closeBtn.addEventListener('click', close);
   startBtn.addEventListener('click', function(e){ e.stopPropagation(); sound('shot'); startGame(); });
