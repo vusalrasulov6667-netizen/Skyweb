@@ -21,6 +21,9 @@ ob_start(static function (string $html): string { return sky_translate_document_
   <script src="<?= SITE_URL ?>/assets/js/sky-i18n.js?v=<?= time() ?>"></script>
   <style>
     .games-page { padding-top: 90px; min-height: 100vh; }
+    .games-back-link { color:var(--text-muted);text-decoration:none;font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;white-space:nowrap;flex-shrink:0; }
+    .games-back-link:hover { color: var(--neon-green); }
+    @media (max-width: 520px) { .games-back-link { font-size:0.78rem; } }
 
     /* Breadcrumb */
     .breadcrumb { display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--text-muted);margin-bottom:2rem; }
@@ -34,6 +37,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
       padding: 3rem 2.5rem; margin-bottom: 3rem; position: relative; overflow: hidden;
       display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
     }
+    .games-hero > * { min-width: 0; }
     .games-hero::before {
       content:''; position:absolute; top:-40px; right:-40px;
       width:300px; height:300px; border-radius:50%;
@@ -45,9 +49,18 @@ ob_start(static function (string $html): string { return sky_translate_document_
       color:#6ee7b7;border-radius:999px;padding:0.3rem 1rem;
       font-size:0.78rem;font-weight:600;margin-bottom:0.75rem;
     }
-    .games-hero-title { font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;line-height:1.2;margin-bottom:0.75rem; }
+    .games-hero-title { font-size:clamp(1.6rem,4vw,2.6rem);font-weight:800;line-height:1.2;margin-bottom:0.75rem; overflow-wrap:anywhere; }
     .games-hero-desc { color:var(--text-muted);font-size:0.95rem;line-height:1.7;max-width:500px; }
     .games-hero-right { display:flex;flex-direction:column;gap:1rem;flex-shrink:0; }
+    @media (max-width: 900px) {
+      .games-hero { padding: 2rem 1.5rem; gap: 1.5rem; }
+      .games-hero-right { width: 100%; flex-direction: row; flex-wrap: wrap; }
+      .games-hero-right .hero-stat { flex: 1 1 140px; }
+    }
+    @media (max-width: 600px) {
+      .games-hero { padding: 1.5rem 1.1rem; margin-bottom: 2rem; }
+      .games-hero-right { flex-direction: column; }
+    }
     .hero-stat { text-align:center; }
     .hero-stat-val { font-size:2rem;font-weight:900;color:var(--neon-green); }
     .hero-stat-label { font-size:0.75rem;color:var(--text-muted);font-weight:500; }
@@ -180,8 +193,18 @@ ob_start(static function (string $html): string { return sky_translate_document_
     .quiz-result-title { font-size:1.35rem;font-weight:800;margin-bottom:0.35rem; }
     .quiz-result-score { color:var(--neon-green);font-weight:800;font-size:1.05rem;margin-bottom:0.5rem; }
     .quiz-result-msg { color:var(--text-muted);font-size:0.9rem; }
-    .quiz-next[hidden],.quiz-feedback[hidden],.quiz-result[hidden],.quiz-feedback-answer[hidden] { display:none !important; }
-    @media(max-width:600px){ .quiz-box { padding:1.5rem 1.25rem; } .quiz-question { font-size:1.02rem; } }
+    .quiz-next[hidden],.quiz-feedback[hidden],.quiz-result[hidden],.quiz-feedback-answer[hidden],.quiz-state[hidden],.quiz-status[hidden] { display:none !important; }
+    .quiz-status { display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.75rem;padding:.55rem .8rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.18);border-radius:12px;font-size:.78rem;color:var(--text-muted); }
+    .quiz-status-rank { font-weight:700;color:#34d399; }
+    .quiz-status-meta { white-space:nowrap; }
+    .quiz-state { text-align:center;padding:1.25rem .5rem .25rem; }
+    .quiz-state-icon { font-size:2.2rem;margin-bottom:.5rem; }
+    .quiz-state h2 { font-size:1.35rem;margin-bottom:.5rem;color:#34d399; }
+    .quiz-state p { color:var(--text-muted);font-size:.92rem;margin-bottom:.75rem;line-height:1.55; }
+    .quiz-state-actions { display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:.5rem; }
+    .quiz-state-actions .quiz-next { min-width:160px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center; }
+    .quiz-state-actions .quiz-next.ghost { background:transparent;border:1px solid rgba(16,185,129,0.35);color:#34d399;box-shadow:none; }
+    @media(max-width:600px){ .quiz-box { padding:1.5rem 1.25rem; } .quiz-question { font-size:1.02rem; } .quiz-status { flex-direction:column;align-items:flex-start;gap:.25rem; } }
 
     /* Playable riddles — warm/lightbulb identity, deliberately unlike the quiz */
     .riddle-overlay {
@@ -332,6 +355,90 @@ ob_start(static function (string $html): string { return sky_translate_document_
       .riddle-tz { margin-left:0;width:100%; }
       .riddle-gate-actions { flex-direction:column; }
     }
+
+    /* Brend Yaddaşı — compact memory match */
+    .game-memory-mark svg { width:72px;height:72px;filter:drop-shadow(0 8px 24px rgba(56,189,248,.35)); }
+    .memory-overlay { position:fixed;inset:0;z-index:10001;padding:.75rem;background:rgba(6,10,24,.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility .22s ease; }
+    .memory-overlay.open { opacity:1;visibility:visible; }
+    .memory-box { width:100%;max-width:420px;max-height:94vh;overflow:auto;background:linear-gradient(180deg,#0f1a2e 0%,#0b1424 100%);border:1px solid rgba(56,189,248,.22);border-radius:18px;padding:1rem;position:relative;box-shadow:0 24px 60px -28px rgba(56,189,248,.35); }
+    .memory-close { position:absolute;top:.65rem;right:.65rem;width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--text-muted);font-size:1.1rem;line-height:1;cursor:pointer; }
+    .memory-close:hover { color:#fff;border-color:rgba(56,189,248,.35); }
+    .memory-head { display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.75rem;padding-right:2.2rem; }
+    .memory-title { font-weight:800;font-size:1rem;color:#eafcff;letter-spacing:-.01em; }
+    .memory-title span { color:#5eead4; }
+    .memory-level { font-size:.72rem;color:#7dd3fc;font-weight:600;margin-top:.15rem; }
+    .memory-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.75rem; }
+    .memory-stat { background:rgba(255,255,255,.03);border:1px solid rgba(56,189,248,.12);border-radius:10px;padding:.35rem .25rem;text-align:center; }
+    .memory-stat span { display:block;font-size:.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;line-height:1; }
+    .memory-stat strong { display:block;font-size:.88rem;color:#a5f3fc;margin-top:.2rem;font-variant-numeric:tabular-nums; }
+    .memory-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem; }
+    .memory-card { aspect-ratio:1/1;border-radius:10px;border:1px solid rgba(56,189,248,.14);background:rgba(56,189,248,.05);cursor:pointer;position:relative;perspective:500px;padding:0; }
+    .memory-card-inner { position:absolute;inset:0;border-radius:10px;transition:transform .32s ease;transform-style:preserve-3d; }
+    .memory-card.flipped .memory-card-inner, .memory-card.matched .memory-card-inner { transform:rotateY(180deg); }
+    .memory-face { position:absolute;inset:0;border-radius:10px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden; }
+    .memory-front { background:linear-gradient(160deg,rgba(56,189,248,.12),rgba(16,185,129,.06)); }
+    .memory-front::after { content:''; width:18px;height:18px;border-radius:5px;border:2px solid rgba(125,211,252,.35);transform:rotate(45deg); }
+    .memory-back { background:linear-gradient(160deg,rgba(15,23,42,.96),rgba(30,41,59,.92));transform:rotateY(180deg);border:1px solid rgba(56,189,248,.22); }
+    .memory-back svg { width:54%;height:54%;display:block; }
+    .memory-card.matched .memory-back { background:linear-gradient(160deg,rgba(16,185,129,.18),rgba(56,189,248,.1));border-color:rgba(52,211,153,.4); box-shadow:inset 0 0 0 1px rgba(52,211,153,.12); }
+    .memory-card:disabled { cursor:default; }
+    .memory-card:focus-visible { outline:2px solid rgba(56,189,248,.7);outline-offset:2px; }
+    .memory-win { text-align:center;padding:.8rem .25rem .1rem; }
+    .memory-win[hidden], .memory-overlay [hidden] { display:none !important; }
+    .memory-win-title { font-size:1rem;font-weight:800;color:#5eead4;margin-bottom:.2rem; }
+    .memory-win p { color:var(--text-muted);font-size:.8rem;margin-bottom:.65rem; }
+    .memory-actions { display:flex;gap:.5rem;justify-content:center; }
+    .memory-btn { padding:.55rem 1rem;border-radius:10px;border:none;font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s; }
+    .memory-btn.primary { background:linear-gradient(135deg,#22d3ee,#10b981);color:#042f2e; }
+    .memory-btn.primary:hover { filter:brightness(1.06); }
+    @media(max-width:420px){ .memory-box{padding:.85rem;} .memory-grid{gap:.35rem;} .memory-stat span{font-size:.58rem;} .memory-stat strong{font-size:.82rem;} }
+
+    /* Brend Ovçusu — retro target hunt */
+    .hunt-overlay { position:fixed;inset:0;z-index:10001;padding:.75rem;background:rgba(6,10,24,.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility .22s ease; }
+    .hunt-overlay.open { opacity:1;visibility:visible; }
+    .hunt-box { width:100%;max-width:460px;background:linear-gradient(180deg,#0f1a2e 0%,#0b1424 100%);border:1px solid rgba(251,191,36,.22);border-radius:18px;padding:1rem;position:relative;box-shadow:0 24px 60px -28px rgba(251,191,36,.25); }
+    .hunt-close { position:absolute;top:.65rem;right:.65rem;width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--text-muted);font-size:1.1rem;line-height:1;cursor:pointer;z-index:5; }
+    .hunt-close:hover { color:#fff;border-color:rgba(251,191,36,.35); }
+    .hunt-head { display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.65rem;padding-right:2.2rem; }
+    .hunt-title { font-weight:800;font-size:1rem;color:#fff7ed;letter-spacing:-.01em; }
+    .hunt-title span { color:#fbbf24; }
+    .hunt-sub { font-size:.72rem;color:#fcd34d;font-weight:600;margin-top:.12rem; }
+    .hunt-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.65rem; }
+    .hunt-stat { background:rgba(255,255,255,.03);border:1px solid rgba(251,191,36,.12);border-radius:10px;padding:.35rem .25rem;text-align:center; }
+    .hunt-stat span { display:block;font-size:.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;line-height:1; }
+    .hunt-stat strong { display:block;font-size:.88rem;color:#fde68a;margin-top:.2rem;font-variant-numeric:tabular-nums; }
+    .hunt-arena { position:relative;width:100%;aspect-ratio:16/10;border-radius:12px;overflow:hidden;cursor:none;background:linear-gradient(180deg,#07111f 0%,#0d1b2a 40%,#13283a 68%,#0f2a22 68%,#091c18 100%);border:1px solid rgba(251,191,36,.15);touch-action:manipulation;user-select:none; }
+    .hunt-arena::before { content:'';position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.022) 0,rgba(255,255,255,.022) 1px,transparent 1px,transparent 4px);pointer-events:none;z-index:2; }
+    .hunt-arena::after { content:'';position:absolute;left:0;right:0;top:68%;height:1px;background:rgba(251,191,36,.18);box-shadow:0 0 12px rgba(251,191,36,.12);pointer-events:none;z-index:2; }
+    .hunt-star { position:absolute;width:2px;height:2px;background:rgba(255,255,255,.6);border-radius:50%;pointer-events:none; }
+    .hunt-crosshair { position:absolute;width:34px;height:34px;margin-left:-17px;margin-top:-17px;pointer-events:none;z-index:7;opacity:0;transition:opacity .12s; }
+    .hunt-crosshair.on { opacity:1; }
+    .hunt-crosshair::before,.hunt-crosshair::after { content:'';position:absolute;background:rgba(125,211,252,.95);box-shadow:0 0 6px rgba(56,189,248,.6);border-radius:2px; }
+    .hunt-crosshair::before { left:16px;top:2px;width:2px;height:30px; }
+    .hunt-crosshair::after { top:16px;left:2px;height:2px;width:30px; }
+    .hunt-crosshair i { position:absolute;inset:5px;border:2px solid rgba(251,191,36,.9);border-radius:50%;box-shadow:0 0 8px rgba(251,191,36,.35), inset 0 0 8px rgba(251,191,36,.08); }
+    .hunt-crosshair i::after { content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;background:#fbbf24;border-radius:50%;box-shadow:0 0 6px #fbbf24; }
+    .hunt-target { position:absolute;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);z-index:3;cursor:none;transition:transform .08s; }
+    .hunt-target .hunt-target-body { width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center; }
+    .hunt-target svg { width:58%;height:58%;display:block; }
+    .hunt-target.bonus .hunt-target-body { background:radial-gradient(circle at 35% 30%,rgba(74,222,128,.35),rgba(16,185,129,.12) 60%,rgba(16,185,129,.04));border:1px solid rgba(74,222,128,.55);box-shadow:0 0 18px rgba(74,222,128,.35), inset 0 0 10px rgba(74,222,128,.12); }
+    .hunt-target.bonus svg { filter:drop-shadow(0 0 8px rgba(74,222,128,.7)); }
+    .hunt-target.hit { pointer-events:none;animation:huntPop .28s ease forwards; }
+    @keyframes huntPop { 0%{transform:translate(-50%,-50%) scale(1);opacity:1} 60%{transform:translate(-50%,-50%) scale(1.35);opacity:.9} 100%{transform:translate(-50%,-50%) scale(.2);opacity:0} }
+    .hunt-float { position:absolute;z-index:5;font-weight:800;font-size:.82rem;color:#4ade80;text-shadow:0 0 10px rgba(74,222,128,.6);pointer-events:none;animation:huntFloat .9s ease forwards;transform:translate(-50%,-50%); }
+    @keyframes huntFloat { from{opacity:1;transform:translate(-50%,-50%) translateY(0)} to{opacity:0;transform:translate(-50%,-50%) translateY(-28px)} }
+    .hunt-miss-fx { position:absolute;width:28px;height:28px;border:2px solid rgba(248,113,113,.7);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:4;animation:huntMiss .35s ease forwards; }
+    @keyframes huntMiss { from{opacity:1;transform:translate(-50%,-50%) scale(.5)} to{opacity:0;transform:translate(-50%,-50%) scale(1.4)} }
+    .hunt-msg { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.45rem;background:rgba(6,10,24,.55);z-index:6;text-align:center;padding:1rem; }
+    .hunt-msg[hidden] { display:none !important; }
+    .hunt-msg h3 { font-size:1.1rem;color:#fde68a;margin:0; }
+    .hunt-msg p { font-size:.82rem;color:var(--text-muted);margin:0;line-height:1.5; }
+    .hunt-msg .hunt-motto { font-size:.78rem;color:#86efac;background:rgba(16,185,129,.1);border:1px solid rgba(74,222,128,.18);padding:.45rem .65rem;border-radius:10px;margin-top:.15rem;max-width:320px; }
+    .hunt-actions { display:flex;gap:.5rem;justify-content:center;margin-top:.65rem; }
+    .hunt-btn { padding:.55rem 1rem;border-radius:10px;border:none;font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s; }
+    .hunt-btn.primary { background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#422006; }
+    .hunt-btn.primary:hover { filter:brightness(1.05); }
+    @media(max-width:420px){ .hunt-box{padding:.85rem;} .hunt-target{width:38px;height:38px;} .hunt-stat span{font-size:.58rem;} }
   </style>
   <!-- Favicon (inline SVG) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 10 62 76'%3E%3Cdefs%3E%3ClinearGradient id='skySGradFav' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12,74 L42,74 C50,74 54,70 54,64 C54,58 48,54 40,52 L26,48 C16,45 10,39 10,30 C10,20 18,14 30,14 L56,14 L52,22 L30,22 C26,22 22,25 22,30 C22,35 26,37 30,39 L44,43 C54,46 64,51 64,64 C64,75 56,82 43,82 L12,82 Z' fill='url(%23skySGradFav)'/%3E%3C/svg%3E">
@@ -397,7 +504,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
       </div>
       <span class="logo-text"><span class="logo-sky">sky</span><span class="logo-web">web</span><span class="dot-az">.az</span></span>
     </a>
-    <a href="<?= SITE_URL ?>" style="color:var(--text-muted);text-decoration:none;font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;">← Ana səhifəyə qayıt</a>
+    <a href="<?= SITE_URL ?>" class="games-back-link">← Ana səhifəyə qayıt</a>
   </div>
 </nav>
 
@@ -450,7 +557,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Mükafat sistemi</span>
             <span class="game-feat-tag">Avtomatik hesab</span>
           </div>
-          <button class="game-demo-btn" id="quizDemoBtn" type="button">Demo / Yeni Ön Baxış</button>
+          <button class="game-demo-btn" id="quizDemoBtn" type="button">Oyuna daxil ol</button>
         </div>
       </div>
 
@@ -467,7 +574,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">İnstagram uyumlu</span>
             <span class="game-feat-tag">Moderasiya paneli</span>
           </div>
-          <button class="game-demo-btn" type="button">Demo / Yeni Ön Baxış</button>
+          <button class="game-demo-btn" type="button">Oyuna daxil ol</button>
         </div>
       </div>
 
@@ -491,23 +598,53 @@ ob_start(static function (string $html): string { return sky_translate_document_
             <span class="game-feat-tag">Reytinq cədvəli</span>
             <span class="game-feat-tag">Qeydiyyatla</span>
           </div>
-          <button class="game-demo-btn" id="riddleDemoBtn" type="button">Demo / Yeni Ön Baxış</button>
+          <button class="game-demo-btn" id="riddleDemoBtn" type="button">Oyuna daxil ol</button>
         </div>
       </div>
 
       <div class="game-card">
-        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(56,189,248,0.08));">
-          <span style="position:relative;z-index:2;">⚽</span>
+        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(56,189,248,0.14),rgba(16,185,129,0.10));">
+          <span class="game-memory-mark" aria-hidden="true">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="10" width="18" height="18" rx="4" stroke="#fff" stroke-width="3.5"/>
+              <rect x="36" y="10" width="18" height="18" rx="4" stroke="#fff" stroke-width="3.5"/>
+              <rect x="10" y="36" width="18" height="18" rx="4" stroke="#fff" stroke-width="3.5"/>
+              <rect x="36" y="36" width="18" height="18" rx="4" fill="rgba(255,255,255,0.18)" stroke="#fff" stroke-width="3.5"/>
+              <path d="M41 45l3 3 5-6" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <div class="game-badge badge-new">Yeni</div>
         </div>
         <div class="game-card-body">
-          <div class="game-name">Brend İdman Oyunu</div>
-          <div class="game-desc">Futbol, basketbol və ya digər idman mövzusunda mini oyun. Korporativ tədbirlər, sponsorluqlar üçün mükəmməldir.</div>
+          <div class="game-name">Brend Yaddaşı</div>
+          <div class="game-desc">Kartları çevir, eyni cütləri tap. Yaddaşını sınayan bu retro mini oyun müştərini saytda daha uzun saxlayır.</div>
           <div class="game-features">
-            <span class="game-feat-tag">Tədbirlər üçün</span>
-            <span class="game-feat-tag">Turnir rejimi</span>
-            <span class="game-feat-tag">Liderlik cədvəli</span>
+            <span class="game-feat-tag">Yaddaş oyunu</span>
+            <span class="game-feat-tag">Səviyyə</span>
+            <span class="game-feat-tag">Ən yaxşı nəticə</span>
+            <span class="game-feat-tag">Səs effekti</span>
           </div>
-          <button class="game-demo-btn" type="button">Demo / Yeni Ön Baxış</button>
+          <button class="game-demo-btn" id="memoryDemoBtn" type="button">Oyuna daxil ol</button>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(249,115,22,0.10));">
+          <span aria-hidden="true" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:18px;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.22);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:38px;height:38px;"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.2" fill="#fbbf24" stroke="none"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          </span>
+          <div class="game-badge badge-new">Yeni</div>
+        </div>
+        <div class="game-card-body">
+          <div class="game-name">Brend Ovçusu</div>
+          <div class="game-desc">Retro hədəf ovçusu: uçan brend nişanlarını vur, xal topla, səviyyə keç. Sürətli, yığcam və mobil uyumlu mini oyun.</div>
+          <div class="game-features">
+            <span class="game-feat-tag">Retro arcade</span>
+            <span class="game-feat-tag">Refleks</span>
+            <span class="game-feat-tag">Səviyyə</span>
+            <span class="game-feat-tag">Səs effekti</span>
+          </div>
+          <button class="game-demo-btn" id="huntDemoBtn" type="button">Oyuna daxil ol</button>
         </div>
       </div>
 
@@ -515,6 +652,33 @@ ob_start(static function (string $html): string { return sky_translate_document_
 
   </div>
 </main>
+
+<!-- Brend Ovçusu — retro target hunt demo -->
+<div class="hunt-overlay" id="huntOverlay" role="dialog" aria-modal="true" aria-label="Brend Ovçusu">
+  <div class="hunt-box">
+    <button class="hunt-close" id="huntClose" type="button" aria-label="Oyunu bağla">×</button>
+    <div class="hunt-head">
+      <div>
+        <div class="hunt-title">Brend <span>Ovçusu</span></div>
+        <div class="hunt-sub" id="huntLevel">Səviyyə 1 · Retro rejim</div>
+      </div>
+    </div>
+    <div class="hunt-stats">
+      <div class="hunt-stat"><span>Xal</span><strong id="huntScore">0</strong></div>
+      <div class="hunt-stat"><span>Həyat</span><strong id="huntLives">3</strong></div>
+      <div class="hunt-stat"><span>Dalğa</span><strong id="huntWave">1</strong></div>
+      <div class="hunt-stat"><span>Rekord</span><strong id="huntBest">0</strong></div>
+    </div>
+    <div class="hunt-arena" id="huntArena" aria-label="Oyun sahəsi">
+      <div class="hunt-crosshair" id="huntCrosshair"><i></i></div>
+      <div class="hunt-msg" id="huntMsg">
+        <h3 id="huntMsgTitle">Brend Ovçusu</h3>
+        <p id="huntMsgText">Uçan nişanlara vur, canını qoru.</p>
+        <button class="hunt-btn primary" id="huntStart" type="button">Başla</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Brend Viktorinası — oynanabilir demo -->
 <div class="quiz-overlay" id="quizOverlay" role="dialog" aria-modal="true" aria-label="Brend Viktorinası">
@@ -537,6 +701,11 @@ ob_start(static function (string $html): string { return sky_translate_document_
     <div class="quiz-counter"><span>Sual</span> <span id="quizQNum">1</span> / <span id="quizQTotal">25</span></div>
     <div class="quiz-progress"><div class="quiz-progress-bar" id="quizProgressBar"></div></div>
 
+    <div class="quiz-status" id="quizStatus" hidden>
+      <span class="quiz-status-rank" id="quizRankText"></span>
+      <span class="quiz-status-meta"><span id="quizCorrectCount">0</span> <span id="quizCorrectLabel">doğru cavab</span> · <span id="quizNextRankText"></span></span>
+    </div>
+
     <div id="quizPlay">
       <h2 class="quiz-question" id="quizQuestion"></h2>
       <div class="quiz-options" id="quizOptions"></div>
@@ -553,6 +722,16 @@ ob_start(static function (string $html): string { return sky_translate_document_
       <p class="quiz-result-score"><span>Bal:</span> <span id="quizScore">0</span></p>
       <p class="quiz-result-msg" id="quizResultMsg"></p>
       <button class="quiz-next" id="quizRestart" type="button">Yenidən oyna</button>
+    </div>
+
+    <div class="quiz-state" id="quizGate" hidden>
+      <div class="quiz-state-icon" aria-hidden="true">🔒</div>
+      <h2 id="quizGateTitle">Qeydiyyat tələb olunur</h2>
+      <p id="quizGateMsg">Viktorinada səhv cavab verdin. Davam etmək üçün saytda qeydiyyatdan keç.</p>
+      <div class="quiz-state-actions">
+        <a class="quiz-next" id="quizGateRegister" href="#">Qeydiyyatdan keç</a>
+        <a class="quiz-next ghost" id="quizGateLogin" href="#">Giriş et</a>
+      </div>
     </div>
   </div>
 </div>
@@ -631,8 +810,45 @@ ob_start(static function (string $html): string { return sky_translate_document_
   </div>
 </div>
 
+
+<!-- Brend Yaddaşı — memory match demo -->
+<div class="memory-overlay" id="memoryOverlay" role="dialog" aria-modal="true" aria-label="Brend Yaddaşı">
+  <div class="memory-box">
+    <button class="memory-close" id="memoryClose" type="button" aria-label="Oyunu bağla">×</button>
+    <div class="memory-head">
+      <div>
+        <div class="memory-title">Brend <span>Yaddaşı</span></div>
+        <div class="memory-level" id="memoryLevel">Səviyyə 1 · Yeni başlayan</div>
+      </div>
+    </div>
+    <div class="memory-stats">
+      <div class="memory-stat"><span>Gediş</span><strong id="memoryMoves">0</strong></div>
+      <div class="memory-stat"><span>Vaxt</span><strong id="memoryTime">0:00</strong></div>
+      <div class="memory-stat"><span>Cüt</span><strong id="memoryPairs">0/8</strong></div>
+      <div class="memory-stat"><span>Rekord</span><strong id="memoryBest">—</strong></div>
+    </div>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-win" id="memoryWin" hidden>
+      <div class="memory-win-title" id="memoryWinTitle">Əla! Bütün cütlər tapıldı</div>
+      <p id="memoryWinMsg"></p>
+      <div class="memory-actions">
+        <button class="memory-btn primary" id="memoryRestart" type="button">Yenidən oyna</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="<?= SITE_URL ?>/assets/js/main.js"></script>
 <script>
+<?php $quizUser = currentUser(); ?>
+var quizAuth = <?= json_encode([
+  'loggedIn' => isLoggedIn(),
+  'userId' => (int) ($_SESSION['user_id'] ?? 0),
+  'name' => (string) ($quizUser['fullname'] ?? ''),
+  'registerUrl' => SITE_URL . '/auth/register.php',
+  'loginUrl' => SITE_URL . '/auth/login.php',
+  'csrf' => csrf_token()
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 (function () {
   var overlay     = document.getElementById('quizOverlay');
   var openBtn     = document.getElementById('quizDemoBtn');
@@ -653,8 +869,112 @@ ob_start(static function (string $html): string { return sky_translate_document_
   var restartBtn  = document.getElementById('quizRestart');
   var scoreEl     = document.getElementById('quizScore');
   var resultMsg   = document.getElementById('quizResultMsg');
+  var statusEl    = document.getElementById('quizStatus');
+  var rankTextEl  = document.getElementById('quizRankText');
+  var correctCountEl = document.getElementById('quizCorrectCount');
+  var correctLabelEl = document.getElementById('quizCorrectLabel');
+  var nextRankTextEl = document.getElementById('quizNextRankText');
+  var gateEl      = document.getElementById('quizGate');
+  var gateTitleEl = document.getElementById('quizGateTitle');
+  var gateMsgEl   = document.getElementById('quizGateMsg');
+  var gateRegister = document.getElementById('quizGateRegister');
+  var gateLogin   = document.getElementById('quizGateLogin');
 
   if (!overlay || !openBtn) return;
+
+  var QSTORE = 'skyweb_quiz_v1';
+  var QGUEST_FLAG = 'skyweb_quiz_guest_played';
+  var QGUEST_COOKIE = 'skyweb_quiz_guest=1';
+  var audioCtx = null;
+
+  function playSound(ok) {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      var now = audioCtx.currentTime;
+      function tone(freq, start, dur, type, vol, slide) {
+        var o = audioCtx.createOscillator();
+        var g = audioCtx.createGain();
+        o.type = type;
+        o.frequency.setValueAtTime(freq, now + start);
+        if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(slide, 0.0001), now + start + dur);
+        g.gain.setValueAtTime(0.0001, now + start);
+        g.gain.exponentialRampToValueAtTime(vol, now + start + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + start + dur);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + start); o.stop(now + start + dur + 0.02);
+      }
+      if (ok) {
+        // Happy ascending major arpeggio with a soft sparkle
+        tone(523.25, 0,    0.22, 'sine', 0.14, 523.25); // C5
+        tone(659.25, 0.08, 0.24, 'sine', 0.15, 659.25); // E5
+        tone(783.99, 0.16, 0.32, 'sine', 0.16, 783.99); // G5
+        tone(1046.5, 0.24, 0.38, 'sine', 0.07, 1046.5); // C6 sparkle
+      } else {
+        // Gentle disappointed descending tones
+        tone(392.00, 0,    0.34, 'triangle', 0.13, 349.23); // G4 -> F4
+        tone(311.13, 0.12, 0.38, 'triangle', 0.11, 261.63); // Eb4 -> C4
+        tone(220.00, 0.24, 0.45, 'sine',     0.09, 196.00); // A3 -> G3 soft tail
+      }
+    } catch (e) { /* audio optional */ }
+  }
+
+  function qStoreKey() {
+    return quizAuth.loggedIn && quizAuth.userId ? QSTORE + '_u' + quizAuth.userId : QSTORE;
+  }
+  function qGuestPlayed() {
+    try { if (localStorage.getItem(QGUEST_FLAG) === '1') return true; } catch (e) { /* private mode */ }
+    return document.cookie.split(';').some(function (p) { return p.trim() === QGUEST_COOKIE; });
+  }
+  function qMarkGuestPlayed() {
+    if (quizAuth.loggedIn) return;
+    try { localStorage.setItem(QGUEST_FLAG, '1'); } catch (e) { /* private mode */ }
+    document.cookie = QGUEST_COOKIE + '; path=/; max-age=31536000; SameSite=Lax';
+  }
+  function qDefault() { return { totalCorrect: 0, bestScore: 0, gamesPlayed: 0 }; }
+  function qLoad() {
+    try {
+      var raw = localStorage.getItem(qStoreKey());
+      if (!raw) return qDefault();
+      var s = JSON.parse(raw);
+      return {
+        totalCorrect: Math.max(0, Number(s.totalCorrect) || 0),
+        bestScore: Math.max(0, Number(s.bestScore) || 0),
+        gamesPlayed: Math.max(0, Number(s.gamesPlayed) || 0)
+      };
+    } catch (e) { return qDefault(); }
+  }
+  function qSave(s) { try { localStorage.setItem(qStoreKey(), JSON.stringify(s)); } catch (e) { /* private mode */ } }
+  var qState = qLoad();
+
+  function qRankInfo(totalCorrect) {
+    var level = Math.floor(totalCorrect / 10) + 1;
+    var titles = ['Yeni başlayan', 'Bilməyə can atan', 'Bilici', 'Usta', 'Çempion', 'Əfsanə'];
+    var title = titles[Math.min(level - 1, titles.length - 1)];
+    var nextAt = level * 10;
+    return { level: level, title: title, nextAt: nextAt, inLevel: totalCorrect % 10 };
+  }
+  function renderQuizStatus() {
+    if (!statusEl) return;
+    var info = qRankInfo(sessionCorrect);
+    rankTextEl.textContent = qt('Səviyyə') + ' ' + info.level + ' · ' + qt(info.title);
+    correctCountEl.textContent = String(sessionCorrect);
+    correctLabelEl.textContent = qt('doğru cavab');
+    nextRankTextEl.textContent = qt('növbəti') + ': ' + info.inLevel + '/10 · ' + qt('ümumi') + ': ' + qState.totalCorrect;
+    statusEl.hidden = false;
+  }
+  function showQuizGate() {
+    play.hidden = true;
+    result.hidden = true;
+    gateEl.hidden = false;
+    gateRegister.href = quizAuth.registerUrl;
+    gateLogin.href = quizAuth.loginUrl;
+  }
+  function hideQuizGate() {
+    gateEl.hidden = true;
+  }
 
   // 25 Azerbaijan questions — 5 topics x 5 questions. AZ source strings are
   // translated through the shared SkyI18n literal map, so every option follows
@@ -803,6 +1123,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
 
   var index = 0;
   var score = 0;
+  var sessionCorrect = 0;
   var locked = false;
 
   // Use the site i18n engine so every dynamically generated string follows
@@ -856,9 +1177,15 @@ ob_start(static function (string $html): string { return sky_translate_document_
     var correct = i === correctDisplay;
     if (correct) {
       score += 4;
+      sessionCorrect += 1;
+      qState.totalCorrect += 1;
+      qSave(qState);
+      renderQuizStatus();
+      playSound(true);
       feedbackTxt.textContent = qt('Doğru cavab!');
       answerWrap.hidden = true;
     } else {
+      playSound(false);
       feedbackTxt.textContent = qt('Yanlış cavab.');
       answerEl.textContent = qt(item.options[item.answer]);
       answerWrap.hidden = false;
@@ -868,6 +1195,19 @@ ob_start(static function (string $html): string { return sky_translate_document_
       btn.disabled = true;
       btn.classList.add(j === correctDisplay ? 'is-correct' : (j === i ? 'is-wrong' : 'is-muted'));
     });
+    if (!correct && !quizAuth.loggedIn) {
+      qMarkGuestPlayed();
+      qState.gamesPlayed += 1;
+      qSave(qState);
+      nextBtn.hidden = true;
+      play.hidden = true;
+      gateMsgEl.textContent = qt('Viktorinada səhv cavab verdin. Davam etmək üçün saytda qeydiyyatdan keç.');
+      gateTitleEl.textContent = qt('Qeydiyyat tələb olunur');
+      gateRegister.href = quizAuth.registerUrl;
+      gateLogin.href = quizAuth.loginUrl;
+      gateEl.hidden = false;
+      return;
+    }
     nextBtn.textContent = qt(index === questions.length - 1 ? 'Nəticəni gör' : 'Növbəti sual');
     nextBtn.hidden = false;
   }
@@ -877,23 +1217,39 @@ ob_start(static function (string $html): string { return sky_translate_document_
     result.hidden = false;
     scoreEl.textContent = String(score);
     resultMsg.textContent = qt(score >= 80 ? 'Əla nəticə!' : (score >= 40 ? 'Yaxşı başlanğıc!' : 'Yenidən cəhd edin!'));
+    if (score > qState.bestScore) qState.bestScore = score;
+    qState.gamesPlayed += 1;
+    if (!quizAuth.loggedIn) qMarkGuestPlayed();
+    qSave(qState);
+    renderQuizStatus();
   }
 
   function reset() {
     index = 0;
     score = 0;
+    sessionCorrect = 0;
     locked = false;
     play.hidden = false;
     result.hidden = true;
+    hideQuizGate();
     scoreEl.textContent = '0';
+    renderQuizStatus();
     renderQuestion();
   }
 
   function openQuiz() {
-    reset();
+    qState = qLoad();
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     closeBtn.focus();
+    if (!quizAuth.loggedIn && qGuestPlayed()) {
+      gateTitleEl.textContent = qt('Qeydiyyat tələb olunur');
+      gateMsgEl.textContent = qt('Sən artıq bir dəfə oynadın. Davam etmək üçün saytda qeydiyyatdan keç.');
+      showQuizGate();
+      renderQuizStatus();
+      return;
+    }
+    reset();
   }
 
   function closeQuiz() {
@@ -931,6 +1287,40 @@ var riddleAuth = <?= json_encode([
   if (!overlay || !openBtn) return;
 
   var STORE = 'skyweb_riddles_v1';
+  var audioCtx = null;
+  function playSound(ok) {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      var now = audioCtx.currentTime;
+      function tone(freq, start, dur, type, vol, slide) {
+        var o = audioCtx.createOscillator();
+        var g = audioCtx.createGain();
+        o.type = type;
+        o.frequency.setValueAtTime(freq, now + start);
+        if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(slide, 0.0001), now + start + dur);
+        g.gain.setValueAtTime(0.0001, now + start);
+        g.gain.exponentialRampToValueAtTime(vol, now + start + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + start + dur);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + start); o.stop(now + start + dur + 0.02);
+      }
+      if (ok) {
+        // Happy ascending major arpeggio with a soft sparkle
+        tone(523.25, 0,    0.22, 'sine', 0.14, 523.25); // C5
+        tone(659.25, 0.08, 0.24, 'sine', 0.15, 659.25); // E5
+        tone(783.99, 0.16, 0.32, 'sine', 0.16, 783.99); // G5
+        tone(1046.5, 0.24, 0.38, 'sine', 0.07, 1046.5); // C6 sparkle
+      } else {
+        // Gentle disappointed descending tones
+        tone(392.00, 0,    0.34, 'triangle', 0.13, 349.23); // G4 -> F4
+        tone(311.13, 0.12, 0.38, 'triangle', 0.11, 261.63); // Eb4 -> C4
+        tone(220.00, 0.24, 0.45, 'sine',     0.09, 196.00); // A3 -> G3 soft tail
+      }
+    } catch (e) { /* audio optional */ }
+  }
   var ratingEl   = document.getElementById('riddleRating');
   var streakEl   = document.getElementById('riddleStreak');
   var todayEl    = document.getElementById('riddleToday');
@@ -1398,6 +1788,7 @@ var riddleAuth = <?= json_encode([
       newRecord = addPoints(10);
       state.solved += 1;
       state.todaySolved += 1;
+      playSound(true);
       feedbackTxt.textContent = qt('Doğru cavab! +10');
       feedbackAnswer.hidden = true;
       if (state.todaySolved >= GOAL_LIMIT && state.goalDone !== dayKey()) {
@@ -1406,6 +1797,7 @@ var riddleAuth = <?= json_encode([
         showToast(qt('Günlük məqsəd tamamlandı +50'));
       }
     } else {
+      playSound(false);
       var answerText = qt(item.o[item.a]);
       feedbackTxt.textContent = qt('Yanlış! Doğru cavab:');
       feedbackAnswer.textContent = answerText;
@@ -1545,5 +1937,396 @@ var riddleAuth = <?= json_encode([
     if (daily) showToast(qt('Günlük giriş +25'));
   }, 60000);
 })();
-</script></body>
+
+
+(function () {
+  var overlay = document.getElementById('memoryOverlay');
+  var openBtn = document.getElementById('memoryDemoBtn');
+  if (!overlay || !openBtn) return;
+
+  var gridEl = document.getElementById('memoryGrid');
+  var movesEl = document.getElementById('memoryMoves');
+  var timeEl = document.getElementById('memoryTime');
+  var pairsEl = document.getElementById('memoryPairs');
+  var bestEl = document.getElementById('memoryBest');
+  var levelEl = document.getElementById('memoryLevel');
+  var winEl = document.getElementById('memoryWin');
+  var winTitleEl = document.getElementById('memoryWinTitle');
+  var winMsgEl = document.getElementById('memoryWinMsg');
+  var restartBtn = document.getElementById('memoryRestart');
+  var closeBtn = document.getElementById('memoryClose');
+
+  var STORE = 'skyweb_memory_v1';
+  var ICONS = [
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8L12 3z"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13H11l-1 9 9.5-11H13l1-9z"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4.5v11L12 22l-8-4.5v-11L12 2z"/><path d="M12 2v20M4 6.5l8 4.5 8-4.5"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="18" cy="17" r="2"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><rect x="5" y="5" width="14" height="14" rx="3"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-4.4 7-10a7 7 0 10-14 0c0 5.6 7 10 7 10z"/><circle cx="12" cy="11" r="2.5"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>'
+  ];
+  var audioCtx = null;
+  var timer = null;
+  var seconds = 0;
+  var moves = 0;
+  var found = 0;
+  var lock = false;
+  var first = null;
+  var second = null;
+  var started = false;
+
+  function qt(text) {
+    if (window.SkyI18n && typeof window.SkyI18n.tr === 'function') {
+      return window.SkyI18n.tr(text, undefined, 'az');
+    }
+    return text;
+  }
+
+  function playSound(kind) {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      var now = audioCtx.currentTime;
+      function tone(freq, start, dur, type, vol, slide) {
+        var o = audioCtx.createOscillator();
+        var g = audioCtx.createGain();
+        o.type = type;
+        o.frequency.setValueAtTime(freq, now + start);
+        if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(slide, 0.0001), now + start + dur);
+        g.gain.setValueAtTime(0.0001, now + start);
+        g.gain.exponentialRampToValueAtTime(vol, now + start + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + start + dur);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + start); o.stop(now + start + dur + 0.02);
+      }
+      if (kind === 'flip') {
+        tone(440, 0, 0.07, 'sine', 0.06, 520);
+      } else if (kind === 'match') {
+        tone(523.25, 0, 0.18, 'sine', 0.13, 523.25);
+        tone(659.25, 0.07, 0.2, 'sine', 0.14, 659.25);
+        tone(783.99, 0.14, 0.28, 'sine', 0.12, 783.99);
+      } else if (kind === 'wrong') {
+        tone(330, 0, 0.22, 'triangle', 0.1, 220);
+        tone(220, 0.08, 0.24, 'triangle', 0.07, 165);
+      } else if (kind === 'win') {
+        tone(523.25, 0, 0.2, 'sine', 0.14, 523.25);
+        tone(659.25, 0.1, 0.22, 'sine', 0.14, 659.25);
+        tone(783.99, 0.2, 0.28, 'sine', 0.15, 783.99);
+        tone(1046.5, 0.3, 0.45, 'sine', 0.12, 1046.5);
+      }
+    } catch (e) { /* audio optional */ }
+  }
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE);
+      if (!raw) return { wins: 0, bestMoves: null, bestTime: null };
+      var s = JSON.parse(raw);
+      return {
+        wins: Math.max(0, Number(s.wins) || 0),
+        bestMoves: s.bestMoves == null ? null : Math.max(1, Number(s.bestMoves) || 1),
+        bestTime: s.bestTime == null ? null : Math.max(1, Number(s.bestTime) || 1)
+      };
+    } catch (e) { return { wins: 0, bestMoves: null, bestTime: null }; }
+  }
+  function save(s) { try { localStorage.setItem(STORE, JSON.stringify(s)); } catch (e) {} }
+  var state = load();
+
+  function levelInfo(wins) {
+    var level = Math.floor(wins / 2) + 1;
+    var titles = ['Yeni başlayan', 'Diqqətli', 'Yaddaş ustası', 'Çempion', 'Əfsanə'];
+    return { level: level, title: titles[Math.min(level - 1, titles.length - 1)] };
+  }
+
+  function fmtTime(sec) {
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  function updateStats() {
+    movesEl.textContent = String(moves);
+    timeEl.textContent = fmtTime(seconds);
+    pairsEl.textContent = found + '/8';
+    bestEl.textContent = state.bestMoves == null ? '—' : String(state.bestMoves);
+    var info = levelInfo(state.wins);
+    levelEl.textContent = qt('Səviyyə') + ' ' + info.level + ' · ' + qt(info.title) + ' · ' + qt('Qələbə') + ': ' + state.wins;
+  }
+
+  function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+  function startTimer() {
+    if (started) return;
+    started = true;
+    timer = setInterval(function () { seconds += 1; timeEl.textContent = fmtTime(seconds); }, 1000);
+  }
+
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  function buildGrid() {
+    gridEl.innerHTML = '';
+    var deck = shuffle(ICONS.concat(ICONS).map(function (icon, idx) { return { icon: icon, id: idx }; }));
+    deck.forEach(function (card, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'memory-card';
+      btn.dataset.icon = card.icon;
+      btn.setAttribute('aria-label', qt('Kart'));
+      btn.innerHTML = '<span class="memory-card-inner"><span class="memory-face memory-front"></span><span class="memory-face memory-back" style="color:#67e8f9">' + card.icon + '</span></span>';
+      btn.addEventListener('click', function () { flip(btn); });
+      gridEl.appendChild(btn);
+    });
+  }
+
+  function flip(card) {
+    if (lock || card === first || card.classList.contains('matched') || card.classList.contains('flipped')) return;
+    startTimer();
+    playSound('flip');
+    card.classList.add('flipped');
+    if (!first) { first = card; return; }
+    second = card;
+    moves += 1;
+    updateStats();
+    lock = true;
+    var isMatch = first.dataset.icon === second.dataset.icon;
+    if (isMatch) {
+      setTimeout(function () {
+        first.classList.add('matched');
+        second.classList.add('matched');
+        first.disabled = true;
+        second.disabled = true;
+        found += 1;
+        playSound('match');
+        resetPick();
+        updateStats();
+        if (found === 8) win();
+      }, 220);
+    } else {
+      playSound('wrong');
+      setTimeout(function () {
+        first.classList.remove('flipped');
+        second.classList.remove('flipped');
+        resetPick();
+      }, 700);
+    }
+  }
+
+  function resetPick() { first = null; second = null; lock = false; }
+
+  function win() {
+    stopTimer();
+    state.wins += 1;
+    if (state.bestMoves == null || moves < state.bestMoves) state.bestMoves = moves;
+    if (state.bestTime == null || seconds < state.bestTime) state.bestTime = seconds;
+    save(state);
+    updateStats();
+    winTitleEl.textContent = qt('Əla! Bütün cütlər tapıldı');
+    winMsgEl.textContent = qt('Gediş') + ': ' + moves + ' · ' + qt('Vaxt') + ': ' + fmtTime(seconds) + ' · ' + qt('Səviyyə') + ' ' + levelInfo(state.wins).level;
+    winEl.hidden = false;
+    playSound('win');
+  }
+
+  function reset() {
+    stopTimer();
+    seconds = 0; moves = 0; found = 0; lock = false; first = null; second = null; started = false;
+    winEl.hidden = true;
+    buildGrid();
+    updateStats();
+  }
+
+  function open() {
+    state = load();
+    reset();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+  function close() {
+    stopTimer();
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  restartBtn.addEventListener('click', reset);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && overlay.classList.contains('open')) close(); });
+})();
+
+</script>
+<script>
+(function () {
+  var overlay = document.getElementById('huntOverlay');
+  var openBtn = document.getElementById('huntDemoBtn');
+  if (!overlay || !openBtn) return;
+  var arena = document.getElementById('huntArena');
+  var scoreEl = document.getElementById('huntScore');
+  var livesEl = document.getElementById('huntLives');
+  var waveEl = document.getElementById('huntWave');
+  var bestEl = document.getElementById('huntBest');
+  var levelEl = document.getElementById('huntLevel');
+  var msg = document.getElementById('huntMsg');
+  var msgTitle = document.getElementById('huntMsgTitle');
+  var msgText = document.getElementById('huntMsgText');
+  var startBtn = document.getElementById('huntStart');
+  var closeBtn = document.getElementById('huntClose');
+  var crosshair = document.getElementById('huntCrosshair');
+  var STORE = 'skyweb_hunt_v1';
+  function qt(t){ if(window.SkyI18n&&typeof window.SkyI18n.tr==='function') return window.SkyI18n.tr(t,undefined,'az'); return t; }
+  var SHAPES = [
+    { svg:'<svg viewBox="0 0 24 24" fill="rgba(251,191,36,.18)" stroke="#fbbf24" stroke-width="1.8"><path d="M12 2l8 4.5v11L12 22l-8-4.5v-11L12 2z"/></svg>', bg:'radial-gradient(circle at 35% 30%,rgba(251,191,36,.28),rgba(245,158,11,.08) 65%)', bd:'rgba(251,191,36,.45)', gl:'0 0 14px rgba(251,191,36,.3)' },
+    { svg:'<svg viewBox="0 0 24 24" fill="rgba(56,189,248,.16)" stroke="#67e8f9" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2"/></svg>', bg:'radial-gradient(circle at 35% 30%,rgba(56,189,248,.28),rgba(14,165,233,.08) 65%)', bd:'rgba(56,189,248,.45)', gl:'0 0 14px rgba(56,189,248,.3)' },
+    { svg:'<svg viewBox="0 0 24 24" fill="rgba(244,114,182,.16)" stroke="#f9a8d4" stroke-width="1.8"><path d="M13 2L4.5 13H11l-1 9 9.5-11H13z"/></svg>', bg:'radial-gradient(circle at 35% 30%,rgba(244,114,182,.28),rgba(236,72,153,.08) 65%)', bd:'rgba(244,114,182,.45)', gl:'0 0 14px rgba(244,114,182,.3)' },
+    { svg:'<svg viewBox="0 0 24 24" fill="rgba(167,139,250,.16)" stroke="#c4b5fd" stroke-width="1.8"><path d="M12 3l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.9-5.4 2.9 1-6L3.3 9.4l6-.9z"/></svg>', bg:'radial-gradient(circle at 35% 30%,rgba(167,139,250,.28),rgba(139,92,246,.08) 65%)', bd:'rgba(167,139,250,.45)', gl:'0 0 14px rgba(167,139,250,.3)' }
+  ];
+  var BONUS_SVG = '<svg viewBox="0 0 24 24" fill="rgba(74,222,128,.22)" stroke="#4ade80" stroke-width="1.8"><path d="M20.8 8.6c0 1.5-.6 2.9-1.6 3.9L12 19.7l-7.2-7.2a5.5 5.5 0 117.8-7.8l.4.4.4-.4a5.5 5.5 0 017.4 3.9z"/></svg>';
+  var audioCtx = null, raf = null, spawnTimer = null, targets = [], score = 0, lives = 3, wave = 1, hits = 0, running = false;
+  function bestGet(){ try { return Math.max(0, Number(localStorage.getItem(STORE))||0); } catch(e){ return 0; } }
+  function bestSet(v){ try { localStorage.setItem(STORE, String(v)); } catch(e){} }
+  var best = bestGet();
+  bestEl.textContent = String(best);
+  function sound(kind){
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext; if(!Ctx) return;
+      if(!audioCtx) audioCtx = new Ctx(); if(audioCtx.state==='suspended') audioCtx.resume();
+      var now = audioCtx.currentTime;
+      function tone(f,s,d,t,v,slide){ var o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type=t; o.frequency.setValueAtTime(f,now+s); if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(slide,0.0001),now+s+d); g.gain.setValueAtTime(0.0001,now+s); g.gain.exponentialRampToValueAtTime(v,now+s+0.01); g.gain.exponentialRampToValueAtTime(0.0001,now+s+d); o.connect(g); g.connect(audioCtx.destination); o.start(now+s); o.stop(now+s+d+0.02); }
+      if(kind==='shot'){ tone(220,0,0.06,'square',0.05,120); tone(110,0.02,0.08,'triangle',0.04,80); }
+      else if(kind==='hit'){ tone(660,0,0.08,'sine',0.12,880); tone(990,0.05,0.12,'sine',0.08,1320); }
+      else if(kind==='miss'){ tone(180,0,0.18,'sawtooth',0.05,120); }
+      else if(kind==='over'){ tone(330,0,0.18,'triangle',0.08,220); tone(220,0.12,0.28,'triangle',0.07,165); }
+      else if(kind==='level'){ tone(523,0,0.1,'sine',0.1,523); tone(659,0.07,0.12,'sine',0.1,659); tone(784,0.14,0.16,'sine',0.09,784); }
+    } catch(e){}
+  }
+  function updateHud(){ scoreEl.textContent=String(score); livesEl.textContent=String(lives); waveEl.textContent=String(wave); bestEl.textContent=String(best); levelEl.textContent=qt('Səviyyə')+' '+wave+' · '+qt('Retro rejim'); }
+  function clearTargets(){ targets.forEach(function(t){ if(t.el && t.el.parentNode) t.el.parentNode.removeChild(t.el); }); targets=[]; }
+  function spawn(forceBonus){
+    if(!running) return;
+    var r = arena.getBoundingClientRect();
+    var bonus = !!forceBonus || (Math.random() < 0.12 && wave > 0);
+    var size = r.width < 400 ? (bonus ? 36 : 38) : (bonus ? 42 : 44);
+    var y = 18 + Math.random() * (r.height * 0.52);
+    var fromLeft = Math.random() > 0.5;
+    var baseSpeed = bonus ? (95 + wave * 14 + Math.random() * 45) : (55 + wave * 12 + Math.random() * 35);
+    var speed = baseSpeed * (fromLeft ? 1 : -1);
+    var el = document.createElement('button');
+    el.type = 'button'; el.className = 'hunt-target' + (bonus ? ' bonus' : '');
+    el.style.width = size+'px'; el.style.height = size+'px';
+    el.style.left = (fromLeft ? -30 : r.width + 30) + 'px';
+    el.style.top = y + 'px';
+    if (bonus) {
+      el.innerHTML = '<span class="hunt-target-body">' + BONUS_SVG + '</span>';
+      el.setAttribute('aria-label', qt('Bonus can'));
+    } else {
+      var shape = SHAPES[Math.floor(Math.random()*SHAPES.length)];
+      el.innerHTML = '<span class="hunt-target-body" style="background:' + shape.bg + ';border:1px solid ' + shape.bd + ';box-shadow:' + shape.gl + '">' + shape.svg + '</span>';
+      el.setAttribute('aria-label', qt('Hədəf'));
+    }
+    var t = {el:el, x: fromLeft ? -30 : r.width + 30, y:y, speed:speed, size:size, dead:false, bonus:bonus};
+    el.addEventListener('pointerdown', function(ev){ ev.stopPropagation(); hit(t); });
+    arena.appendChild(el);
+    targets.push(t);
+  }
+  function hit(t){
+    if(!running || t.dead) return;
+    t.dead = true;
+    if (t.bonus) {
+      lives = Math.min(lives + 1, 5);
+      score += 5 * wave;
+      var fx = document.createElement('div'); fx.className='hunt-float'; fx.textContent='+1 ' + qt('Həyat');
+      fx.style.left=t.x+'px'; fx.style.top=t.y+'px'; arena.appendChild(fx);
+      setTimeout(function(){ if(fx.parentNode) fx.parentNode.removeChild(fx); }, 900);
+      sound('level');
+    } else {
+      hits += 1; score += 10 * wave;
+      sound('hit');
+      if(hits % 8 === 0){ wave += 1; sound('level'); restartSpawn(); }
+    }
+    t.el.classList.add('hit');
+    setTimeout(function(){ if(t.el.parentNode) t.el.parentNode.removeChild(t.el); targets = targets.filter(function(x){return x!==t;}); }, 280);
+    if(score > best){ best = score; bestSet(best); }
+    updateHud();
+  }
+  function missFx(x,y){
+    var fx = document.createElement('div'); fx.className='hunt-miss-fx'; fx.style.left=x+'px'; fx.style.top=y+'px'; arena.appendChild(fx);
+    setTimeout(function(){ if(fx.parentNode) fx.parentNode.removeChild(fx); }, 350);
+  }
+  function arenaMiss(ev){
+    if(!running) return;
+    if(ev.target.closest && ev.target.closest('.hunt-target')) return;
+    if(ev.target.closest && ev.target.closest('.hunt-msg')) return;
+    var r = arena.getBoundingClientRect();
+    var x = ev.clientX - r.left, y = ev.clientY - r.top;
+    missFx(x,y); sound('miss');
+    lives -= 1; if(lives < 0) lives = 0;
+    updateHud();
+    if(lives <= 0) gameOver();
+  }
+  function loop(ts){
+    if(!running) return;
+    var r = arena.getBoundingClientRect();
+    for(var i=targets.length-1;i>=0;i--){
+      var t = targets[i]; if(t.dead) continue;
+      t.x += t.speed * 0.016;
+      t.el.style.left = t.x + 'px';
+      if((t.speed > 0 && t.x > r.width + 40) || (t.speed < 0 && t.x < -40)){
+        if(t.el.parentNode) t.el.parentNode.removeChild(t.el);
+        targets.splice(i,1);
+        if (!t.bonus) {
+          lives -= 1; if(lives < 0) lives = 0; updateHud();
+          if(lives <= 0){ gameOver(); return; }
+        }
+      }
+    }
+    raf = requestAnimationFrame(loop);
+  }
+  var bonusTimer = null;
+  function restartSpawn(){ if(spawnTimer) clearInterval(spawnTimer); var ms = Math.max(520, 1100 - wave * 80); spawnTimer = setInterval(function(){ spawn(false); }, ms); if(bonusTimer) clearInterval(bonusTimer); bonusTimer = setInterval(function(){ if(running && Math.random()<0.55) spawn(true); }, 6500); }
+  function startGame(){
+    running = true; score = 0; lives = 3; wave = 1; hits = 0; clearTargets(); updateHud(); msg.hidden = true;
+    restartSpawn(); spawn(); if(raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+  }
+  function gameOver(){
+    running = false; if(raf) cancelAnimationFrame(raf); raf=null; if(spawnTimer) clearInterval(spawnTimer); spawnTimer=null; if(bonusTimer) clearInterval(bonusTimer); bonusTimer=null;
+    clearTargets(); sound('over');
+    if(score > best){ best = score; bestSet(best); updateHud(); }
+    msgTitle.textContent = qt('Oyun bitdi');
+    msgText.innerHTML = '<div>' + qt('Xal')+': '+score+' · '+qt('Dalğa')+': '+wave+' · '+qt('Rekord')+': '+best + '</div>'
+      + '<div class="hunt-motto">' + qt('SkyWeb sizi salamlayır: bu sadəcə bir oyundur. Həyatda uduzmayın, davam edin!') + '</div>';
+    startBtn.textContent = qt('Yenidən başla');
+    msg.hidden = false;
+  }
+  function open(){
+    best = bestGet(); updateHud(); clearTargets(); running = false;
+    msgTitle.textContent = qt('Brend Ovçusu');
+    msgText.innerHTML = qt('Uçan nişanlara vur, canını qoru.');
+    startBtn.textContent = qt('Başla');
+    msg.hidden = false;
+    overlay.classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function close(){
+    running = false; if(raf) cancelAnimationFrame(raf); raf=null; if(spawnTimer) clearInterval(spawnTimer); spawnTimer=null; if(bonusTimer) clearInterval(bonusTimer); bonusTimer=null;
+    crosshair.classList.remove('on'); clearTargets(); overlay.classList.remove('open'); document.body.style.overflow='';
+  }
+  arena.addEventListener('pointermove', function(e){ var r=arena.getBoundingClientRect(); crosshair.style.left=(e.clientX-r.left)+'px'; crosshair.style.top=(e.clientY-r.top)+'px'; crosshair.classList.add('on'); });
+  arena.addEventListener('pointerleave', function(){ crosshair.classList.remove('on'); });
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  startBtn.addEventListener('click', function(e){ e.stopPropagation(); sound('shot'); startGame(); });
+  arena.addEventListener('pointerdown', arenaMiss);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && overlay.classList.contains('open')) close(); });
+})();
+</script>
+</body>
 </html>
