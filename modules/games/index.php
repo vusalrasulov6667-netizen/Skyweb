@@ -444,6 +444,40 @@ ob_start(static function (string $html): string { return sky_translate_document_
     .hunt-btn.primary { background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#422006; }
     .hunt-btn.primary:hover { filter:brightness(1.05); }
     @media(max-width:420px){ .hunt-box{padding:.85rem;} .hunt-target{width:38px;height:38px;} .hunt-stat span{font-size:.58rem;} }
+
+    /* SkyWeb Macərası */
+    .adv-overlay{position:fixed;inset:0;z-index:10002;padding:.5rem;background:rgba(4,8,20,.9);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .22s,visibility .22s}
+    .adv-overlay.open{opacity:1;visibility:visible}
+    .adv-box{width:100%;max-width:760px;background:linear-gradient(180deg,#101b30 0%,#0b1424 100%);border:1px solid rgba(99,102,241,.25);border-radius:18px;padding:.75rem;position:relative;box-shadow:0 24px 70px -28px rgba(99,102,241,.35)}
+    .adv-close{position:absolute;top:.55rem;right:.55rem;width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--text-muted);font-size:1.1rem;line-height:1;cursor:pointer;z-index:5}
+    .adv-close:hover{color:#fff;border-color:rgba(99,102,241,.4)}
+    .adv-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.5rem;padding-right:2.2rem;flex-wrap:wrap}
+    .adv-title{font-weight:800;font-size:1rem;color:#e0e7ff}.adv-title span{color:#818cf8}
+    .adv-sub{font-size:.72rem;color:#a5b4fc;font-weight:600;margin-top:.1rem}
+    .adv-hud{display:grid;grid-template-columns:repeat(5,1fr);gap:.35rem;margin-bottom:.5rem}
+    .adv-stat{background:rgba(255,255,255,.03);border:1px solid rgba(99,102,241,.14);border-radius:10px;padding:.3rem .2rem;text-align:center}
+    .adv-stat span{display:block;font-size:.58rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.03em;line-height:1}
+    .adv-stat strong{display:block;font-size:.82rem;color:#c7d2fe;margin-top:.18rem;font-variant-numeric:tabular-nums}
+    .adv-canvas-wrap{position:relative;width:100%;border-radius:12px;overflow:hidden;border:1px solid rgba(99,102,241,.18);background:#0b1020}
+    .adv-canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;touch-action:none}
+    .adv-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.45rem;background:rgba(6,10,24,.55);z-index:4;text-align:center;padding:1rem}
+    .adv-msg[hidden]{display:none!important}
+    .adv-msg h3{font-size:1.15rem;color:#c7d2fe;margin:0}.adv-msg p{font-size:.8rem;color:var(--text-muted);margin:0;line-height:1.45;max-width:420px}
+    .adv-msg .adv-motto{font-size:.76rem;color:#fde68a;background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(99,102,241,.1));border:1px solid rgba(251,191,36,.2);padding:.45rem .65rem;border-radius:10px;max-width:360px}
+    .adv-btn{padding:.55rem 1rem;border-radius:10px;border:none;font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s}
+    .adv-btn.primary{background:linear-gradient(135deg,#818cf8,#6366f1);color:#fff}.adv-btn.primary:hover{filter:brightness(1.08)}
+    .adv-controls{display:none;gap:.4rem;justify-content:center;margin-top:.5rem;user-select:none}
+    .adv-ctrl{width:52px;height:44px;border-radius:10px;border:1px solid rgba(99,102,241,.25);background:rgba(99,102,241,.1);color:#c7d2fe;font-size:1.1rem;font-weight:700;touch-action:manipulation}
+    .adv-ctrl:active,.adv-ctrl.on{background:rgba(99,102,241,.28);border-color:rgba(99,102,241,.5)}
+    .adv-ctrl.jump{width:72px}
+    .adv-board{margin-top:.55rem;background:rgba(255,255,255,.02);border:1px solid rgba(99,102,241,.12);border-radius:12px;padding:.55rem}
+    .adv-board-head{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-muted);margin-bottom:.35rem}
+    .adv-board ol{list-style:none;padding:0;margin:0;display:grid;gap:.2rem}
+    .adv-board li{display:flex;justify-content:space-between;font-size:.74rem;color:#cbd5e1;padding:.2rem .35rem;border-radius:6px}
+    .adv-board li.me{background:rgba(99,102,241,.14);color:#c7d2fe}
+    .adv-board-note{font-size:.68rem;color:var(--text-muted);margin-top:.3rem}
+    @media(max-width:700px){.adv-controls{display:flex}.adv-hud{grid-template-columns:repeat(5,1fr)}}
+    @media(max-width:480px){.adv-box{padding:.55rem}.adv-stat span{font-size:.52rem}.adv-stat strong{font-size:.74rem}.adv-ctrl{width:46px;height:42px}.adv-ctrl.jump{width:62px}}
   </style>
   <!-- Favicon (inline SVG) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 10 62 76'%3E%3Cdefs%3E%3ClinearGradient id='skySGradFav' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12,74 L42,74 C50,74 54,70 54,64 C54,58 48,54 40,52 L26,48 C16,45 10,39 10,30 C10,20 18,14 30,14 L56,14 L52,22 L30,22 C26,22 22,25 22,30 C22,35 26,37 30,39 L44,43 C54,46 64,51 64,64 C64,75 56,82 43,82 L12,82 Z' fill='url(%23skySGradFav)'/%3E%3C/svg%3E">
@@ -627,6 +661,26 @@ ob_start(static function (string $html): string { return sky_translate_document_
         </div>
       </div>
 
+      <div class="game-card">
+        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(99,102,241,0.16),rgba(236,72,153,0.10));">
+          <span aria-hidden="true" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:18px;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.24);">
+            <svg viewBox="0 0 24 24" fill="none" style="width:40px;height:40px"><rect x="3" y="4" width="18" height="16" rx="4" fill="rgba(129,140,248,.18)" stroke="#818cf8" stroke-width="1.5"/><path d="M8 14l2-2 2 2 4-4 2 2" stroke="#c7d2fe" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="#fbbf24"/></svg>
+          </span>
+          <div class="game-badge badge-new">Yeni</div>
+        </div>
+        <div class="game-card-body">
+          <div class="game-name">SkyWeb Macərası</div>
+          <div class="game-desc">SkyWeb loqosu ilə platforma macərası: ulduz topla, maneələri aş, şahzadəni xilas et. Rəngli səviyyə, səs effektləri və reytinq cədvəli.</div>
+          <div class="game-features">
+            <span class="game-feat-tag">Platforma</span>
+            <span class="game-feat-tag">Macəra</span>
+            <span class="game-feat-tag">Reytinq</span>
+            <span class="game-feat-tag">Səs effekti</span>
+          </div>
+          <button class="game-demo-btn" id="advDemoBtn" type="button">Oyuna daxil ol</button>
+        </div>
+      </div>
+
     </div><!-- /games-grid -->
 
   </div>
@@ -690,6 +744,44 @@ ob_start(static function (string $html): string { return sky_translate_document_
   </div>
 </div>
 </div>
+</div>
+
+<!-- SkyWeb Macərası — platformer demo -->
+<div class="adv-overlay" id="advOverlay" role="dialog" aria-modal="true" aria-label="SkyWeb Macərası">
+  <div class="adv-box">
+    <button class="adv-close" id="advClose" type="button" aria-label="Oyunu bağla">×</button>
+    <div class="adv-head">
+      <div>
+        <div class="adv-title">SkyWeb <span>Macərası</span></div>
+        <div class="adv-sub" id="advSub">Ulduz topla, şahzadəni xilas et</div>
+      </div>
+    </div>
+    <div class="adv-hud">
+      <div class="adv-stat"><span>Xal</span><strong id="advScore">0</strong></div>
+      <div class="adv-stat"><span>Ulduz</span><strong id="advCoins">0</strong></div>
+      <div class="adv-stat"><span>Həyat</span><strong id="advLives">3</strong></div>
+      <div class="adv-stat"><span>Vaxt</span><strong id="advTime">90</strong></div>
+      <div class="adv-stat"><span>Rekord</span><strong id="advBest">0</strong></div>
+    </div>
+    <div class="adv-canvas-wrap">
+      <canvas class="adv-canvas" id="advCanvas" width="960" height="540"></canvas>
+      <div class="adv-msg" id="advMsg">
+        <h3 id="advMsgTitle">SkyWeb Macərası</h3>
+        <p id="advMsgText">Ox düymələri ilə hərəkət et, boşluq/↑ ilə tullan. Ulduzları topla, maneələrdən qaç, şahzadəni xilas et!</p>
+        <button class="adv-btn primary" id="advStart" type="button">Başla</button>
+      </div>
+    </div>
+    <div class="adv-controls" id="advControls" aria-label="Mobil idarəetmə">
+      <button class="adv-ctrl" id="advLeft" type="button" aria-label="Sol">◀</button>
+      <button class="adv-ctrl jump" id="advJump" type="button" aria-label="Tullan">▲</button>
+      <button class="adv-ctrl" id="advRight" type="button" aria-label="Sağ">▶</button>
+    </div>
+    <div class="adv-board">
+      <div class="adv-board-head"><span>Reytinq cədvəli</span><span id="advMyRank"></span></div>
+      <ol id="advBoardList"></ol>
+      <div class="adv-board-note" id="advBoardNote" hidden></div>
+    </div>
+  </div>
 </div>
 
 <!-- Brend Viktorinası — oynanabilir demo -->
@@ -2334,6 +2426,335 @@ var riddleAuth = <?= json_encode([
   arena.addEventListener('pointerdown', arenaMiss);
   overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && overlay.classList.contains('open')) close(); });
+})();
+</script>
+
+<script>
+<?php $advUser = currentUser(); ?>
+var advAuth = <?= json_encode([
+  'loggedIn' => isLoggedIn(),
+  'userId' => (int) ($_SESSION['user_id'] ?? 0),
+  'name' => (string) ($advUser['fullname'] ?? ''),
+  'registerUrl' => SITE_URL . '/auth/register.php',
+  'loginUrl' => SITE_URL . '/auth/login.php',
+  'boardUrl' => SITE_URL . '/api/adventure-scores.php',
+  'csrf' => csrf_token()
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+(function(){
+  var overlay=document.getElementById('advOverlay'), openBtn=document.getElementById('advDemoBtn');
+  if(!overlay||!openBtn) return;
+  var canvas=document.getElementById('advCanvas'), ctx=canvas.getContext('2d');
+  var W=960,H=540;
+  var scoreEl=document.getElementById('advScore'), coinsEl=document.getElementById('advCoins'), livesEl=document.getElementById('advLives'), timeEl=document.getElementById('advTime'), bestEl=document.getElementById('advBest');
+  var msg=document.getElementById('advMsg'), msgTitle=document.getElementById('advMsgTitle'), msgText=document.getElementById('advMsgText'), startBtn=document.getElementById('advStart');
+  var closeBtn=document.getElementById('advClose'), subEl=document.getElementById('advSub');
+  var boardListEl=document.getElementById('advBoardList'), myRankEl=document.getElementById('advMyRank'), boardNoteEl=document.getElementById('advBoardNote');
+  var btnL=document.getElementById('advLeft'), btnR=document.getElementById('advRight'), btnJ=document.getElementById('advJump');
+  var STORE='skyweb_adventure_v1';
+  function qt(t){ if(window.SkyI18n&&typeof window.SkyI18n.tr==='function') return window.SkyI18n.tr(t,undefined,'az'); return t; }
+  var audioCtx=null;
+  function snd(k){
+    try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!audioCtx)audioCtx=new C();if(audioCtx.state==='suspended')audioCtx.resume();
+      var n=audioCtx.currentTime; function tone(f,s,d,t,v,sl){var o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.setValueAtTime(f,n+s);if(sl)o.frequency.exponentialRampToValueAtTime(Math.max(40,sl),n+s+d);g.gain.setValueAtTime(0.0001,n+s);g.gain.exponentialRampToValueAtTime(v,n+s+0.01);g.gain.exponentialRampToValueAtTime(0.0001,n+s+d);o.connect(g);g.connect(audioCtx.destination);o.start(n+s);o.stop(n+s+d+0.02);}
+      if(k==='jump'){tone(320,0,.12,'sine',.09,520);tone(520,0.05,.1,'sine',.05,680);}
+      else if(k==='coin'){tone(880,0,.07,'sine',.1,1100);tone(1320,0.05,.12,'sine',.08,1500);}
+      else if(k==='hit'){tone(220,0,.12,'sawtooth',.07,120);tone(140,0.06,.2,'triangle',.06,90);}
+      else if(k==='win'){[523,659,784,1047].forEach(function(f,i){tone(f,i*0.08,.18,'sine',.09,f);});}
+      else if(k==='lose'){tone(330,0,.2,'triangle',.07,220);tone(220,0.12,.3,'triangle',.06,140);}
+      else if(k==='stomp'){tone(180,0,.08,'square',.05,120);}
+    }catch(e){}
+  }
+
+  var keys={};
+  var best=0; try{best=Math.max(0,Number(localStorage.getItem(STORE))||0);}catch(e){}
+  bestEl.textContent=String(best);
+
+  var state=null, raf=null, lastTs=0, boardTimer=null;
+  function makeLevel(){
+    var plats=[
+      {x:0,y:470,w:420,h:70},{x:520,y:470,w:260,h:70},{x:860,y:470,w:240,h:70},{x:1180,y:470,w:260,h:70},
+      {x:1520,y:470,w:220,h:70},{x:1820,y:470,w:260,h:70},{x:2160,y:470,w:300,h:70},{x:2540,y:470,w:260,h:70},
+      {x:2880,y:470,w:420,h:70},
+      {x:300,y:360,w:120,h:20},{x:560,y:320,w:120,h:20},{x:760,y:260,w:110,h:20},
+      {x:980,y:350,w:120,h:20},{x:1260,y:300,w:120,h:20},{x:1480,y:240,w:110,h:20},
+      {x:1700,y:330,w:130,h:20},{x:1960,y:280,w:120,h:20},{x:2240,y:340,w:120,h:20},
+      {x:2440,y:260,w:120,h:20},{x:2680,y:330,w:120,h:20}
+    ];
+    var coins=[
+      {x:340,y:320},{x:600,y:280},{x:790,y:220},{x:1020,y:310},{x:1300,y:260},{x:1510,y:200},
+      {x:1740,y:290},{x:2000,y:240},{x:2280,y:300},{x:2480,y:220},{x:2720,y:290},{x:620,y:430},
+      {x:940,y:430},{x:1280,y:430},{x:1900,y:430},{x:2320,y:430},{x:2620,y:430},{x:2980,y:430}
+    ].map(function(c){return {x:c.x,y:c.y,r:12,got:false};});
+    var enemies=[
+      {x:560,y:430,w:36,h:36,vx:60,minX:520,maxX:720,dead:false},
+      {x:900,y:430,w:36,h:36,vx:-70,minX:860,maxX:1060,dead:false},
+      {x:1240,y:430,w:36,h:36,vx:80,minX:1180,maxX:1390,dead:false},
+      {x:1880,y:430,w:36,h:36,vx:-75,minX:1820,maxX:2030,dead:false},
+      {x:2220,y:430,w:36,h:36,vx:85,minX:2160,maxX:2410,dead:false},
+      {x:2600,y:430,w:36,h:36,vx:-90,minX:2540,maxX:2750,dead:false}
+    ];
+    return {plats:plats,coins:coins,enemies:enemies,goal:{x:3120,y:390,w:48,h:80},len:3300};
+  }
+
+  function reset(){
+    var L=makeLevel();
+    state={p:{x:60,y:380,w:34,h:34,vx:0,vy:0,on:false,face:1,inv:0},cam:0,score:0,coins:0,lives:3,time:90,win:false,dead:false,over:false,plats:L.plats,coins:L.coins,enemies:L.enemies,goal:L.goal,len:L.len,t:0};
+    updateHud(); msg.hidden=true;
+  }
+
+  function updateHud(){
+    if(!state) return;
+    scoreEl.textContent=String(state.score);
+    coinsEl.textContent=String(state.coins);
+    livesEl.textContent=String(state.lives);
+    timeEl.textContent=String(Math.max(0,Math.ceil(state.time)));
+    bestEl.textContent=String(best);
+  }
+
+  function rectHit(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
+
+  function loseLife(){
+    if(!state||state.over||state.win) return;
+    if(state.p.inv>0) return;
+    state.lives--; state.p.inv=1.2; snd('hit'); updateHud();
+    if(state.lives<=0){ gameOver(false); }
+    else { state.p.x=Math.max(40,state.p.x-80); state.p.y=300; state.p.vx=0; state.p.vy=0; }
+  }
+
+  function gameOver(won){
+    state.over=true; state.win=!!won; state.dead=!won;
+    snd(won?'win':'lose');
+    var finalScore = state.score + (won? Math.ceil(state.time)*5 + 200 : 0);
+    if(won) state.score = finalScore;
+    if(state.score>best){ best=state.score; try{localStorage.setItem(STORE,String(best));}catch(e){} }
+    updateHud(); saveBoardScore();
+    msgTitle.textContent = won ? qt('Şahzadə xilas oldu!') : qt('Oyun bitdi');
+    var base = qt('Xal')+': '+state.score+' · '+qt('Ulduz')+': '+state.coins+' · '+qt('Rekord')+': '+best;
+    msgText.innerHTML = '<div>'+base+'</div><div class="adv-motto">'+(won? '🏆 '+qt('SkyWeb Macərası: Şahzadəni xilas etdin! Sən əsl qəhrəmansan!') : '🎮 '+qt('SkyWeb salamlayır: məğlubiyyət son deyil, yenidən başla və zirvəyə qalx!'))+'</div>';
+    startBtn.textContent = qt('Yenidən başla');
+    msg.hidden=false;
+  }
+
+  function update(dt){
+    if(!state||state.over) return;
+    state.t+=dt; state.time-=dt; if(state.time<=0){state.time=0; updateHud(); gameOver(false); return;}
+    var p=state.p;
+    if(p.inv>0) p.inv-=dt;
+    var left=keys['ArrowLeft']||keys['KeyA'], right=keys['ArrowRight']||keys['KeyD'], jump=keys['ArrowUp']||keys['Space']||keys['KeyW'];
+    var accel=1400, maxV=320, fric=1200;
+    if(left){ p.vx-=accel*dt; p.face=-1; }
+    if(right){ p.vx+=accel*dt; p.face=1; }
+    if(!left&&!right){ if(p.vx>0) p.vx=Math.max(0,p.vx-fric*dt); else if(p.vx<0) p.vx=Math.min(0,p.vx+fric*dt); }
+    if(p.vx>maxV) p.vx=maxV; if(p.vx<-maxV) p.vx=-maxV;
+    if(jump && p.on){ p.vy=-640; p.on=false; snd('jump'); }
+    p.vy+=1700*dt; if(p.vy>900) p.vy=900;
+
+    p.x+=p.vx*dt;
+    for(var i=0;i<state.plats.length;i++){
+      var pl=state.plats[i];
+      if(rectHit(p,pl)){
+        if(p.vx>0) p.x=pl.x-p.w;
+        else if(p.vx<0) p.x=pl.x+pl.w;
+        p.vx=0;
+      }
+    }
+    p.y+=p.vy*dt; p.on=false;
+    for(var j=0;j<state.plats.length;j++){
+      var pl2=state.plats[j];
+      if(rectHit(p,pl2)){
+        if(p.vy>0){ p.y=pl2.y-p.h; p.vy=0; p.on=true; }
+        else if(p.vy<0){ p.y=pl2.y+pl2.h; p.vy=0; }
+      }
+    }
+    if(p.x<0) p.x=0;
+    if(p.y>H+200){ loseLife(); if(state.over) return; }
+
+    for(var c=0;c<state.coins.length;c++){
+      var cn=state.coins[c]; if(cn.got) continue;
+      var cb={x:cn.x-cn.r,y:cn.y-cn.r,w:cn.r*2,h:cn.r*2};
+      if(rectHit(p,cb)){ cn.got=true; state.coins++; state.score+=10; snd('coin'); updateHud(); }
+    }
+    for(var e=0;e<state.enemies.length;e++){
+      var en=state.enemies[e]; if(en.dead) continue;
+      en.x+=en.vx*dt; if(en.x<en.minX){en.x=en.minX;en.vx=Math.abs(en.vx);} if(en.x+en.w>en.maxX){en.x=en.maxX-en.w;en.vx=-Math.abs(en.vx);}
+      if(rectHit(p,en)){
+        var prevBottom = p.y+p.h - p.vy*dt;
+        if(p.vy>0 && prevBottom <= en.y+8){ en.dead=true; p.vy=-360; state.score+=30; snd('stomp'); updateHud(); }
+        else { loseLife(); if(state.over) return; }
+      }
+    }
+    if(rectHit(p,state.goal)){ gameOver(true); return; }
+
+    var targetCam = p.x - W*0.35;
+    if(targetCam<0) targetCam=0;
+    var maxCam = state.len-W; if(targetCam>maxCam) targetCam=maxCam;
+    state.cam += (targetCam-state.cam)*Math.min(1,dt*6);
+    updateHud();
+  }
+
+  function draw(){
+    if(!state) return;
+    var cam=state.cam;
+    // sky
+    var g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#1e1b4b'); g.addColorStop(.45,'#312e81'); g.addColorStop(.7,'#4f46e5'); g.addColorStop(1,'#7c3aed');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // stars
+    ctx.fillStyle='rgba(255,255,255,.8)';
+    for(var i=0;i<60;i++){ var sx=(i*97 % W + (W-cam*0.1%W))%W; var sy=(i*53 % 220); ctx.fillRect(sx,sy,(i%3)+1,(i%3)+1); }
+    // far hills
+    ctx.fillStyle='#2e1065'; ctx.beginPath(); ctx.moveTo(0,H);
+    for(var x=0;x<=W;x+=40){ var wx=x+cam*0.2; var hy=340 - Math.sin(wx*0.004)*40 - Math.cos(wx*0.009)*25; ctx.lineTo(x,hy); }
+    ctx.lineTo(W,H); ctx.closePath(); ctx.fill();
+    // near hills
+    ctx.fillStyle='#4c1d95'; ctx.beginPath(); ctx.moveTo(0,H);
+    for(var x2=0;x2<=W;x2+=30){ var wx2=x2+cam*0.35; var hy2=390 - Math.sin(wx2*0.006+1)*30 - Math.cos(wx2*0.012)*18; ctx.lineTo(x2,hy2); }
+    ctx.lineTo(W,H); ctx.closePath(); ctx.fill();
+
+    ctx.save(); ctx.translate(-cam,0);
+    // platforms
+    for(var pi=0;pi<state.plats.length;pi++){
+      var pl=state.plats[pi];
+      if(pl.x-cam>W+100||pl.x+pl.w<cam-100) continue;
+      var isGround=pl.h>30;
+      ctx.fillStyle=isGround?'#1e293b':'#334155';
+      ctx.fillRect(pl.x,pl.y,pl.w,pl.h);
+      ctx.fillStyle=isGround?'#22c55e':'#818cf8';
+      ctx.fillRect(pl.x,pl.y,pl.w,isGround?8:5);
+      if(isGround){ ctx.fillStyle='rgba(34,197,94,.15)'; ctx.fillRect(pl.x,pl.y+8,pl.w,4); }
+    }
+    // coins
+    for(var ci=0;ci<state.coins.length;ci++){
+      var cn=state.coins[ci]; if(cn.got) continue;
+      if(cn.x-cam>W+50||cn.x<cam-50) continue;
+      var bob=Math.sin(state.t*3+ci)*3;
+      ctx.save(); ctx.translate(cn.x,cn.y+bob);
+      ctx.fillStyle='#fbbf24'; ctx.beginPath(); ctx.arc(0,0,cn.r,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='#fde68a'; ctx.lineWidth=2; ctx.stroke();
+      ctx.fillStyle='#78350f'; ctx.font='bold 13px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('★',0,1);
+      ctx.restore();
+    }
+    // enemies
+    for(var ei=0;ei<state.enemies.length;ei++){
+      var en=state.enemies[ei]; if(en.dead) continue;
+      if(en.x-cam>W+60||en.x+en.w<cam-60) continue;
+      ctx.fillStyle='#ef4444'; roundRect(ctx,en.x,en.y,en.w,en.h,8); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(en.x+11,en.y+13,4,0,Math.PI*2); ctx.arc(en.x+25,en.y+13,4,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#1f2937'; ctx.beginPath(); ctx.arc(en.x+12,en.y+13,2,0,Math.PI*2); ctx.arc(en.x+26,en.y+13,2,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='#7f1d1d'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(en.x+8,en.y+24); ctx.lineTo(en.x+28,en.y+24); ctx.stroke();
+    }
+    // goal/princess
+    var gl=state.goal;
+    if(gl.x-cam<W+100 && gl.x+gl.w>cam-100){
+      // tower
+      ctx.fillStyle='#c4b5fd'; ctx.fillRect(gl.x+8,gl.y+20,32,60);
+      ctx.fillStyle='#8b5cf6'; ctx.fillRect(gl.x+4,gl.y+10,40,14);
+      ctx.fillStyle='#fbbf24'; ctx.beginPath(); ctx.moveTo(gl.x+24,gl.y-10); ctx.lineTo(gl.x+34,gl.y+10); ctx.lineTo(gl.x+14,gl.y+10); ctx.closePath(); ctx.fill();
+      // princess
+      ctx.fillStyle='#f9a8d4'; ctx.beginPath(); ctx.arc(gl.x+24,gl.y+34,10,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#fde68a'; ctx.beginPath(); ctx.arc(gl.x+24,gl.y+30,10,Math.PI,true); ctx.fill();
+      ctx.fillStyle='#f472b6'; ctx.fillRect(gl.x+16,gl.y+44,16,18);
+      ctx.fillStyle='#fbbf24'; ctx.fillRect(gl.x+20,gl.y+24,8,3);
+      // flag
+      ctx.strokeStyle='#fde68a'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(gl.x+44,gl.y+80); ctx.lineTo(gl.x+44,gl.y+5); ctx.stroke();
+      ctx.fillStyle='#22d3ee'; ctx.beginPath(); ctx.moveTo(gl.x+44,gl.y+8); ctx.lineTo(gl.x+68,gl.y+16); ctx.lineTo(gl.x+44,gl.y+24); ctx.closePath(); ctx.fill();
+    }
+
+    // player
+    var p=state.p;
+    if(!(p.inv>0 && Math.floor(state.t*12)%2===0)){
+      ctx.save(); ctx.translate(p.x+p.w/2,p.y+p.h/2);
+      var pg=ctx.createLinearGradient(-17,-17,17,17); pg.addColorStop(0,'#60a5fa'); pg.addColorStop(1,'#6366f1');
+      ctx.fillStyle=pg; ctx.beginPath(); ctx.arc(0,0,17,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.lineWidth=2; ctx.stroke();
+      ctx.fillStyle='#fff'; ctx.font='bold 12px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('SW',0,1);
+      // eye direction
+      ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(p.face*4,-4,2.2,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+
+    // HUD hint
+    ctx.fillStyle='rgba(255,255,255,.5)'; ctx.font='12px sans-serif'; ctx.textAlign='left'; ctx.fillText(qt('Hədəf: şahzadəni xilas et'), 14, H-14);
+  }
+
+  function roundRect(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+
+  function loop(ts){
+    if(!overlay.classList.contains('open')) return;
+    if(!lastTs) lastTs=ts;
+    var dt=Math.min(0.033,(ts-lastTs)/1000); lastTs=ts;
+    update(dt); draw();
+    raf=requestAnimationFrame(loop);
+  }
+
+  function startGame(){
+    reset(); lastTs=0; if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(loop);
+  }
+
+  function renderBoard(data){
+    var rows=data && Array.isArray(data.top)?data.top:[];
+    boardListEl.innerHTML='';
+    rows.slice(0,5).forEach(function(row,i){
+      var li=document.createElement('li'); if(row.is_me) li.className='me';
+      var name=document.createElement('span'); name.textContent=String(i+1)+'. '+(row.name||'-');
+      var sc=document.createElement('b'); sc.textContent=String(row.score||0);
+      li.appendChild(name); li.appendChild(sc); boardListEl.appendChild(li);
+    });
+    myRankEl.textContent = data && data.me ? qt('Sənin sıran')+' #'+data.me.rank : '';
+    boardNoteEl.hidden = advAuth.loggedIn;
+    if(!advAuth.loggedIn) boardNoteEl.textContent = qt('Cədvəldə yer almaq üçün qeydiyyatdan keç.');
+  }
+  function fetchBoard(){
+    if(!advAuth.boardUrl) return;
+    fetch(advAuth.boardUrl+'?action=top',{credentials:'same-origin'}).then(function(r){return r.json();}).then(renderBoard).catch(function(){});
+  }
+  function saveBoardScore(){
+    if(!advAuth.loggedIn || !advAuth.boardUrl || !state) return;
+    if(boardTimer) clearTimeout(boardTimer);
+    boardTimer=setTimeout(function(){
+      fetch(advAuth.boardUrl,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-CSRF-Token':advAuth.csrf},body:JSON.stringify({action:'save',score:state.score})})
+        .then(function(r){return r.json();}).then(function(d){ if(d&&d.top) renderBoard(d); }).catch(function(){});
+    },400);
+  }
+
+  function open(){
+    overlay.classList.add('open'); document.body.style.overflow='hidden';
+    best=0; try{best=Math.max(0,Number(localStorage.getItem(STORE))||0);}catch(e){}
+    bestEl.textContent=String(best);
+    state=null; reset(); draw();
+    msgTitle.textContent=qt('SkyWeb Macərası');
+    msgText.innerHTML=qt('Ox düymələri ilə hərəkət et, boşluq/↑ ilə tullan. Ulduzları topla, maneələrdən qaç, şahzadəni xilas et!');
+    startBtn.textContent=qt('Başla'); msg.hidden=false;
+    fetchBoard();
+    lastTs=0; if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(loop);
+  }
+  function close(){
+    overlay.classList.remove('open'); document.body.style.overflow='';
+    if(raf) cancelAnimationFrame(raf); raf=null;
+    keys={};
+  }
+
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  startBtn.addEventListener('click', function(e){ e.stopPropagation(); startGame(); });
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
+  document.addEventListener('keydown', function(e){
+    if(overlay.classList.contains('open')){
+      if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].indexOf(e.code)>-1) e.preventDefault();
+      keys[e.code]=true;
+      if(e.code==='Escape') close();
+    }
+  });
+  document.addEventListener('keyup', function(e){ keys[e.code]=false; });
+
+  function bindHold(btn, code){
+    if(!btn) return;
+    var on=function(ev){ ev.preventDefault(); keys[code]=true; btn.classList.add('on'); };
+    var off=function(ev){ ev.preventDefault(); keys[code]=false; btn.classList.remove('on'); };
+    btn.addEventListener('pointerdown',on); btn.addEventListener('pointerup',off); btn.addEventListener('pointerleave',off); btn.addEventListener('pointercancel',off);
+  }
+  bindHold(btnL,'ArrowLeft'); bindHold(btnR,'ArrowRight'); bindHold(btnJ,'ArrowUp');
+
 })();
 </script>
 </body>
