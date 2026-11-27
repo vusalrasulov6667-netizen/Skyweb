@@ -2483,7 +2483,8 @@ var advAuth = <?= json_encode([
     var coins=[
       {x:340,y:320},{x:600,y:280},{x:790,y:220},{x:1020,y:310},{x:1300,y:260},{x:1510,y:200},
       {x:1740,y:290},{x:2000,y:240},{x:2280,y:300},{x:2480,y:220},{x:2720,y:290},{x:620,y:430},
-      {x:940,y:430},{x:1280,y:430},{x:1900,y:430},{x:2320,y:430},{x:2620,y:430},{x:2980,y:430}
+      {x:940,y:430},{x:1280,y:430},{x:1900,y:430},{x:2320,y:430},{x:2620,y:430},{x:2980,y:430},
+      {x:360,y:320},{x:820,y:220},{x:1530,y:200},{x:2460,y:220}
     ].map(function(c){return {x:c.x,y:c.y,r:12,got:false};});
     var enemies=[
       {x:560,y:430,w:36,h:36,vx:60,minX:520,maxX:720,dead:false},
@@ -2491,27 +2492,36 @@ var advAuth = <?= json_encode([
       {x:1240,y:430,w:36,h:36,vx:80,minX:1180,maxX:1390,dead:false},
       {x:1880,y:430,w:36,h:36,vx:-75,minX:1820,maxX:2030,dead:false},
       {x:2220,y:430,w:36,h:36,vx:85,minX:2160,maxX:2410,dead:false},
-      {x:2600,y:430,w:36,h:36,vx:-90,minX:2540,maxX:2750,dead:false}
+      {x:2600,y:430,w:36,h:36,vx:-90,minX:2540,maxX:2750,dead:false},
+      {x:1560,y:430,w:36,h:36,vx:65,minX:1520,maxX:1700,dead:false}
     ];
-    return {plats:plats,coins:coins,enemies:enemies,goal:{x:3120,y:390,w:48,h:80},len:3300};
+    var boxes=[
+      {x:450,y:330,w:34,h:34,hit:false,type:'coin'},
+      {x:1100,y:310,w:34,h:34,hit:false,type:'star'},
+      {x:1640,y:290,w:34,h:34,hit:false,type:'coin'},
+      {x:2100,y:240,w:34,h:34,hit:false,type:'life'},
+      {x:2820,y:290,w:34,h:34,hit:false,type:'coin'}
+    ];
+    return {plats:plats,coins:coins,enemies:enemies,boxes:boxes,goal:{x:3120,y:390,w:48,h:80},len:3300};
   }
 
   function reset(){
     var L=makeLevel();
-    state={p:{x:60,y:380,w:34,h:34,vx:0,vy:0,on:false,face:1,inv:0},cam:0,score:0,coins:0,lives:3,time:90,win:false,dead:false,over:false,plats:L.plats,coins:L.coins,enemies:L.enemies,goal:L.goal,len:L.len,t:0};
+    state={p:{x:60,y:380,w:34,h:34,vx:0,vy:0,on:false,face:1,inv:0,power:0},cam:0,score:0,coinCount:0,lives:3,time:90,win:false,dead:false,over:false,plats:L.plats,coins:L.coins,enemies:L.enemies,boxes:L.boxes,particles:[],goal:L.goal,len:L.len,t:0};
     updateHud(); msg.hidden=true;
   }
 
   function updateHud(){
     if(!state) return;
     scoreEl.textContent=String(state.score);
-    coinsEl.textContent=String(state.coins);
+    coinsEl.textContent=String(state.coinCount);
     livesEl.textContent=String(state.lives);
     timeEl.textContent=String(Math.max(0,Math.ceil(state.time)));
     bestEl.textContent=String(best);
   }
 
   function rectHit(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
+  function addParticles(x,y,color,n){ for(var i=0;i<(n||8);i++){ state.particles.push({x:x,y:y,vx:(Math.random()-0.5)*220,vy:-80-Math.random()*180,life:0.7+Math.random()*0.4,color:color,r:2+Math.random()*3}); } }
 
   function loseLife(){
     if(!state||state.over||state.win) return;
@@ -2529,7 +2539,7 @@ var advAuth = <?= json_encode([
     if(state.score>best){ best=state.score; try{localStorage.setItem(STORE,String(best));}catch(e){} }
     updateHud(); saveBoardScore();
     msgTitle.textContent = won ? qt('Şahzadə xilas oldu!') : qt('Oyun bitdi');
-    var base = qt('Xal')+': '+state.score+' · '+qt('Ulduz')+': '+state.coins+' · '+qt('Rekord')+': '+best;
+    var base = qt('Xal')+': '+state.score+' · '+qt('Ulduz')+': '+state.coinCount+' · '+qt('Rekord')+': '+best;
     msgText.innerHTML = '<div>'+base+'</div><div class="adv-motto">'+(won? '🏆 '+qt('SkyWeb Macərası: Şahzadəni xilas etdin! Sən əsl qəhrəmansan!') : '🎮 '+qt('SkyWeb salamlayır: məğlubiyyət son deyil, yenidən başla və zirvəyə qalx!'))+'</div>';
     startBtn.textContent = qt('Yenidən başla');
     msg.hidden=false;
@@ -2540,6 +2550,7 @@ var advAuth = <?= json_encode([
     state.t+=dt; state.time-=dt; if(state.time<=0){state.time=0; updateHud(); gameOver(false); return;}
     var p=state.p;
     if(p.inv>0) p.inv-=dt;
+    if(p.power>0) p.power-=dt;
     var left=keys['ArrowLeft']||keys['KeyA'], right=keys['ArrowRight']||keys['KeyD'], jump=keys['ArrowUp']||keys['Space']||keys['KeyW'];
     var accel=1400, maxV=320, fric=1200;
     if(left){ p.vx-=accel*dt; p.face=-1; }
@@ -2568,11 +2579,27 @@ var advAuth = <?= json_encode([
     }
     if(p.x<0) p.x=0;
     if(p.y>H+200){ loseLife(); if(state.over) return; }
+    // surprise boxes
+    for(var bi=0;bi<state.boxes.length;bi++){
+      var bx=state.boxes[bi]; if(bx.hit) continue;
+      if(rectHit(p,bx)){
+        var prevBottom2=p.y+p.h-p.vy*dt;
+        var prevTop2=p.y-p.vy*dt;
+        if(p.vy<0 && prevTop2>=bx.y+bx.h-4){ bx.hit=true; p.y=bx.y+bx.h; p.vy=0; addParticles(bx.x+bx.w/2,bx.y,'#fde68a',10);
+          if(bx.type==='coin'){ state.score+=50; state.coinCount+=1; snd('coin'); }
+          else if(bx.type==='star'){ state.power=6; state.score+=40; snd('win'); }
+          else if(bx.type==='life'){ state.lives=Math.min(state.lives+1,5); state.score+=30; snd('win'); }
+          updateHud();
+        } else if(p.vy>0 && prevBottom2<=bx.y+4){ p.y=bx.y-p.h; p.vy=0; p.on=true; }
+        else if(p.vx>0){ p.x=bx.x-p.w; p.vx=0; }
+        else if(p.vx<0){ p.x=bx.x+bx.w; p.vx=0; }
+      }
+    }
 
     for(var c=0;c<state.coins.length;c++){
       var cn=state.coins[c]; if(cn.got) continue;
       var cb={x:cn.x-cn.r,y:cn.y-cn.r,w:cn.r*2,h:cn.r*2};
-      if(rectHit(p,cb)){ cn.got=true; state.coins++; state.score+=10; snd('coin'); updateHud(); }
+      if(rectHit(p,cb)){ cn.got=true; state.coinCount++; state.score+=10; snd('coin'); updateHud(); }
     }
     for(var e=0;e<state.enemies.length;e++){
       var en=state.enemies[e]; if(en.dead) continue;
@@ -2580,10 +2607,12 @@ var advAuth = <?= json_encode([
       if(rectHit(p,en)){
         var prevBottom = p.y+p.h - p.vy*dt;
         if(p.vy>0 && prevBottom <= en.y+8){ en.dead=true; p.vy=-360; state.score+=30; snd('stomp'); updateHud(); }
+        else if(p.power>0){ en.dead=true; state.score+=40; snd('stomp'); addParticles(en.x+en.w/2,en.y+en.h/2,'#f87171',10); updateHud(); }
         else { loseLife(); if(state.over) return; }
       }
     }
     if(rectHit(p,state.goal)){ gameOver(true); return; }
+    for(var k=state.particles.length-1;k>=0;k--){ var pt=state.particles[k]; pt.life-=dt; pt.x+=pt.vx*dt; pt.y+=pt.vy*dt; pt.vy+=420*dt; if(pt.life<=0) state.particles.splice(k,1); }
 
     var targetCam = p.x - W*0.35;
     if(targetCam<0) targetCam=0;
@@ -2622,6 +2651,12 @@ var advAuth = <?= json_encode([
       ctx.fillRect(pl.x,pl.y,pl.w,isGround?8:5);
       if(isGround){ ctx.fillStyle='rgba(34,197,94,.15)'; ctx.fillRect(pl.x,pl.y+8,pl.w,4); }
     }
+    // surprise boxes
+    for(var bi2=0;bi2<state.boxes.length;bi2++){ var bx2=state.boxes[bi2]; if(bx2.x-cam>W+60||bx2.x+bx2.w<cam-60) continue;
+      ctx.fillStyle=bx2.hit?'#475569':'#f59e0b'; roundRect(ctx,bx2.x,bx2.y,bx2.w,bx2.h,6); ctx.fill();
+      ctx.strokeStyle=bx2.hit?'#64748b':'#fde68a'; ctx.lineWidth=2; ctx.stroke();
+      if(!bx2.hit){ ctx.fillStyle='#422006'; ctx.font='bold 20px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('?',bx2.x+bx2.w/2,bx2.y+bx2.h/2+1); }
+    }
     // coins
     for(var ci=0;ci<state.coins.length;ci++){
       var cn=state.coins[ci]; if(cn.got) continue;
@@ -2659,9 +2694,13 @@ var advAuth = <?= json_encode([
       ctx.fillStyle='#22d3ee'; ctx.beginPath(); ctx.moveTo(gl.x+44,gl.y+8); ctx.lineTo(gl.x+68,gl.y+16); ctx.lineTo(gl.x+44,gl.y+24); ctx.closePath(); ctx.fill();
     }
 
+    // particles
+    for(var pk=0;pk<state.particles.length;pk++){ var pt2=state.particles[pk]; ctx.globalAlpha=Math.max(0,pt2.life); ctx.fillStyle=pt2.color; ctx.beginPath(); ctx.arc(pt2.x,pt2.y,pt2.r,0,Math.PI*2); ctx.fill(); }
+    ctx.globalAlpha=1;
     // player
     var p=state.p;
     if(!(p.inv>0 && Math.floor(state.t*12)%2===0)){
+      if(p.power>0){ ctx.save(); ctx.translate(p.x+p.w/2,p.y+p.h/2); ctx.strokeStyle='rgba(251,191,36,'+(0.4+Math.sin(state.t*10)*0.2)+')'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2); ctx.stroke(); ctx.restore(); }
       ctx.save(); ctx.translate(p.x+p.w/2,p.y+p.h/2);
       var pg=ctx.createLinearGradient(-17,-17,17,17); pg.addColorStop(0,'#60a5fa'); pg.addColorStop(1,'#6366f1');
       ctx.fillStyle=pg; ctx.beginPath(); ctx.arc(0,0,17,0,Math.PI*2); ctx.fill();
