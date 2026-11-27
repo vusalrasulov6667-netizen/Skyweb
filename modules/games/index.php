@@ -395,7 +395,8 @@ ob_start(static function (string $html): string { return sky_translate_document_
     /* Brend Ovçusu — retro target hunt */
     .hunt-overlay { position:fixed;inset:0;z-index:10001;padding:.75rem;background:rgba(6,10,24,.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .22s ease,visibility .22s ease; }
     .hunt-overlay.open { opacity:1;visibility:visible; }
-    .hunt-box { width:100%;max-width:460px;background:linear-gradient(180deg,#0f1a2e 0%,#0b1424 100%);border:1px solid rgba(251,191,36,.22);border-radius:18px;padding:1rem;position:relative;box-shadow:0 24px 60px -28px rgba(251,191,36,.25); }
+    .hunt-box { width:100%;max-width:460px;background:linear-gradient(180deg,#0f1a2e 0%,#0b1424 100%);border:1px solid rgba(251,191,36,.22);border-radius:18px;padding:1rem;position:relative;box-shadow:0 24px 60px -28px rgba(251,191,36,.25); transition:max-width .25s ease; }
+    .hunt-box.macera-mode { max-width:760px; }
     .hunt-close { position:absolute;top:.65rem;right:.65rem;width:30px;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--text-muted);font-size:1.1rem;line-height:1;cursor:pointer;z-index:5; }
     .hunt-close:hover { color:#fff;border-color:rgba(251,191,36,.35); }
     .hunt-head { display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.55rem;padding-right:2.2rem; }
@@ -650,34 +651,14 @@ ob_start(static function (string $html): string { return sky_translate_document_
         </div>
         <div class="game-card-body">
           <div class="game-name">Brend Ovçusu</div>
-          <div class="game-desc">İki oyun, bir arena: nişanlarını vur, sonra Cüt Ovla rejimində yaddaşını sına. Sürətli, yığcam və mobil uyumlu.</div>
+          <div class="game-desc">?? oyun, bir arena: h?d?f vur, c?t tap, SkyWeb Mac?ras?nda ?ahzad?ni xilas et. R?ngli, s?r?tli v? mobil uyumlu.</div>
           <div class="game-features">
-            <span class="game-feat-tag">Hədəf Ovçusu</span>
-            <span class="game-feat-tag">Cüt Ovla</span>
-            <span class="game-feat-tag">Retro arcade</span>
-            <span class="game-feat-tag">Səs effekti</span>
+            <span class="game-feat-tag">H?d?f Ov?usu</span>
+            <span class="game-feat-tag">C?t Ovla</span>
+            <span class="game-feat-tag">Mac?ra</span>
+            <span class="game-feat-tag">Reytinq</span>
           </div>
           <button class="game-demo-btn" id="huntDemoBtn" type="button">Oyuna daxil ol</button>
-        </div>
-      </div>
-
-      <div class="game-card">
-        <div class="game-card-preview" style="background:linear-gradient(135deg,rgba(99,102,241,0.16),rgba(236,72,153,0.10));">
-          <span aria-hidden="true" style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:18px;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.24);">
-            <svg viewBox="0 0 24 24" fill="none" style="width:40px;height:40px"><rect x="3" y="4" width="18" height="16" rx="4" fill="rgba(129,140,248,.18)" stroke="#818cf8" stroke-width="1.5"/><path d="M8 14l2-2 2 2 4-4 2 2" stroke="#c7d2fe" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="#fbbf24"/></svg>
-          </span>
-          <div class="game-badge badge-new">Yeni</div>
-        </div>
-        <div class="game-card-body">
-          <div class="game-name">SkyWeb Macərası</div>
-          <div class="game-desc">SkyWeb loqosu ilə platforma macərası: ulduz topla, maneələri aş, şahzadəni xilas et. Rəngli səviyyə, səs effektləri və reytinq cədvəli.</div>
-          <div class="game-features">
-            <span class="game-feat-tag">Platforma</span>
-            <span class="game-feat-tag">Macəra</span>
-            <span class="game-feat-tag">Reytinq</span>
-            <span class="game-feat-tag">Səs effekti</span>
-          </div>
-          <button class="game-demo-btn" id="advDemoBtn" type="button">Oyuna daxil ol</button>
         </div>
       </div>
 
@@ -700,6 +681,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
     <div class="hunt-tabs" role="tablist" aria-label="Oyun rejimi">
       <button class="hunt-tab active" id="huntTabTarget" type="button" role="tab" aria-selected="true">Hədəf Ovçusu</button>
       <button class="hunt-tab" id="huntTabMemory" type="button" role="tab" aria-selected="false">Cüt Ovla</button>
+      <button class="hunt-tab" id="huntTabAdv" type="button" role="tab" aria-selected="false">Macəra</button>
     </div>
     <div class="hunt-panel active" id="huntPanelTarget">
 <div class="hunt-stats">
@@ -743,13 +725,9 @@ ob_start(static function (string $html): string { return sky_translate_document_
     </div>
   </div>
 </div>
-</div>
-</div>
 
-<!-- SkyWeb Macərası — platformer demo -->
-<div class="adv-overlay" id="advOverlay" role="dialog" aria-modal="true" aria-label="SkyWeb Macərası">
-  <div class="adv-box">
-    <button class="adv-close" id="advClose" type="button" aria-label="Oyunu bağla">×</button>
+    <div class="hunt-panel" id="advPanel" role="region" aria-label="SkyWeb Mac?ras?">
+
     <div class="adv-head">
       <div>
         <div class="adv-title">SkyWeb <span>Macərası</span></div>
@@ -781,9 +759,11 @@ ob_start(static function (string $html): string { return sky_translate_document_
       <ol id="advBoardList"></ol>
       <div class="adv-board-note" id="advBoardNote" hidden></div>
     </div>
-  </div>
+    </div>
+</div>
 </div>
 
+<!-- SkyWeb Macərası — platformer demo -->
 <!-- Brend Viktorinası — oynanabilir demo -->
 <div class="quiz-overlay" id="quizOverlay" role="dialog" aria-modal="true" aria-label="Brend Viktorinası">
   <div class="quiz-box">
@@ -2251,8 +2231,11 @@ var riddleAuth = <?= json_encode([
   var crosshair = document.getElementById('huntCrosshair');
   var tabTarget = document.getElementById('huntTabTarget');
   var tabMemory = document.getElementById('huntTabMemory');
+  var tabAdv = document.getElementById('huntTabAdv');
   var panelTarget = document.getElementById('huntPanelTarget');
   var panelMemory = document.getElementById('memoryPanel');
+  var panelAdv = document.getElementById('advPanel');
+  var huntBox = overlay ? overlay.querySelector('.hunt-box') : null;
   var STORE = 'skyweb_hunt_v1';
   function qt(t){ if(window.SkyI18n&&typeof window.SkyI18n.tr==='function') return window.SkyI18n.tr(t,undefined,'az'); return t; }
   var SHAPES = [
@@ -2380,26 +2363,22 @@ var riddleAuth = <?= json_encode([
     startBtn.textContent = qt('Yenidən başla');
     msg.hidden = false;
   }
-  var mode = 'target';
+    var mode = 'target';
+  function stopHunt(){ running = false; if(raf) cancelAnimationFrame(raf); raf=null; if(spawnTimer) clearInterval(spawnTimer); spawnTimer=null; if(bonusTimer) clearInterval(bonusTimer); bonusTimer=null; clearTargets(); crosshair.classList.remove('on'); }
   function setMode(next){
     mode = next;
-    var isTarget = next === 'target';
+    var isTarget = next === 'target', isMemory = next === 'memory', isAdv = next === 'adv';
     if (tabTarget) { tabTarget.classList.toggle('active', isTarget); tabTarget.setAttribute('aria-selected', isTarget ? 'true' : 'false'); }
-    if (tabMemory) { tabMemory.classList.toggle('active', !isTarget); tabMemory.setAttribute('aria-selected', !isTarget ? 'true' : 'false'); }
+    if (tabMemory) { tabMemory.classList.toggle('active', isMemory); tabMemory.setAttribute('aria-selected', isMemory ? 'true' : 'false'); }
+    if (tabAdv) { tabAdv.classList.toggle('active', isAdv); tabAdv.setAttribute('aria-selected', isAdv ? 'true' : 'false'); }
     if (panelTarget) panelTarget.classList.toggle('active', isTarget);
-    if (panelMemory) panelMemory.classList.toggle('active', !isTarget);
-    if (isTarget) {
-      if (window.skyMemoryPanel && window.skyMemoryPanel.deactivate) window.skyMemoryPanel.deactivate();
-    } else {
-      // stop hunt when switching away
-      running = false; if(raf) cancelAnimationFrame(raf); raf=null; if(spawnTimer) clearInterval(spawnTimer); spawnTimer=null; if(bonusTimer) clearInterval(bonusTimer); bonusTimer=null;
-      clearTargets(); crosshair.classList.remove('on');
-      msgTitle.textContent = qt('Brend Ovçusu');
-      msgText.innerHTML = qt('Uçan nişanlara vur, canını qoru.');
-      startBtn.textContent = qt('Başla');
-      msg.hidden = false;
-      if (window.skyMemoryPanel && window.skyMemoryPanel.activate) window.skyMemoryPanel.activate();
-    }
+    if (panelMemory) panelMemory.classList.toggle('active', isMemory);
+    if (panelAdv) panelAdv.classList.toggle('active', isAdv);
+    if (huntBox) huntBox.classList.toggle('macera-mode', isAdv);
+    if (!isTarget) { stopHunt(); msgTitle.textContent = qt('Brend Ov?usu'); msgText.innerHTML = qt('U?an ni?anlara vur, can?n? qoru.'); startBtn.textContent = qt('Ba?la'); msg.hidden = false; }
+    if (isMemory) { if (window.skyAdvPanel && window.skyAdvPanel.deactivate) window.skyAdvPanel.deactivate(); if (window.skyMemoryPanel && window.skyMemoryPanel.activate) window.skyMemoryPanel.activate(); }
+    else if (isAdv) { if (window.skyMemoryPanel && window.skyMemoryPanel.deactivate) window.skyMemoryPanel.deactivate(); if (window.skyAdvPanel && window.skyAdvPanel.activate) window.skyAdvPanel.activate(); }
+    else { if (window.skyMemoryPanel && window.skyMemoryPanel.deactivate) window.skyMemoryPanel.deactivate(); if (window.skyAdvPanel && window.skyAdvPanel.deactivate) window.skyAdvPanel.deactivate(); }
   }
   function open(){
     best = bestGet(); updateHud(); clearTargets(); running = false;
@@ -2411,15 +2390,17 @@ var riddleAuth = <?= json_encode([
     overlay.classList.add('open'); document.body.style.overflow='hidden';
   }
   function close(){
-    running = false; if(raf) cancelAnimationFrame(raf); raf=null; if(spawnTimer) clearInterval(spawnTimer); spawnTimer=null; if(bonusTimer) clearInterval(bonusTimer); bonusTimer=null;
-    crosshair.classList.remove('on'); clearTargets();
+    stopHunt();
     if (window.skyMemoryPanel && window.skyMemoryPanel.deactivate) window.skyMemoryPanel.deactivate();
+    if (window.skyAdvPanel && window.skyAdvPanel.deactivate) window.skyAdvPanel.deactivate();
+    if (huntBox) huntBox.classList.remove('macera-mode');
     overlay.classList.remove('open'); document.body.style.overflow='';
   }
   arena.addEventListener('pointermove', function(e){ var r=arena.getBoundingClientRect(); crosshair.style.left=(e.clientX-r.left)+'px'; crosshair.style.top=(e.clientY-r.top)+'px'; crosshair.classList.add('on'); });
   arena.addEventListener('pointerleave', function(){ crosshair.classList.remove('on'); });
   if (tabTarget) tabTarget.addEventListener('click', function(){ setMode('target'); });
   if (tabMemory) tabMemory.addEventListener('click', function(){ setMode('memory'); });
+  if (tabAdv) tabAdv.addEventListener('click', function(){ setMode('adv'); });
   openBtn.addEventListener('click', open);
   closeBtn.addEventListener('click', close);
   startBtn.addEventListener('click', function(e){ e.stopPropagation(); sound('shot'); startGame(); });
@@ -2441,8 +2422,10 @@ var advAuth = <?= json_encode([
   'csrf' => csrf_token()
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 (function(){
-  var overlay=document.getElementById('advOverlay'), openBtn=document.getElementById('advDemoBtn');
-  if(!overlay||!openBtn) return;
+  var huntOverlay=document.getElementById('huntOverlay');
+  var panel=document.getElementById('advPanel');
+  if(!huntOverlay||!panel) return;
+  var overlay=huntOverlay; // compat for existing refs
   var canvas=document.getElementById('advCanvas'), ctx=canvas.getContext('2d');
   var W=960,H=540;
   var scoreEl=document.getElementById('advScore'), coinsEl=document.getElementById('advCoins'), livesEl=document.getElementById('advLives'), timeEl=document.getElementById('advTime'), bestEl=document.getElementById('advBest');
@@ -2719,7 +2702,7 @@ var advAuth = <?= json_encode([
   function roundRect(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
 
   function loop(ts){
-    if(!overlay.classList.contains('open')) return;
+    if(!overlay.classList.contains('open') || !panel.classList.contains('active')) { raf=null; return; }
     if(!lastTs) lastTs=ts;
     var dt=Math.min(0.033,(ts-lastTs)/1000); lastTs=ts;
     update(dt); draw();
@@ -2756,32 +2739,28 @@ var advAuth = <?= json_encode([
     },400);
   }
 
-  function open(){
-    overlay.classList.add('open'); document.body.style.overflow='hidden';
+  function activate(){
     best=0; try{best=Math.max(0,Number(localStorage.getItem(STORE))||0);}catch(e){}
     bestEl.textContent=String(best);
     state=null; reset(); draw();
-    msgTitle.textContent=qt('SkyWeb Macərası');
-    msgText.innerHTML=qt('Ox düymələri ilə hərəkət et, boşluq/↑ ilə tullan. Ulduzları topla, maneələrdən qaç, şahzadəni xilas et!');
-    startBtn.textContent=qt('Başla'); msg.hidden=false;
+    msgTitle.textContent=qt('SkyWeb Mac?ras?');
+    msgText.innerHTML=qt('Ox d?ym?l?ri il? h?r?k?t et, bo?luq/? il? tullan. Ulduzlar? topla, mane?l?rd?n qa?, ?ahzad?ni xilas et!');
+    startBtn.textContent=qt('Ba?la'); msg.hidden=false;
     fetchBoard();
     lastTs=0; if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(loop);
   }
-  function close(){
-    overlay.classList.remove('open'); document.body.style.overflow='';
+  function deactivate(){
     if(raf) cancelAnimationFrame(raf); raf=null;
     keys={};
   }
+  window.skyAdvPanel={activate:activate,deactivate:deactivate};
 
-  openBtn.addEventListener('click', open);
-  closeBtn.addEventListener('click', close);
+  if(closeBtn) closeBtn.addEventListener('click', function(){ /* hunt handles close */ });
   startBtn.addEventListener('click', function(e){ e.stopPropagation(); startGame(); });
-  overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
   document.addEventListener('keydown', function(e){
-    if(overlay.classList.contains('open')){
+    if(overlay.classList.contains('open') && panel.classList.contains('active')){
       if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].indexOf(e.code)>-1) e.preventDefault();
       keys[e.code]=true;
-      if(e.code==='Escape') close();
     }
   });
   document.addEventListener('keyup', function(e){ keys[e.code]=false; });
