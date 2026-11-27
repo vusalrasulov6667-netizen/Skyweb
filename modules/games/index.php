@@ -651,11 +651,11 @@ ob_start(static function (string $html): string { return sky_translate_document_
         </div>
         <div class="game-card-body">
           <div class="game-name">Brend Ovçusu</div>
-          <div class="game-desc">?? oyun, bir arena: h?d?f vur, c?t tap, SkyWeb Mac?ras?nda ?ahzad?ni xilas et. R?ngli, s?r?tli v? mobil uyumlu.</div>
+          <div class="game-desc">Üç oyun, bir arena: hədəf vur, cüt tap, SkyWeb Macərasında şahzadəni xilas et. Rəngli, sürətli və mobil uyumlu.</div>
           <div class="game-features">
             <span class="game-feat-tag">H?d?f Ov?usu</span>
             <span class="game-feat-tag">C?t Ovla</span>
-            <span class="game-feat-tag">Mac?ra</span>
+            <span class="game-feat-tag">Macəra</span>
             <span class="game-feat-tag">Reytinq</span>
           </div>
           <button class="game-demo-btn" id="huntDemoBtn" type="button">Oyuna daxil ol</button>
@@ -726,7 +726,7 @@ ob_start(static function (string $html): string { return sky_translate_document_
   </div>
 </div>
 
-    <div class="hunt-panel" id="advPanel" role="region" aria-label="SkyWeb Mac?ras?">
+    <div class="hunt-panel" id="advPanel" role="region" aria-label="SkyWeb Macərası">
 
     <div class="adv-head">
       <div>
@@ -2375,7 +2375,7 @@ var riddleAuth = <?= json_encode([
     if (panelMemory) panelMemory.classList.toggle('active', isMemory);
     if (panelAdv) panelAdv.classList.toggle('active', isAdv);
     if (huntBox) huntBox.classList.toggle('macera-mode', isAdv);
-    if (!isTarget) { stopHunt(); msgTitle.textContent = qt('Brend Ov?usu'); msgText.innerHTML = qt('U?an ni?anlara vur, can?n? qoru.'); startBtn.textContent = qt('Ba?la'); msg.hidden = false; }
+    if (!isTarget) { stopHunt(); msgTitle.textContent = qt('Brend Ovçusu'); msgText.innerHTML = qt('Uçan nişanlara vur, canını qoru.'); startBtn.textContent = qt('Başla'); msg.hidden = false; }
     if (isMemory) { if (window.skyAdvPanel && window.skyAdvPanel.deactivate) window.skyAdvPanel.deactivate(); if (window.skyMemoryPanel && window.skyMemoryPanel.activate) window.skyMemoryPanel.activate(); }
     else if (isAdv) { if (window.skyMemoryPanel && window.skyMemoryPanel.deactivate) window.skyMemoryPanel.deactivate(); if (window.skyAdvPanel && window.skyAdvPanel.activate) window.skyAdvPanel.activate(); }
     else { if (window.skyMemoryPanel && window.skyMemoryPanel.deactivate) window.skyMemoryPanel.deactivate(); if (window.skyAdvPanel && window.skyAdvPanel.deactivate) window.skyAdvPanel.deactivate(); }
@@ -2743,9 +2743,9 @@ var advAuth = <?= json_encode([
     best=0; try{best=Math.max(0,Number(localStorage.getItem(STORE))||0);}catch(e){}
     bestEl.textContent=String(best);
     state=null; reset(); draw();
-    msgTitle.textContent=qt('SkyWeb Mac?ras?');
-    msgText.innerHTML=qt('Ox d?ym?l?ri il? h?r?k?t et, bo?luq/? il? tullan. Ulduzlar? topla, mane?l?rd?n qa?, ?ahzad?ni xilas et!');
-    startBtn.textContent=qt('Ba?la'); msg.hidden=false;
+    msgTitle.textContent=qt('SkyWeb Macərası');
+    msgText.innerHTML=qt('Ox düymələri ilə hərəkət et, boşluq/↑ ilə tullan. Ulduzları topla, maneələrdən qaç, şahzadəni xilas et!');
+    startBtn.textContent=qt('Başla'); msg.hidden=false;
     fetchBoard();
     lastTs=0; if(raf) cancelAnimationFrame(raf); raf=requestAnimationFrame(loop);
   }
